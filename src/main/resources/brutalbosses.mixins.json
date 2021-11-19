@@ -1,0 +1,21 @@
+{
+  "required": false,
+  "package": "com.brutalbosses.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "brutalbosses.refmap.json",
+  "mixins": [
+    "SpawnerBlockListener",
+    "BiomeSpawnBossMixin",
+    "LockableLootTileEntityMixin",
+    "MeleeAttackGoalMixin",
+    "ProjectileHitActionMixin"
+  ],
+  "client": [
+    "EntityRenderDataMixin",
+    "LivingRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

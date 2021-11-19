@@ -1,0 +1,50 @@
+{
+  "entity": "minecraft:cave_spider",
+  "name": "Arag the Lurker",
+  "visualscale": 1.5,
+  "experience": 300,
+  "effects": {
+    "minecraft:resistance": 1
+  },
+  "attributes": {
+    "generic.max_health": 60,
+    "generic.follow_range": 50,
+    "generic.attack_damage": 5,
+    "generic.knockback_resistance": 10
+  },
+  "customattributes": {
+  },
+  "gear": {
+  },
+  "ai-goals": {
+    "brutalbosses:spitcobweb": {
+      "projectile_interval": 200,
+      "projectile_distance": 20
+    },
+    "brutalbosses:aftercombatregen": {
+      "amount": 2
+    },
+    "brutalbosses:summonmobs": {
+      "interval": 600,
+      "maxcount": 2,
+      "count": 1,
+      "entityid": "minecraft:cave_spider"
+    }
+  },
+  "spawnatchest": {
+    "minecraft:chests/simple_dungeon": 3,
+    "minecraft:chests/stronghold_library": 1,
+    "minecraft:chests/stronghold_crossing": 5,
+    "minecraft:chests/stronghold_corridor": 1,
+    "minecraft:chests/desert_pyramid": 1,
+    "minecraft:chests/jungle_temple": 1,
+    "minecraft:chests/woodland_mansion": 1,
+    "minecraft:chests/pillager_outpost": 1,
+    "betterdungeons:skeleton_dungeon/chests/common": 1,
+    "betterdungeons:skeleton_dungeon/chests/middle": 1,
+    "betterdungeons:zombie_dungeon/chests/common": 1,
+    "betterdungeons:zombie_dungeon/chests/special": 1,
+    "betterdungeons:zombie_dungeon/chests/tombstone": 1,
+    "betterdungeons:spider_dungeon/chests/egg_room": 3
+  }
+}

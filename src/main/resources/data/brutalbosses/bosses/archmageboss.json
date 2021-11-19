@@ -1,0 +1,54 @@
+{
+  "entity": "minecraft:wandering_trader",
+  "name": "Agizahr the Archmage",
+  "visualscale": 1.1,
+  "experience": 300,
+  "effects": {
+    "minecraft:slowness": 2,
+    "minecraft:resistance": 1,
+    "minecraft:regeneration": 1,
+    "minecraft:glowing": 1,
+    "minecraft:fire_resistance": 1
+  },
+  "attributes": {
+    "generic.max_health": 70,
+    "generic.follow_range": 80,
+    "generic.knockback_resistance": 1
+  },
+  "customattributes": {
+    "dropgear": 6
+  },
+  "gear": {
+    "mainhand": "{id: \"minecraft:enchanted_book\", Count: 1b, tag: {StoredEnchantments: [{lvl: 1s, id: \"minecraft:mending\"}]}}"
+  },
+  "test": {
+    "brutalbosses:shootwitherskulls": {},
+    "brutalbosses:shootfireballs": {},
+    "brutalbosses:shootbigfireballs": {}
+  },
+  "ai-goals": {
+    "brutalbosses:itemshootgoal": {
+      "item": "{id: \"minecraft:fire_charge\", Count: 1b, tag: {}",
+      "projectile_count": 3,
+      "projectile_interval": 100,
+      "projectile_aoe": true,
+      "explode": true
+    },
+    "minecraft:target": {},
+    "brutalbosses:chasetarget": {
+      "chasedistance": 20
+    }
+  },
+  "spawnatchest": {
+    "minecraft:chests/simple_dungeon": 5,
+    "minecraft:chests/stronghold_crossing": 5,
+    "minecraft:chests/stronghold_corridor": 1,
+    "minecraft:chests/pillager_outpost": 1,
+    "minecraft:chests/buried_treasure": 1,
+    "betterdungeons:skeleton_dungeon/chests/common": 1,
+    "betterdungeons:skeleton_dungeon/chests/middle": 1,
+    "betterdungeons:zombie_dungeon/chests/common": 1,
+    "betterdungeons:zombie_dungeon/chests/special": 5,
+    "betterdungeons:zombie_dungeon/chests/tombstone": 1
+  }
+}
