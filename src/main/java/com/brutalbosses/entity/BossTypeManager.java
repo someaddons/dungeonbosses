@@ -63,7 +63,7 @@ public class BossTypeManager
 
         aiRegistry.put(WitherSkullAttackGoal.ID,
           entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2000, new WitherSkullAttackGoal((MobEntity) entity)));
-        aiSupplier.put(WitherSkullAttackGoal.ID, SimpleRangedAttackGoal::parse);
+        aiSupplier.put(WitherSkullAttackGoal.ID, WitherSkullAttackGoal::parse);
 
         aiRegistry.put(SnowballAttackGoal.ID,
           entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2000, new SnowballAttackGoal((MobEntity) entity)));

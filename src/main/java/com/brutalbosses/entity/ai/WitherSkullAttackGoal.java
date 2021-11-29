@@ -1,5 +1,6 @@
 package com.brutalbosses.entity.ai;
 
+import com.google.gson.JsonObject;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -40,8 +41,31 @@ public class WitherSkullAttackGoal extends SimpleRangedAttackGoal
 
         final WitherSkullEntity witherskullentity = new WitherSkullEntity(mob.level, mob, xDiff, yDiff, zDiff);
         witherskullentity.setOwner(mob);
-        // witherskullentity.setDangerous(true);
+        if (((WitherSkullParams) params).dangerous)
+        {
+            witherskullentity.setDangerous(true);
+        }
         witherskullentity.setPos(projectileEntity.getX(), projectileEntity.getY(), projectileEntity.getZ());
         mob.level.addFreshEntity(witherskullentity);
+    }
+
+    private static final String DANGEROUS = "dangerous";
+
+    public static IAIParams parse(final JsonObject jsonElement)
+    {
+        final WitherSkullParams params = new WitherSkullParams();
+        SimpleRangedAttackGoal.parse(jsonElement, params);
+
+        if (jsonElement.has(DANGEROUS))
+        {
+            params.dangerous = jsonElement.get(DANGEROUS).getAsBoolean();
+        }
+
+        return params;
+    }
+
+    private static class WitherSkullParams extends RangedParams
+    {
+        private boolean dangerous = false;
     }
 }

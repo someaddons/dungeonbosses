@@ -28,9 +28,7 @@
   },
   "spawnatchest": {
     "minecraft:chests/simple_dungeon": 5,
-    "minecraft:chests/end_city_treasure": 1,
     "minecraft:chests/village/village_armorer": 1,
-    "minecraft:chests/stronghold_library": 1,
     "minecraft:chests/stronghold_crossing": 5,
     "minecraft:chests/stronghold_corridor": 1,
     "minecraft:chests/desert_pyramid": 1,
@@ -38,7 +36,6 @@
     "minecraft:chests/jungle_temple_dispenser": 1,
     "minecraft:chests/igloo_chest": 1,
     "minecraft:chests/woodland_mansion": 1,
-    "minecraft:chests/pillager_outpost": 1,
     "minecraft:chests/ruined_portal": 1,
     "betterdungeons:skeleton_dungeon/chests/common": 1,
     "betterdungeons:skeleton_dungeon/chests/middle": 1,

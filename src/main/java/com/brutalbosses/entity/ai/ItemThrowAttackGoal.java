@@ -98,7 +98,27 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                 else if (rayTraceResult instanceof BlockRayTraceResult)
                 {
                     final BlockPos hitPos = ((BlockRayTraceResult) rayTraceResult).getBlockPos();
-                    //(hitPos.relative(((BlockRayTraceResult) rayTraceResult).getDirection(), 1));
+                    if (((ItemThrowParams) params).lighting)
+                    {
+                        LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(mob.level);
+                        lightningboltentity.moveTo(hitPos.getX(), hitPos.getY(), hitPos.getZ());
+                        lightningboltentity.setVisualOnly(false);
+                        mob.level.addFreshEntity(lightningboltentity);
+                    }
+
+                    if (((ItemThrowParams) params).explode)
+                    {
+                        mob.level.explode(null,
+                          DamageSource.indirectMobAttack(mob, mob),
+                          null,
+                          hitPos.getX(),
+                          hitPos.getY(),
+                          hitPos.getZ(),
+                          (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier.get()),
+                          false,
+                          Explosion.Mode.NONE);
+                    }
+
                 }
             });
         }

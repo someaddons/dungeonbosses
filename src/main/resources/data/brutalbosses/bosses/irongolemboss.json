@@ -25,7 +25,14 @@
     "brutalbosses:aftercombatregen": {
       "amount": 2
     },
-    "brutalbosses:whirldwind": {}
+    "brutalbosses:whirldwind": {},
+    "brutalbosses:itemshootgoal": {
+      "item": "{id: \"minecraft:stone_bricks\", Count: 1b}",
+      "projectile_count": 1,
+      "projectile_interval": 300,
+      "damage": 4,
+      "projectile_distance": 20
+    }
   },
   "spawnatchest": {
     "minecraft:chests/stronghold_crossing": 5,

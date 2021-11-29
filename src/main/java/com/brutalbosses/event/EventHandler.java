@@ -74,7 +74,7 @@ public class EventHandler
             return;
         }
 
-        if (event.getSource() instanceof IndirectEntityDamageSource)
+        if (event.getSource() instanceof IndirectEntityDamageSource && event.getSource().getEntity() != null)
         {
             final BossCapability cap = event.getSource().getEntity().getCapability(BossCapability.BOSS_CAP).orElse(null);
             if (cap != null && cap.isBoss())
