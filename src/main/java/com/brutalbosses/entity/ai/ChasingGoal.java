@@ -55,6 +55,7 @@ public class ChasingGoal extends Goal
 
     public void tick()
     {
+        mob.getLookControl().setLookAt(target.getX(), target.getEyeY(), target.getZ());
         if (--ticksToNextUpdate > 0)
         {
             return;
@@ -112,7 +113,7 @@ public class ChasingGoal extends Goal
 
     private static class ChaseParams implements IAIParams
     {
-        private float chasedistance = 1f;
+        private float chasedistance = 2f;
 
         private ChaseParams()
         {

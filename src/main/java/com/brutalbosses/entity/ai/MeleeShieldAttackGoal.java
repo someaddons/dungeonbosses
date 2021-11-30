@@ -3,8 +3,8 @@ package com.brutalbosses.entity.ai;
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.BossType;
 import com.brutalbosses.entity.capability.BossCapability;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.pathfinding.Path;
@@ -22,7 +22,7 @@ public class MeleeShieldAttackGoal extends Goal
 {
     public static ResourceLocation ID = new ResourceLocation("brutalbosses:shieldmelee");
 
-    public MeleeShieldAttackGoal(CreatureEntity entity, double speed)
+    public MeleeShieldAttackGoal(MobEntity entity, double speed)
     {
         this.mob = entity;
         this.speedModifier = speed;
@@ -32,18 +32,18 @@ public class MeleeShieldAttackGoal extends Goal
         attackInterval = bossType.getCustomAttributeValueOrDefault(ATTACK_SPEED, 1);
     }
 
-    private final   BossType       bossType;
-    protected final CreatureEntity mob;
-    private final   double         speedModifier;
-    private final   boolean        followingTargetEvenIfNotSeen;
-    private         Path           path;
-    private         double         pathedTargetX;
-    private         double         pathedTargetY;
-    private         double         pathedTargetZ;
-    private         int            ticksUntilNextPathRecalculation;
-    private         int            ticksUntilNextAttack;
-    private final   double         attackInterval;
-    private         long           lastCanUseCheck;
+    private final   BossType  bossType;
+    protected final MobEntity mob;
+    private final   double    speedModifier;
+    private final   boolean   followingTargetEvenIfNotSeen;
+    private         Path      path;
+    private         double    pathedTargetX;
+    private         double    pathedTargetY;
+    private         double    pathedTargetZ;
+    private         int       ticksUntilNextPathRecalculation;
+    private         int       ticksUntilNextAttack;
+    private final   double    attackInterval;
+    private         long      lastCanUseCheck;
 
     public boolean canUse()
     {

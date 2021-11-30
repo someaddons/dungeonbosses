@@ -1,11 +1,15 @@
 package com.brutalbosses;
 
+import com.brutalbosses.command.CommandSpawnBoss;
 import com.brutalbosses.config.Configuration;
 import com.brutalbosses.entity.BossTypeManager;
 import com.brutalbosses.event.ClientEventHandler;
 import com.brutalbosses.event.EventHandler;
 import com.brutalbosses.event.ModEventHandler;
 import com.brutalbosses.network.Network;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.minecraft.command.CommandSource;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -37,6 +41,7 @@ public class BrutalBosses
 
         Mod.EventBusSubscriber.Bus.MOD.bus().get().register(ModEventHandler.class);
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(EventHandler.class);
+        Mod.EventBusSubscriber.Bus.FORGE.bus().get().addListener(this::onCommandsRegister);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
     }
@@ -53,5 +58,12 @@ public class BrutalBosses
         LOGGER.info(MODID + " mod initialized");
         BossTypeManager.instance.register();
         Network.instance.registerMessages();
+    }
+
+    public void onCommandsRegister(final RegisterCommandsEvent event)
+    {
+        LiteralArgumentBuilder<CommandSource> root = LiteralArgumentBuilder.literal(MODID);
+        // Adds all command trees to the dispatcher to register the commands.
+        event.getDispatcher().register(root.then(new CommandSpawnBoss().build()));
     }
 }

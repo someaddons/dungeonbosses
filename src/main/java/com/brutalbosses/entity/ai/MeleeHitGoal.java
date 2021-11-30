@@ -3,39 +3,34 @@ package com.brutalbosses.entity.ai;
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonObject;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.List;
-
 /**
- * Simple whirldwind attack, can apply potion effects here!
+ * Simple melee hit goal, simply hits its target
  */
-public class WhirldwindMelee extends Goal
+public class MeleeHitGoal extends Goal
 {
-    public static ResourceLocation ID = new ResourceLocation("brutalbosses:whirldwind");
+    public static ResourceLocation ID = new ResourceLocation("brutalbosses:meleehit");
 
-    private final MobEntity        mob;
-    private       LivingEntity     target = null;
-    private       WhirldWindParams params;
+    private final MobEntity      mob;
+    private       LivingEntity   target = null;
+    private       MeleeHitParams params;
 
-    public WhirldwindMelee(MobEntity mob)
+    public MeleeHitGoal(MobEntity mob)
     {
         final BossCapability cap = mob.getCapability(BossCapability.BOSS_CAP).orElse(null);
-        params = ((WhirldWindParams) cap.getBossType().getAIParams(ID));
+        params = ((MeleeHitParams) cap.getBossType().getAIParams(ID));
         this.mob = mob;
     }
 
@@ -70,67 +65,50 @@ public class WhirldwindMelee extends Goal
 
         double distSqr = this.mob.distanceToSqr(this.target.getX(), this.target.getY(), this.target.getZ());
 
-        if (distSqr < params.attackDistance * params.attackDistance && BrutalBosses.rand.nextInt(40) == 0)
+        if (distSqr < params.attackDistance * params.attackDistance)
         {
-            attackTimer = params.cooldown;
-            final List<LivingEntity> entities = mob.level.getLoadedEntitiesOfClass(PlayerEntity.class, mob.getBoundingBox().inflate(2.0D, 0.5D, 2.0D));
-            if (!entities.contains(mob.getTarget()))
-            {
-                entities.add(mob.getTarget());
-            }
+            attackTimer = (int) (params.cooldown * (BrutalBosses.rand.nextFloat() * 0.5 + 0.75f));
 
-            for (LivingEntity livingentity : entities)
+            this.mob.swing(Hand.MAIN_HAND);
+
+            float damage = params.extraDamage;
+            if (mob.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE))
             {
-                if (livingentity != mob)
+                damage += mob.getAttributeValue(Attributes.ATTACK_DAMAGE);
+            }
+            damage += EnchantmentHelper.getDamageBonus(mob.getMainHandItem(), target.getMobType());
+
+            if (target.hurt(DamageSource.mobAttack(mob), damage))
+            {
+                int fireAspect = EnchantmentHelper.getFireAspect(mob);
+                if (fireAspect > 0)
                 {
-                    livingentity.knockback(
-                      params.knockback,
-                      MathHelper.sin(livingentity.yRot * ((float) Math.PI)),
-                      (-MathHelper.cos(livingentity.yRot * ((float) Math.PI))));
-                    this.mob.swing(Hand.MAIN_HAND);
-
-                    float damage = params.extraDamage;
-                    if (mob.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE))
-                    {
-                        damage += mob.getAttributeValue(Attributes.ATTACK_DAMAGE);
-                    }
-                    livingentity.hurt(DamageSource.mobAttack(mob), damage);
-
-                    if (params.onHitEffect != null)
-                    {
-                        livingentity.addEffect(new EffectInstance(params.onHitEffect, params.potionduration, params.potionlevel));
-                    }
+                    target.setSecondsOnFire(fireAspect * 4);
                 }
-            }
+                if (params.onHitEffect != null)
+                {
+                    target.addEffect(new EffectInstance(params.onHitEffect, params.potionduration, params.potionlevel));
+                }
 
-            mob.level.playSound(null,
-              mob.getX(),
-              mob.getY(),
-              mob.getZ(),
-              SoundEvents.PLAYER_ATTACK_SWEEP,
-              mob.getSoundSource(),
-              1.0F,
-              1.0F);
+                float knockBack = params.knockback;
+                if (mob.getAttributes().hasAttribute(Attributes.ATTACK_KNOCKBACK))
+                {
+                    knockBack += (float) mob.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
+                }
+                knockBack += (float) EnchantmentHelper.getKnockbackBonus(mob);
+                if (knockBack > 0.0F)
+                {
+                    target.knockback(knockBack * 0.5F, MathHelper.sin(mob.yRot * ((float) Math.PI / 180F)), (-MathHelper.cos(mob.yRot * ((float) Math.PI / 180F))));
+                }
 
-            double d0 = (double) (-MathHelper.sin(mob.yRot * ((float) Math.PI / 180)));
-            double d1 = (double) MathHelper.cos(mob.yRot * ((float) Math.PI / 180));
-            if (mob.level instanceof ServerWorld)
-            {
-                ((ServerWorld) mob.level).sendParticles(ParticleTypes.SWEEP_ATTACK,
-                  mob.getX() + d0,
-                  mob.getY(0.5D),
-                  mob.getZ() + d1,
-                  2,
-                  d0,
-                  0.0D,
-                  d1,
-                  0.0D);
+                mob.doEnchantDamageEffects(mob, target);
+                mob.setLastHurtMob(target);
             }
         }
     }
 
     public static final String ATKDIST    = "attackdist";
-    public static final String EXTDMG     = "extradamage";
+    public static final String EXTDMG     = "damage";
     public static final String POTION     = "potiononhit";
     public static final String POTION_STR = "potionlevel";
     public static final String POTION_DUR = "potionduration";
@@ -145,7 +123,7 @@ public class WhirldwindMelee extends Goal
      */
     public static IAIParams parse(final JsonObject jsonElement)
     {
-        final WhirldWindParams params = new WhirldWindParams();
+        final MeleeHitParams params = new MeleeHitParams();
         if (jsonElement.has(ATKDIST))
         {
             params.attackDistance = jsonElement.get(ATKDIST).getAsFloat();
@@ -186,17 +164,17 @@ public class WhirldwindMelee extends Goal
         return params;
     }
 
-    private static class WhirldWindParams implements IAIParams
+    private static class MeleeHitParams implements IAIParams
     {
-        private float  attackDistance = 4f;
+        private float  attackDistance = 2f;
         private float  extraDamage    = 2f;
         private Effect onHitEffect    = null;
-        private float  knockback      = 4f;
-        private int    cooldown       = 80;
+        private float  knockback      = 0f;
+        private int    cooldown       = 30;
         private int    potionlevel    = 1;
         private int    potionduration = 60;
 
-        private WhirldWindParams()
+        private MeleeHitParams()
         {
         }
     }

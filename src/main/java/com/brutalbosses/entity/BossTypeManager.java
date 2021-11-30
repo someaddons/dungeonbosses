@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,58 +43,65 @@ public class BossTypeManager
         final ImmutableMap.Builder<ResourceLocation, Function<JsonObject, IAIParams>> aiSupplier = ImmutableMap.<ResourceLocation, Function<JsonObject, IAIParams>>builder();
 
         aiRegistry.put(new ResourceLocation("minecraft:randomwalk"),
-          entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2000, new RandomWalkingGoal((CreatureEntity) entity, 0.8d, 20)));
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new RandomWalkingGoal((CreatureEntity) entity, 0.8d, 20)));
+
+        aiRegistry.put(new ResourceLocation("minecraft:meleeattack"),
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new MeleeAttackGoal((CreatureEntity) entity, 1.0d, true)));
 
         aiRegistry.put(MeleeShieldAttackGoal.ID,
-          entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2001, new MeleeShieldAttackGoal((CreatureEntity) entity, 1.0d)));
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2001, new MeleeShieldAttackGoal((MobEntity) entity, 1.0d)));
 
         aiRegistry.put(new ResourceLocation("minecraft:target"),
-          entity -> ((CreatureEntity) entity).targetSelector.addGoal(-2000, new NearestAttackableTargetGoal<>((MobEntity) entity, PlayerEntity.class, true)));
+          entity -> ((MobEntity) entity).targetSelector.addGoal(-2000, new NearestAttackableTargetGoal<>((MobEntity) entity, PlayerEntity.class, true)));
 
         aiRegistry.put(LavaRescueGoal.ID,
-          entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2000, new LavaRescueGoal((MobEntity) entity)));
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new LavaRescueGoal((MobEntity) entity)));
 
         aiRegistry.put(ChasingGoal.ID,
-          entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2001, new ChasingGoal((MobEntity) entity)));
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2001, new ChasingGoal((MobEntity) entity)));
         aiSupplier.put(ChasingGoal.ID, ChasingGoal::parse);
 
         aiRegistry.put(SmallFireballAttackGoal.ID,
-          entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2000, new SmallFireballAttackGoal((MobEntity) entity)));
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new SmallFireballAttackGoal((MobEntity) entity)));
         aiSupplier.put(SmallFireballAttackGoal.ID, SimpleRangedAttackGoal::parse);
 
         aiRegistry.put(WitherSkullAttackGoal.ID,
-          entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2000, new WitherSkullAttackGoal((MobEntity) entity)));
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new WitherSkullAttackGoal((MobEntity) entity)));
         aiSupplier.put(WitherSkullAttackGoal.ID, WitherSkullAttackGoal::parse);
 
         aiRegistry.put(SnowballAttackGoal.ID,
-          entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2000, new SnowballAttackGoal((MobEntity) entity)));
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new SnowballAttackGoal((MobEntity) entity)));
         aiSupplier.put(SnowballAttackGoal.ID, SimpleRangedAttackGoal::parse);
 
-        aiRegistry.put(OutofCombatRegen.ID, entity -> ((CreatureEntity) entity).targetSelector.addGoal(-2000, new OutofCombatRegen((MobEntity) entity)));
+        aiRegistry.put(OutofCombatRegen.ID, entity -> ((MobEntity) entity).targetSelector.addGoal(-2000, new OutofCombatRegen((MobEntity) entity)));
         aiSupplier.put(OutofCombatRegen.ID, OutofCombatRegen::parse);
 
         aiRegistry.put(SpitCobwebGoal.ID,
-          entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2000, new SpitCobwebGoal((MobEntity) entity)));
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new SpitCobwebGoal((MobEntity) entity)));
         aiSupplier.put(SpitCobwebGoal.ID, SimpleRangedAttackGoal::parse);
 
         aiRegistry.put(SummonMobsGoal.ID,
-          entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2000, new SummonMobsGoal((MobEntity) entity)));
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new SummonMobsGoal((MobEntity) entity)));
         aiSupplier.put(SummonMobsGoal.ID, SummonMobsGoal::parse);
 
         aiRegistry.put(WhirldwindMelee.ID,
-          entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2000, new WhirldwindMelee((MobEntity) entity)));
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new WhirldwindMelee((MobEntity) entity)));
         aiSupplier.put(WhirldwindMelee.ID, WhirldwindMelee::parse);
 
+        aiRegistry.put(MeleeHitGoal.ID,
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new MeleeHitGoal((MobEntity) entity)));
+        aiSupplier.put(MeleeHitGoal.ID, MeleeHitGoal::parse);
+
         aiRegistry.put(ChargeGoal.ID,
-          entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2000, new ChargeGoal((MobEntity) entity)));
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new ChargeGoal((MobEntity) entity)));
         aiSupplier.put(ChargeGoal.ID, ChargeGoal::parse);
 
         aiRegistry.put(BigFireballAttackGoal.ID,
-          entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2000, new BigFireballAttackGoal((MobEntity) entity)));
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new BigFireballAttackGoal((MobEntity) entity)));
         aiSupplier.put(BigFireballAttackGoal.ID, BigFireballAttackGoal::parse);
 
         aiRegistry.put(ItemThrowAttackGoal.ID,
-          entity -> ((CreatureEntity) entity).goalSelector.addGoal(-2000, new ItemThrowAttackGoal((MobEntity) entity)));
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new ItemThrowAttackGoal((MobEntity) entity)));
         aiSupplier.put(ItemThrowAttackGoal.ID, ItemThrowAttackGoal::parse);
 
         this.aiRegistry = aiRegistry.build();
