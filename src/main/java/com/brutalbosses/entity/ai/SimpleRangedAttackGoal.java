@@ -228,7 +228,7 @@ public abstract class SimpleRangedAttackGoal extends Goal
             relativeAttackDist = MathHelper.sqrt(distSqr) / this.params.distance;
             this.attackTime = MathHelper.floor(
               (1 + BrutalBosses.rand.nextFloat() * 0.5f) * (relativeAttackDist * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin))
-                                - 5 * params.count;
+                                - Math.min(5 * params.count, attackIntervalMin - 5);
         }
     }
 
@@ -257,7 +257,7 @@ public abstract class SimpleRangedAttackGoal extends Goal
         projectileEntity.setOwner(mob);
         if (projectileEntity instanceof IOnProjectileHit)
         {
-            ((IOnProjectileHit) projectileEntity).setMaxLifeTime(mob.level.getGameTime() + 20 * 20);
+            ((IOnProjectileHit) projectileEntity).setMaxLifeTime(mob.level.getGameTime() + 20 * 60);
         }
 
         mob.level.addFreshEntity(projectileEntity);

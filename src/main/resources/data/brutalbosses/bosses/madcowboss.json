@@ -9,7 +9,7 @@
     "minecraft:fire_resistance": 1
   },
   "attributes": {
-    "generic.max_health": 40,
+    "generic.max_health": 65,
     "generic.follow_range": 80,
     "generic.knockback_resistance": 1
   },
@@ -30,8 +30,8 @@
     "brutalbosses:chasetarget": {}
   },
   "spawnatchest": {
-    "minecraft:chests/simple_dungeon": 1,
-    "minecraft:chests/village/village_armorer": 1,
-    "minecraft:chests/stronghold_corridor": 1
+    "minecraft:chests/village/village_butcher": 5,
+    "minecraft:chests/jungle_temple": 1,
+    "minecraft:chests/bastion_hoglin_stable": 1
   }
 }

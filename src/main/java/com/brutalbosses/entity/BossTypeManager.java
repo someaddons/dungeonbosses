@@ -7,12 +7,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonObject;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RandomWalkingGoal;
+import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -47,6 +47,9 @@ public class BossTypeManager
 
         aiRegistry.put(new ResourceLocation("minecraft:meleeattack"),
           entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new MeleeAttackGoal((CreatureEntity) entity, 1.0d, true)));
+
+        aiRegistry.put(new ResourceLocation("minecraft:crossbow"),
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new RangedCrossbowAttackGoal<>((MonsterEntity & IRangedAttackMob & ICrossbowUser) entity, 1.0d, 30)));
 
         aiRegistry.put(MeleeShieldAttackGoal.ID,
           entity -> ((MobEntity) entity).goalSelector.addGoal(-2001, new MeleeShieldAttackGoal((MobEntity) entity, 1.0d)));
@@ -106,6 +109,8 @@ public class BossTypeManager
 
         this.aiRegistry = aiRegistry.build();
         this.aiSuppliers = aiSupplier.build();
+
+        // TODO: more summoner bosses
     }
 
     /**
