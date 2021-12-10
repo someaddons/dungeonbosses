@@ -28,7 +28,9 @@
       "interval": 600,
       "maxcount": 2,
       "count": 1,
-      "entityid": "minecraft:cave_spider"
+      "entityid": [
+        "minecraft:cave_spider"
+      ]
     }
   },
   "spawnatchest": {

@@ -9,6 +9,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.goal.PrioritizedGoal;
+import net.minecraft.entity.monster.SpellcastingIllagerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
@@ -17,8 +19,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
+import java.util.Iterator;
 import java.util.Map;
 
+import static com.brutalbosses.entity.CustomAttributes.REMOVESPELLAI;
 import static com.brutalbosses.entity.capability.BossCapability.BOSS_CAP;
 
 /**
@@ -175,6 +179,19 @@ public class BossType
      */
     private void initAI(final LivingEntity boss)
     {
+        if (customAttributes.containsKey(REMOVESPELLAI) && boss instanceof MobEntity)
+        {
+            for (final Iterator<PrioritizedGoal> iterator = ((MobEntity) boss).goalSelector.availableGoals.iterator(); iterator.hasNext(); )
+            {
+                final PrioritizedGoal goal = iterator.next();
+                if (goal.getGoal() instanceof SpellcastingIllagerEntity.UseSpellGoal)
+                {
+                    goal.stop();
+                    iterator.remove();
+                }
+            }
+        }
+
         for (final ResourceLocation aiID : aiData.keySet())
         {
             if (BossTypeManager.instance.aiRegistry.containsKey(aiID))

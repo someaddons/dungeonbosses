@@ -1,12 +1,19 @@
 package com.brutalbosses.entity.ai;
 
+import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.BossSpawnHandler;
 import com.brutalbosses.entity.capability.BossCapability;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.monster.SpellcastingIllagerEntity;
+import net.minecraft.item.Items;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
@@ -37,7 +44,7 @@ public class SummonMobsGoal extends Goal
     public boolean canUse()
     {
         final LivingEntity target = this.mob.getTarget();
-        if (target != null && target.isAlive() && params.entityID != null)
+        if (target != null && target.isAlive() && params.entityIDs.size() > 0)
         {
             this.target = target;
             return true;
@@ -46,6 +53,12 @@ public class SummonMobsGoal extends Goal
         {
             return false;
         }
+    }
+
+    @Override
+    public void start()
+    {
+        ticksToNextUpdate = Math.max(50, ticksToNextUpdate);
     }
 
     public void stop()
@@ -59,7 +72,20 @@ public class SummonMobsGoal extends Goal
     {
         if (--ticksToNextUpdate > 0)
         {
+            if (ticksToNextUpdate < 30)
+            {
+                if (mob instanceof SpellcastingIllagerEntity)
+                {
+                    ((SpellcastingIllagerEntity) mob).setIsCastingSpell(SpellcastingIllagerEntity.SpellType.WOLOLO);
+                }
+            }
+
             return;
+        }
+
+        if (mob instanceof SpellcastingIllagerEntity)
+        {
+            ((SpellcastingIllagerEntity) mob).setIsCastingSpell(SpellcastingIllagerEntity.SpellType.NONE);
         }
 
         ticksToNextUpdate = params.interval;
@@ -79,16 +105,39 @@ public class SummonMobsGoal extends Goal
             return;
         }
 
-        final LivingEntity summoned = params.entityID.create(mob.level);
+        final LivingEntity summoned = params.entityIDs.get(BrutalBosses.rand.nextInt(params.entityIDs.size())).create(mob.level);
         final BlockPos spawnPos = BossSpawnHandler.findSpawnPosForBoss((ServerWorld) mob.level, summoned, mob.blockPosition());
 
         if (spawnPos == null)
         {
             return;
         }
+        ((ServerWorld) mob.level).sendParticles(ParticleTypes.CLOUD,
+          spawnPos.getX(),
+          spawnPos.getY() + 1,
+          spawnPos.getZ(),
+          20,
+          0,
+          0.0D,
+          0,
+          0.0D);
+
+        if (summoned instanceof MobEntity)
+        {
+            ((MobEntity) summoned).setTarget(target);
+            if (summoned instanceof IRangedAttackMob)
+            {
+                summoned.setItemInHand(Hand.MAIN_HAND, Items.BOW.getDefaultInstance());
+            }
+            else
+            {
+                summoned.setItemInHand(Hand.MAIN_HAND, Items.IRON_SWORD.getDefaultInstance());
+            }
+        }
 
         summoned.setPos(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
         mob.level.addFreshEntity(summoned);
+        summonedMobs.add(summoned);
     }
 
     public static final String SUMM_INTERVAL = "interval";
@@ -106,8 +155,13 @@ public class SummonMobsGoal extends Goal
     {
         final SummonParams params = new SummonParams();
 
-        params.entityID = (EntityType<? extends LivingEntity>) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(jsonElement.get(ENTITY_ID).getAsString()));
+        final List<EntityType<? extends LivingEntity>> types = new ArrayList<>();
+        for (final JsonElement entityID : jsonElement.get(ENTITY_ID).getAsJsonArray())
+        {
+            types.add((EntityType<? extends LivingEntity>) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityID.getAsString())));
+        }
 
+        params.entityIDs = types;
         if (jsonElement.has(SUMM_INTERVAL))
         {
             params.interval = jsonElement.get(SUMM_INTERVAL).getAsInt();
@@ -129,10 +183,10 @@ public class SummonMobsGoal extends Goal
 
     private static class SummonParams implements IAIParams
     {
-        private int                                interval = 500;
-        private EntityType<? extends LivingEntity> entityID = EntityType.ZOMBIE;
-        private int                                count    = 1;
-        private int                                maxcount = 2;
+        private int                                      interval  = 500;
+        private List<EntityType<? extends LivingEntity>> entityIDs = new ArrayList<>();
+        private int                                      count     = 1;
+        private int                                      maxcount  = 2;
 
         private SummonParams()
         {

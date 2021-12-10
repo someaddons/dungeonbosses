@@ -53,16 +53,21 @@ public abstract class SimpleRangedAttackGoal extends Goal
 
     public boolean canUse()
     {
-        final LivingEntity target = this.mob.getTarget();
+        LivingEntity target = this.mob.getTarget();
         if (target != null && target.isAlive())
         {
             this.target = target;
             return true;
         }
-        else
+
+        target = mob.getLastHurtByMob();
+        if (target != null && target.isAlive())
         {
-            return false;
+            this.target = target;
+            return true;
         }
+
+        return false;
     }
 
     public boolean canContinueToUse()

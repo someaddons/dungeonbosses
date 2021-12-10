@@ -19,7 +19,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Explosion;
 
 public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
@@ -43,12 +42,12 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
         projectileEntity.remove();
 
         double xDiff = target.getX() - mob.getX();
-        double yDiff = target.getY(0.3333333333333333D) - (mob.getY() + mob.getEyeHeight() - 0.5);
+        double yDiff = target.getY(0.5D) - (mob.getY() + mob.getEyeHeight() - 0.5);
         double zDiff = target.getZ() - mob.getZ();
-        float f = MathHelper.sqrt(xDiff * xDiff + zDiff * zDiff) * 0.2F;
 
         final EnderPearlEntity pearlEntity = new EnderPearlEntity(mob.level, mob);
         pearlEntity.setPos(mob.getX(), mob.getY() + mob.getEyeHeight() - 0.5, mob.getZ());
+        pearlEntity.shoot(xDiff, yDiff, zDiff, 0.8F, 3.0F);
 
         if (!((ItemThrowParams) params).teleport)
         {
@@ -70,7 +69,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                     {
                         if (((ItemThrowParams) params).damage > 0)
                         {
-                            hitEntity.hurt(DamageSource.indirectMagic(mob, hitEntity), ((ItemThrowParams) params).damage);
+                            hitEntity.hurt(DamageSource.indirectMagic(hitEntity, mob), ((ItemThrowParams) params).damage);
                         }
 
                         if (((ItemThrowParams) params).lighting)
@@ -84,7 +83,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                         if (((ItemThrowParams) params).explode)
                         {
                             hitEntity.level.explode(null,
-                              DamageSource.indirectMobAttack(mob, (LivingEntity) hitEntity),
+                              DamageSource.indirectMobAttack((LivingEntity) hitEntity, mob),
                               null,
                               hitEntity.getX(),
                               hitEntity.getY(),
@@ -123,7 +122,6 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
             });
         }
 
-        pearlEntity.shoot(xDiff, yDiff + (double) f, zDiff, 0.8F, 10.0F);
         mob.level.addFreshEntity(pearlEntity);
     }
 

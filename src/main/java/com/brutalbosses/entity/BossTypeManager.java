@@ -109,8 +109,6 @@ public class BossTypeManager
 
         this.aiRegistry = aiRegistry.build();
         this.aiSuppliers = aiSupplier.build();
-
-        // TODO: more summoner bosses
     }
 
     /**

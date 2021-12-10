@@ -1,0 +1,58 @@
+{
+  "entity": "minecraft:evoker",
+  "name": "Vouzhul the Darkmaster",
+  "visualscale": 1.1,
+  "experience": 300,
+  "effects": {
+    "minecraft:resistance": 3
+  },
+  "attributes": {
+    "generic.max_health": 80,
+    "generic.follow_range": 50
+  },
+  "customattributes": {
+    "projectile_damage_bonus": 2,
+    "dropgear": 6,
+    "removespellcastinggoals": 1
+  },
+  "gear": {
+    "mainhand": "{id: \"minecraft:enchanted_book\", Count: 1b, tag: {StoredEnchantments: [{lvl: 10s, id: \"minecraft:mending\"}]}}",
+    "offhand": "{id: \"minecraft:enchanted_book\", Count: 1b, tag: {StoredEnchantments: [{lvl: 10s, id: \"minecraft:fortune\"}]}}"
+  },
+  "ai-goals": {
+    "brutalbosses:aftercombatregen": {
+      "amount": 2
+    },
+    "brutalbosses:shootwitherskulls": {
+      "projectile_count": 5,
+      "projectile_interval": 400,
+      "projectile_distance": 35
+    },
+    "brutalbosses:chasetarget": {
+      "chasedistance": 20
+    },
+    "brutalbosses:summonmobs": {
+      "interval": 600,
+      "maxcount": 10,
+      "count": 2,
+      "entityid": [
+        "minecraft:zombie",
+        "minecraft:skeleton",
+        "minecraft:zombie",
+        "minecraft:husk",
+        "minecraft:wither_skeleton",
+        "minecraft:stray"
+      ]
+    }
+  },
+  "spawnatchest": {
+    "minecraft:chests/simple_dungeon": 1,
+    "minecraft:chests/stronghold_library": 2,
+    "minecraft:chests/stronghold_crossing": 2,
+    "minecraft:chests/stronghold_corridor": 2,
+    "minecraft:chests/woodland_mansion": 3,
+    "minecraft:chests/ruined_portal": 1,
+    "minecraft:chests/pillager_outpost": 2,
+    "minecraft:chests/jungle_temple": 1
+  }
+}

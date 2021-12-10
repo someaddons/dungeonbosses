@@ -1,0 +1,42 @@
+{
+  "entity": "minecraft:vindicator",
+  "name": "Klaudius Bloodglare",
+  "visualscale": 1.1,
+  "experience": 300,
+  "effects": {
+    "minecraft:resistance": 1,
+    "minecraft:slowness": 1
+  },
+  "attributes": {
+    "generic.max_health": 90,
+    "generic.follow_range": 50,
+    "generic.knockback_resistance": 10
+  },
+  "customattributes": {
+  },
+  "gear": {
+    "mainhand": "{id: \"minecraft:netherite_sword\", Count: 1b, tag: {Damage: 0}}"
+  },
+  "ai-goals": {
+    "minecraft:target": {},
+    "brutalbosses:aftercombatregen": {
+      "amount": 1
+    },
+    "brutalbosses:whirldwind": {
+      "potiononhit": "minecraft:wither",
+      "potionduration": 200,
+      "knockback": 4,
+      "cooldown": 200
+    },
+    "brutalbosses:charge": {}
+  },
+  "spawnatchest": {
+    "minecraft:chests/simple_dungeon": 1,
+    "minecraft:chests/stronghold_crossing": 3,
+    "minecraft:chests/stronghold_corridor": 2,
+    "minecraft:chests/woodland_mansion": 5,
+    "minecraft:chests/pillager_outpost": 5,
+    "betterdungeons:skeleton_dungeon/chests/common": 1,
+    "betterdungeons:skeleton_dungeon/chests/middle": 1
+  }
+}

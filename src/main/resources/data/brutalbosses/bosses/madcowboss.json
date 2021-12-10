@@ -25,7 +25,8 @@
     "brutalbosses:whirldwind": {},
     "brutalbosses:meleehit": {
       "damage": 10,
-      "potiononhit": "minecraft:poison"
+      "potiononhit": "minecraft:poison",
+      "cooldown": 30
     },
     "brutalbosses:chasetarget": {}
   },
