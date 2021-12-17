@@ -83,12 +83,19 @@ public class WhirldwindMelee extends Goal
             {
                 if (livingentity != mob)
                 {
-                    livingentity.knockback(
-                      params.knockback,
-                      MathHelper.sin(livingentity.yRot * ((float) Math.PI)),
-                      (-MathHelper.cos(livingentity.yRot * ((float) Math.PI))));
-                    this.mob.swing(Hand.MAIN_HAND);
+                    if (params.knockup)
+                    {
+                        livingentity.setDeltaMovement(livingentity.getDeltaMovement().add(0.0D, params.knockback / 5f, 0.0D));
+                    }
+                    else
+                    {
+                        livingentity.knockback(
+                          params.knockback,
+                          MathHelper.sin(livingentity.yRot * ((float) Math.PI)),
+                          (-MathHelper.cos(livingentity.yRot * ((float) Math.PI))));
+                    }
 
+                    this.mob.swing(Hand.MAIN_HAND);
                     float damage = params.extraDamage;
                     if (mob.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE))
                     {
@@ -136,6 +143,7 @@ public class WhirldwindMelee extends Goal
     public static final String POTION_DUR = "potionduration";
     public static final String KNOCK      = "knockback";
     public static final String COOLDOWN   = "cooldown";
+    public static final String KNOCK_UP   = "knockup";
 
     /**
      * Parses params for this AI
@@ -177,6 +185,11 @@ public class WhirldwindMelee extends Goal
             params.knockback = jsonElement.get(KNOCK).getAsFloat();
         }
 
+        if (jsonElement.has(KNOCK_UP))
+        {
+            params.knockup = jsonElement.get(KNOCK_UP).getAsBoolean();
+        }
+
         if (jsonElement.has(POTION))
         {
             final ResourceLocation effectID = new ResourceLocation(jsonElement.get(POTION).getAsString());
@@ -188,13 +201,14 @@ public class WhirldwindMelee extends Goal
 
     private static class WhirldWindParams implements IAIParams
     {
-        private float  attackDistance = 4f;
-        private float  extraDamage    = 2f;
-        private Effect onHitEffect    = null;
-        private float  knockback      = 4f;
-        private int    cooldown       = 80;
-        private int    potionlevel    = 1;
-        private int    potionduration = 60;
+        private float   attackDistance = 4f;
+        private float   extraDamage    = 2f;
+        private Effect  onHitEffect    = null;
+        private float   knockback      = 4f;
+        private int     cooldown       = 80;
+        private int     potionlevel    = 1;
+        private int     potionduration = 60;
+        private boolean knockup        = false;
 
         private WhirldWindParams()
         {

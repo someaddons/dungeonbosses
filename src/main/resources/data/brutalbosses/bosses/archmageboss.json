@@ -5,7 +5,7 @@
   "experience": 300,
   "effects": {
     "minecraft:slowness": 2,
-    "minecraft:resistance": 1,
+    "minecraft:resistance": 3,
     "minecraft:regeneration": 1,
     "minecraft:glowing": 1,
     "minecraft:fire_resistance": 1
