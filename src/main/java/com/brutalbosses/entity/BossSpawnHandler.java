@@ -42,7 +42,7 @@ public class BossSpawnHandler
             final BossType bossType = possibleBosses.get(BrutalBosses.rand.nextInt(possibleBosses.size()));
             spawnBoss(world, chest.getBlockPos(), bossType, chest);
         }
-        else if (BrutalBosses.config.getCommonConfig().printChestLoottableOnOpen.get())
+        else if (BrutalBosses.config.getCommonConfig().printChestLoottable.get())
         {
             BrutalBosses.LOGGER.info("Chest with Loottable: " + chest.lootTable + " not associated with any boss spawn");
         }

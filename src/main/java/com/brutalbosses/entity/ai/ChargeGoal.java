@@ -174,7 +174,7 @@ public class ChargeGoal extends Goal
 
     private static class ChargeParams implements IAIParams
     {
-        private float minDistance = 1f;
+        private float minDistance = 3f;
         private float duration    = 20;
         private float interval    = 200;
 

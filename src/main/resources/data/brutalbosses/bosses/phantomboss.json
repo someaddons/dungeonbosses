@@ -11,7 +11,6 @@
     "generic.max_health": 90,
     "generic.follow_range": 120,
     "generic.attack_damage": 10,
-    "generic.flying_speed": 0.6,
     "generic.knockback_resistance": 1
   },
   "customattributes": {

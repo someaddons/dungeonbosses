@@ -9,7 +9,6 @@
   "attributes": {
     "generic.max_health": 60,
     "generic.follow_range": 50,
-    "generic.attack_damage": 10,
     "generic.knockback_resistance": 1,
     "generic.movement_speed": 0.8
   },
@@ -29,6 +28,7 @@
     },
     "brutalbosses:chasetarget": {},
     "brutalbosses:meleehit": {
+      "damage": 8,
       "potiononhit": "minecraft:weakness",
       "potionduration": 40,
       "potionlevel": 2

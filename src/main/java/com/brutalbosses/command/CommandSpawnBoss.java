@@ -61,7 +61,11 @@ public class CommandSpawnBoss implements Opcommand
             source.sendFailure(new StringTextComponent("Enter a valid boss id(name of the json file), no boss found for:" + bossID));
             return 0;
         }
-        BossSpawnHandler.spawnBoss(source.getLevel(), new BlockPos(source.getPosition()), bossType, null);
+
+        for (final BossType type : BossTypeManager.instance.bosses.values())
+        {
+            BossSpawnHandler.spawnBoss(source.getLevel(), new BlockPos(source.getPosition()), type, null);
+        }
 
         return 0;
     }

@@ -10,8 +10,7 @@
   "attributes": {
     "generic.max_health": 60,
     "generic.follow_range": 70,
-    "generic.knockback_resistance": 10,
-    "generic.flying_speed": 0.5
+    "generic.knockback_resistance": 10
   },
   "customattributes": {
     "projectile_damage_bonus": 2

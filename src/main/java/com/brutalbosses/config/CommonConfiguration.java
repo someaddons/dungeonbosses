@@ -5,7 +5,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public class CommonConfiguration
 {
     public final ForgeConfigSpec                      ForgeConfigSpecBuilder;
-    public final ForgeConfigSpec.ConfigValue<Boolean> printChestLoottableOnOpen;
+    public final ForgeConfigSpec.ConfigValue<Boolean> printChestLoottable;
     public final ForgeConfigSpec.ConfigValue<Double>  globalDifficultyMultiplier;
     public final ForgeConfigSpec.ConfigValue<Integer> globalBossSpawnChance;
 
@@ -14,8 +14,8 @@ public class CommonConfiguration
         builder.push("Config category");
 
         builder.comment(
-          "Prints the chest loottable on opening and logs the Loottables which do not have a boss assigned of structures to the latest.log. Useful to find the table used by a dungeon chest, only works if the chest is not opened yet: default:false");
-        printChestLoottableOnOpen = builder.define("printChestLoottableOnOpen", false);
+          "Prints the chest loottable on opening and on spawn and logs the Loottables which do not have a boss assigned of structures to the latest.log. Useful to find the table used by a dungeon chest, only works if the chest is not opened yet: default:false");
+        printChestLoottable = builder.define("printChestLoottableOnOpen", false);
 
         builder.comment("Global difficulty multiplier, affects health and damage of all bosses");
         globalDifficultyMultiplier = builder.defineInRange("globalDifficultyMultiplier", 1, 0.1, 1000);

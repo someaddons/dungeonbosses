@@ -88,7 +88,7 @@ public class EventHandler
     @SubscribeEvent
     public static void playerClickBlockEvent(final PlayerInteractEvent.RightClickBlock event)
     {
-        if (!BrutalBosses.config.getCommonConfig().printChestLoottableOnOpen.get() || event.getWorld().isClientSide())
+        if (!BrutalBosses.config.getCommonConfig().printChestLoottable.get() || event.getWorld().isClientSide())
         {
             return;
         }
@@ -124,7 +124,7 @@ public class EventHandler
                       orbValue));
                 }
 
-                final int gearDropCount = (int) cap.getBossType().getCustomAttributeValueOrDefault(DROP_GEAR, 0);
+                final int gearDropCount = Math.min(EquipmentSlotType.values().length, (int) cap.getBossType().getCustomAttributeValueOrDefault(DROP_GEAR, 0));
 
                 for (int i = 0; i < gearDropCount; i++)
                 {
