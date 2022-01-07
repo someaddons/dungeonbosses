@@ -41,7 +41,7 @@ public class ChargeGoal extends Goal
         if (target != null && target.isAlive())
         {
             this.target = target;
-            return true;
+            return params.healthPhaseCheck.test(mob);
         }
         else
         {
@@ -141,45 +141,43 @@ public class ChargeGoal extends Goal
         }
     }
 
-    public static final String CHARGE_MINDIST  = "mindist";
-    public static final String CHARGE_DURATION = "duration";
-    public static final String CHARGE_COOLDOWN = "interval";
-
-    /**
-     * Parses params for this AI
-     *
-     * @param jsonElement
-     * @return
-     */
-    public static IAIParams parse(final JsonObject jsonElement)
-    {
-        final ChargeParams params = new ChargeParams();
-        if (jsonElement.has(CHARGE_MINDIST))
-        {
-            params.minDistance = jsonElement.get(CHARGE_MINDIST).getAsFloat();
-        }
-
-        if (jsonElement.has(CHARGE_DURATION))
-        {
-            params.duration = jsonElement.get(CHARGE_DURATION).getAsFloat();
-        }
-
-        if (jsonElement.has(CHARGE_COOLDOWN))
-        {
-            params.interval = jsonElement.get(CHARGE_COOLDOWN).getAsFloat();
-        }
-
-        return params;
-    }
-
-    private static class ChargeParams implements IAIParams
+    public static class ChargeParams extends IAIParams.DefaultParams
     {
         private float minDistance = 3f;
         private float duration    = 20;
         private float interval    = 200;
 
-        private ChargeParams()
+        public ChargeParams(final JsonObject jsonData)
         {
+            super(jsonData);
+            parse(jsonData);
+        }
+
+        public static final String CHARGE_MINDIST  = "mindist";
+        public static final String CHARGE_DURATION = "duration";
+        public static final String CHARGE_COOLDOWN = "interval";
+
+        @Override
+        public IAIParams parse(final JsonObject jsonElement)
+        {
+            super.parse(jsonElement);
+
+            if (jsonElement.has(CHARGE_MINDIST))
+            {
+                minDistance = jsonElement.get(CHARGE_MINDIST).getAsFloat();
+            }
+
+            if (jsonElement.has(CHARGE_DURATION))
+            {
+                duration = jsonElement.get(CHARGE_DURATION).getAsFloat();
+            }
+
+            if (jsonElement.has(CHARGE_COOLDOWN))
+            {
+                interval = jsonElement.get(CHARGE_COOLDOWN).getAsFloat();
+            }
+
+            return this;
         }
     }
 }

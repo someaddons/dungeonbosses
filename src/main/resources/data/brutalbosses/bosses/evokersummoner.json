@@ -43,6 +43,17 @@
         "minecraft:wither_skeleton",
         "minecraft:stray"
       ]
+    },
+    "brutalbosses:temppotions": {
+      "interval": 600,
+      "duration": 100,
+      "visibleitem": "{id: \"minecraft:gray_banner\", Count: 1b, tag: {BlockEntityTag: {Patterns: [{Pattern: \"bri\", Color: 15}, {Pattern: \"bo\", Color: 15}]}}}",
+      "visibleitemsize": 4.0,
+      "healthinterval": "100-80",
+      "potions": {
+        "minecraft:resistance": 3,
+        "minecraft:regeneration": 2
+      }
     }
   },
   "spawnatchest": {

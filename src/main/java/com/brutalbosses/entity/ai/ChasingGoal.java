@@ -22,12 +22,13 @@ public class ChasingGoal extends Goal
     private final MobEntity    mob;
     private       float        chaseDist;
     private       LivingEntity target = null;
+    private final ChaseParams  params;
 
     public ChasingGoal(MobEntity mob)
     {
         final BossCapability cap = mob.getCapability(BossCapability.BOSS_CAP).orElse(null);
-        chaseDist = ((ChaseParams) cap.getBossType().getAIParams(ID)).chasedistance;
-        chaseDist = chaseDist * chaseDist;
+        params = ((ChaseParams) cap.getBossType().getAIParams(ID));
+        chaseDist = params.chasedistance * params.chasedistance;
         this.mob = mob;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     }
@@ -38,7 +39,7 @@ public class ChasingGoal extends Goal
         if (target != null && target.isAlive())
         {
             this.target = target;
-            return true;
+            return params.healthPhaseCheck.test(mob);
         }
         else
         {
@@ -92,31 +93,27 @@ public class ChasingGoal extends Goal
         }
     }
 
-    public static final String CHASE_DIST = "chasedistance";
-
-    /**
-     * Parses params for this AI
-     *
-     * @param jsonElement
-     * @return
-     */
-    public static IAIParams parse(final JsonObject jsonElement)
-    {
-        final ChaseParams params = new ChaseParams();
-        if (jsonElement.has(CHASE_DIST))
-        {
-            params.chasedistance = jsonElement.get(CHASE_DIST).getAsFloat();
-        }
-
-        return params;
-    }
-
-    private static class ChaseParams implements IAIParams
+    public static class ChaseParams extends IAIParams.DefaultParams
     {
         private float chasedistance = 2f;
 
-        private ChaseParams()
+        public ChaseParams(final JsonObject jsonData)
         {
+            super(jsonData);
+            parse(jsonData);
+        }
+
+        private static final String CHASE_DIST = "chasedistance";
+
+        @Override
+        public IAIParams parse(final JsonObject jsonElement)
+        {
+            super.parse(jsonElement);
+            if (jsonElement.has(CHASE_DIST))
+            {
+                chasedistance = jsonElement.get(CHASE_DIST).getAsFloat();
+            }
+            return this;
         }
     }
 }

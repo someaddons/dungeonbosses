@@ -54,6 +54,15 @@ public class CommandSpawnBoss implements Opcommand
             return 0;
         }
 
+        if (bossName.equals("all"))
+        {
+            for (final BossType type : BossTypeManager.instance.bosses.values())
+            {
+                BossSpawnHandler.spawnBoss(source.getLevel(), new BlockPos(source.getPosition()), type, null);
+            }
+            return 0;
+        }
+
         final ResourceLocation bossID = new ResourceLocation("brutalbosses", bossName);
         final BossType bossType = BossTypeManager.instance.bosses.get(bossID);
         if (bossType == null)
@@ -62,10 +71,7 @@ public class CommandSpawnBoss implements Opcommand
             return 0;
         }
 
-        for (final BossType type : BossTypeManager.instance.bosses.values())
-        {
-            BossSpawnHandler.spawnBoss(source.getLevel(), new BlockPos(source.getPosition()), type, null);
-        }
+        BossSpawnHandler.spawnBoss(source.getLevel(), new BlockPos(source.getPosition()), bossType, null);
 
         return 0;
     }

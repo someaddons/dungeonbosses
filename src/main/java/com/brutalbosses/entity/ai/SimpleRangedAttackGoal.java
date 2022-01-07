@@ -57,14 +57,14 @@ public abstract class SimpleRangedAttackGoal extends Goal
         if (target != null && target.isAlive())
         {
             this.target = target;
-            return true;
+            return params.healthPhaseCheck.test(mob);
         }
 
         target = mob.getLastHurtByMob();
         if (target != null && target.isAlive())
         {
             this.target = target;
-            return true;
+            return params.healthPhaseCheck.test(mob);
         }
 
         return false;
@@ -300,66 +300,49 @@ public abstract class SimpleRangedAttackGoal extends Goal
         projectileEntity.setPos(center.x, center.y, center.z);
     }
 
-    public static final String PROJECTILE_COUNT    = "projectile_count";
-    public static final String PROJECTILE_INTERVAL = "projectile_interval";
-    public static final String PROJECTILE_DISTANCE = "projectile_distance";
-    public static final String PROJECTILE_AOE      = "projectile_aoe";
-
-    /**
-     * Parses params for this AI
-     *
-     * @param jsonElement
-     * @return
-     */
-    public static IAIParams parse(final JsonObject jsonElement)
-    {
-        return parse(jsonElement, null);
-    }
-
-    /**
-     * Parses params for this AI
-     *
-     * @param jsonElement
-     * @return
-     */
-    protected static IAIParams parse(final JsonObject jsonElement, RangedParams params)
-    {
-        if (params == null)
-        {
-            params = new RangedParams();
-        }
-
-        if (jsonElement.has(PROJECTILE_COUNT))
-        {
-            params.count = jsonElement.get(PROJECTILE_COUNT).getAsInt();
-        }
-
-        if (jsonElement.has(PROJECTILE_INTERVAL))
-        {
-            params.interval = jsonElement.get(PROJECTILE_INTERVAL).getAsInt();
-        }
-
-        if (jsonElement.has(PROJECTILE_DISTANCE))
-        {
-            params.distance = jsonElement.get(PROJECTILE_DISTANCE).getAsInt();
-        }
-        if (jsonElement.has(PROJECTILE_AOE))
-        {
-            params.aoe = jsonElement.get(PROJECTILE_AOE).getAsBoolean();
-        }
-
-        return params;
-    }
-
-    protected static class RangedParams implements IAIParams
+    public static class RangedParams extends IAIParams.DefaultParams
     {
         protected int     count    = 1;
         protected int     interval = 50;
         protected int     distance = 15;
         protected boolean aoe      = false;
 
-        protected RangedParams()
+        public RangedParams(final JsonObject jsonData)
         {
+            super(jsonData);
+            parse(jsonData);
+        }
+
+        private static final String PROJECTILE_COUNT    = "projectile_count";
+        private static final String PROJECTILE_INTERVAL = "projectile_interval";
+        private static final String PROJECTILE_DISTANCE = "projectile_distance";
+        private static final String PROJECTILE_AOE      = "projectile_aoe";
+
+        @Override
+        public IAIParams parse(final JsonObject jsonElement)
+        {
+            super.parse(jsonElement);
+
+            if (jsonElement.has(PROJECTILE_COUNT))
+            {
+                count = jsonElement.get(PROJECTILE_COUNT).getAsInt();
+            }
+
+            if (jsonElement.has(PROJECTILE_INTERVAL))
+            {
+                interval = jsonElement.get(PROJECTILE_INTERVAL).getAsInt();
+            }
+
+            if (jsonElement.has(PROJECTILE_DISTANCE))
+            {
+                distance = jsonElement.get(PROJECTILE_DISTANCE).getAsInt();
+            }
+            if (jsonElement.has(PROJECTILE_AOE))
+            {
+                aoe = jsonElement.get(PROJECTILE_AOE).getAsBoolean();
+            }
+
+            return this;
         }
     }
 }

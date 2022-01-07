@@ -62,50 +62,54 @@ public class BossTypeManager
 
         aiRegistry.put(ChasingGoal.ID,
           entity -> ((MobEntity) entity).goalSelector.addGoal(-2001, new ChasingGoal((MobEntity) entity)));
-        aiSupplier.put(ChasingGoal.ID, ChasingGoal::parse);
+        aiSupplier.put(ChasingGoal.ID, ChasingGoal.ChaseParams::new);
 
         aiRegistry.put(SmallFireballAttackGoal.ID,
           entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new SmallFireballAttackGoal((MobEntity) entity)));
-        aiSupplier.put(SmallFireballAttackGoal.ID, SimpleRangedAttackGoal::parse);
+        aiSupplier.put(SmallFireballAttackGoal.ID, SimpleRangedAttackGoal.RangedParams::new);
 
         aiRegistry.put(WitherSkullAttackGoal.ID,
           entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new WitherSkullAttackGoal((MobEntity) entity)));
-        aiSupplier.put(WitherSkullAttackGoal.ID, WitherSkullAttackGoal::parse);
+        aiSupplier.put(WitherSkullAttackGoal.ID, WitherSkullAttackGoal.WitherSkullParams::new);
 
         aiRegistry.put(SnowballAttackGoal.ID,
           entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new SnowballAttackGoal((MobEntity) entity)));
-        aiSupplier.put(SnowballAttackGoal.ID, SimpleRangedAttackGoal::parse);
+        aiSupplier.put(SnowballAttackGoal.ID, SimpleRangedAttackGoal.RangedParams::new);
 
         aiRegistry.put(OutofCombatRegen.ID, entity -> ((MobEntity) entity).targetSelector.addGoal(-2000, new OutofCombatRegen((MobEntity) entity)));
-        aiSupplier.put(OutofCombatRegen.ID, OutofCombatRegen::parse);
+        aiSupplier.put(OutofCombatRegen.ID, OutofCombatRegen.CombatParams::new);
 
         aiRegistry.put(SpitCobwebGoal.ID,
           entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new SpitCobwebGoal((MobEntity) entity)));
-        aiSupplier.put(SpitCobwebGoal.ID, SimpleRangedAttackGoal::parse);
+        aiSupplier.put(SpitCobwebGoal.ID, SimpleRangedAttackGoal.RangedParams::new);
 
         aiRegistry.put(SummonMobsGoal.ID,
           entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new SummonMobsGoal((MobEntity) entity)));
-        aiSupplier.put(SummonMobsGoal.ID, SummonMobsGoal::parse);
+        aiSupplier.put(SummonMobsGoal.ID, SummonMobsGoal.SummonParams::new);
 
         aiRegistry.put(WhirldwindMelee.ID,
           entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new WhirldwindMelee((MobEntity) entity)));
-        aiSupplier.put(WhirldwindMelee.ID, WhirldwindMelee::parse);
+        aiSupplier.put(WhirldwindMelee.ID, WhirldwindMelee.WhirldWindParams::new);
 
         aiRegistry.put(MeleeHitGoal.ID,
           entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new MeleeHitGoal((MobEntity) entity)));
-        aiSupplier.put(MeleeHitGoal.ID, MeleeHitGoal::parse);
+        aiSupplier.put(MeleeHitGoal.ID, MeleeHitGoal.MeleeHitParams::new);
 
         aiRegistry.put(ChargeGoal.ID,
           entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new ChargeGoal((MobEntity) entity)));
-        aiSupplier.put(ChargeGoal.ID, ChargeGoal::parse);
+        aiSupplier.put(ChargeGoal.ID, ChargeGoal.ChargeParams::new);
 
         aiRegistry.put(BigFireballAttackGoal.ID,
           entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new BigFireballAttackGoal((MobEntity) entity)));
-        aiSupplier.put(BigFireballAttackGoal.ID, BigFireballAttackGoal::parse);
+        aiSupplier.put(BigFireballAttackGoal.ID, BigFireballAttackGoal.RangedParams::new);
 
         aiRegistry.put(ItemThrowAttackGoal.ID,
           entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new ItemThrowAttackGoal((MobEntity) entity)));
-        aiSupplier.put(ItemThrowAttackGoal.ID, ItemThrowAttackGoal::parse);
+        aiSupplier.put(ItemThrowAttackGoal.ID, ItemThrowAttackGoal.ItemThrowParams::new);
+
+        aiRegistry.put(TemporaryPotionGoal.ID,
+          entity -> ((MobEntity) entity).goalSelector.addGoal(-2000, new TemporaryPotionGoal((MobEntity) entity)));
+        aiSupplier.put(TemporaryPotionGoal.ID, TemporaryPotionGoal.TempPotionParams::new);
 
         this.aiRegistry = aiRegistry.build();
         this.aiSuppliers = aiSupplier.build();

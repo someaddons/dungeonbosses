@@ -12,6 +12,8 @@ import net.minecraft.util.ResourceLocation;
  */
 public class OutofCombatRegen extends Goal
 {
+    public static ResourceLocation ID = new ResourceLocation("brutalbosses:aftercombatregen");
+
     private final MobEntity mob;
     private final float     amount;
     private       int       combatTimer = 0;
@@ -52,32 +54,27 @@ public class OutofCombatRegen extends Goal
 
     }
 
-    public static        ResourceLocation ID     = new ResourceLocation("brutalbosses:aftercombatregen");
-    private static final String           AMOUNT = "amount";
-
-    /**
-     * Parses params for this AI
-     *
-     * @param jsonElement
-     * @return
-     */
-    public static IAIParams parse(final JsonObject jsonElement)
-    {
-        final CombatParams params = new CombatParams();
-        if (jsonElement.has(AMOUNT))
-        {
-            params.amount = jsonElement.get(AMOUNT).getAsFloat();
-        }
-
-        return params;
-    }
-
-    private static class CombatParams implements IAIParams
+    public static class CombatParams extends IAIParams.DefaultParams
     {
         private float amount = 2.0f;
 
-        private CombatParams()
+        public CombatParams(final JsonObject jsonData)
         {
+            super(jsonData);
+            parse(jsonData);
+        }
+
+        private static final String AMOUNT = "amount";
+
+        @Override
+        public IAIParams parse(final JsonObject jsonElement)
+        {
+            super.parse(jsonElement);
+            if (jsonElement.has(AMOUNT))
+            {
+                amount = jsonElement.get(AMOUNT).getAsFloat();
+            }
+            return this;
         }
     }
 }

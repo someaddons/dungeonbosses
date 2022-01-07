@@ -66,9 +66,9 @@ public class BossSpawnHandler
         {
             final ResourceLocation lootTable = chest.lootTable;
             BrutalBosses.LOGGER.debug(
-              "Spawning " + bossType.getID() + " at " + pos + " at " + chest.getDisplayName().getString() + " with:" + lootTable.toString() + " in "
-                + ((PostStructureInfoGetter) world).getStructure()
-                    .getFeatureName());
+              "Spawning " + bossType.getID() + " at " + pos + " at " + chest.getDisplayName().getString() + " with:" + lootTable + " in "
+                + (((PostStructureInfoGetter) world).getStructure() != null ? ((PostStructureInfoGetter) world).getStructure()
+                                                                                .getFeatureName() : "unkown"));
         }
 
         final BlockPos spawnPos = findSpawnPosForBoss(world, boss, pos);

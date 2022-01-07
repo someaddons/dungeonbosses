@@ -2,6 +2,7 @@ package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.IOnProjectileHit;
+import com.brutalbosses.entity.thrownentity.ThrownItemEntity;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.entity.Entity;
@@ -9,7 +10,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.item.EnderPearlEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -45,7 +45,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
         double yDiff = target.getY(0.5D) - (mob.getY() + mob.getEyeHeight() - 0.5);
         double zDiff = target.getZ() - mob.getZ();
 
-        final EnderPearlEntity pearlEntity = new EnderPearlEntity(mob.level, mob);
+        final ThrownItemEntity pearlEntity = new ThrownItemEntity(mob.level, mob);
         pearlEntity.setPos(mob.getX(), mob.getY() + mob.getEyeHeight() - 0.5, mob.getZ());
         pearlEntity.shoot(xDiff, yDiff, zDiff, 0.8F, 3.0F);
 
@@ -88,9 +88,9 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                               hitEntity.getX(),
                               hitEntity.getY(),
                               hitEntity.getZ(),
-                              (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier.get()),
+                              (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier.get()) * pearlEntity.getScale(),
                               false,
-                              Explosion.Mode.NONE);
+                              Explosion.Mode.BREAK);
                         }
                     }
                 }
@@ -117,7 +117,6 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                           false,
                           Explosion.Mode.NONE);
                     }
-
                 }
             });
         }
@@ -128,69 +127,77 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
     @Override
     protected ProjectileEntity createProjectile()
     {
-        final EnderPearlEntity pearlEntity = new EnderPearlEntity(mob.level, mob);
+        final ThrownItemEntity pearlEntity = new ThrownItemEntity(mob.level, mob);
         pearlEntity.setItem(((ItemThrowParams) params).item);
+        pearlEntity.setScale(((ItemThrowParams) params).projectilesize);
         return pearlEntity;
     }
 
-    private static final String ITEM      = "item";
-    private static final String DAMAGE    = "damage";
-    private static final String TELEPORT  = "teleport";
-    private static final String LIGHTNING = "lightning";
-    private static final String EXPLODE   = "explode";
-
-    /**
-     * Parses params for this AI
-     *
-     * @param jsonElement
-     * @return
-     */
-    public static IAIParams parse(final JsonObject jsonElement)
+    public static class ItemThrowParams extends RangedParams
     {
-        final ItemThrowParams params = new ItemThrowParams();
-        SimpleRangedAttackGoal.parse(jsonElement, params);
+        private ItemStack item           = Items.ENDER_PEARL.getDefaultInstance();
+        private float     damage         = 0;
+        private boolean   teleport       = false;
+        private boolean   lighting       = false;
+        private boolean   explode        = false;
+        private float     projectilesize = 1.0f;
 
-        if (jsonElement.has(ITEM))
+        public ItemThrowParams(final JsonObject jsonData)
         {
-            try
+            super(jsonData);
+            parse(jsonData);
+        }
+
+        private static final String ITEM      = "item";
+        private static final String DAMAGE    = "damage";
+        private static final String TELEPORT  = "teleport";
+        private static final String LIGHTNING = "lightning";
+        private static final String EXPLODE   = "explode";
+        private static final String PR_SIZE   = "projectilesize";
+
+        @Override
+        public IAIParams parse(final JsonObject jsonElement)
+        {
+            super.parse(jsonElement);
+
+            if (jsonElement.has(ITEM))
             {
-                params.item = ItemStack.of(JsonToNBT.parseTag(jsonElement.get(ITEM).getAsString()));
+                try
+                {
+                    item = ItemStack.of(JsonToNBT.parseTag(jsonElement.get(ITEM).getAsString()));
+                }
+                catch (CommandSyntaxException e)
+                {
+                    BrutalBosses.LOGGER.warn("Could not parse item of: " + jsonElement.get(ITEM).getAsString(), e);
+                }
             }
-            catch (CommandSyntaxException e)
+
+            if (jsonElement.has(DAMAGE))
             {
-                BrutalBosses.LOGGER.warn("Could not parse item of: " + jsonElement.get(ITEM).getAsString(), e);
+                damage = jsonElement.get(DAMAGE).getAsFloat();
             }
+
+            if (jsonElement.has(TELEPORT))
+            {
+                teleport = true;
+            }
+
+            if (jsonElement.has(LIGHTNING))
+            {
+                lighting = true;
+            }
+
+            if (jsonElement.has(EXPLODE))
+            {
+                explode = true;
+            }
+
+            if (jsonElement.has(PR_SIZE))
+            {
+                projectilesize = jsonElement.get(PR_SIZE).getAsFloat();
+            }
+
+            return this;
         }
-
-        if (jsonElement.has(DAMAGE))
-        {
-            params.damage = jsonElement.get(DAMAGE).getAsFloat();
-        }
-
-        if (jsonElement.has(TELEPORT))
-        {
-            params.teleport = true;
-        }
-
-        if (jsonElement.has(LIGHTNING))
-        {
-            params.lighting = true;
-        }
-
-        if (jsonElement.has(EXPLODE))
-        {
-            params.explode = true;
-        }
-
-        return params;
-    }
-
-    private static class ItemThrowParams extends RangedParams
-    {
-        private ItemStack item     = Items.ENDER_PEARL.getDefaultInstance();
-        private float     damage   = 0;
-        private boolean   teleport = false;
-        private boolean   lighting = false;
-        private boolean   explode  = false;
     }
 }

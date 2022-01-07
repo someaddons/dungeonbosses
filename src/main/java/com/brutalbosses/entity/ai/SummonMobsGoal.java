@@ -13,6 +13,7 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.monster.SpellcastingIllagerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -47,7 +48,7 @@ public class SummonMobsGoal extends Goal
         if (target != null && target.isAlive() && params.entityIDs.size() > 0)
         {
             this.target = target;
-            return true;
+            return params.healthPhaseCheck.test(mob);
         }
         else
         {
@@ -90,7 +91,18 @@ public class SummonMobsGoal extends Goal
 
         ticksToNextUpdate = params.interval;
 
-        summonedMobs.removeIf(summoned -> !summoned.isAlive());
+        summonedMobs.removeIf(summoned ->
+        {
+            if (!summoned.isAlive())
+            {
+                if (params.ownerdamage > 0)
+                {
+                    mob.hurt(DamageSource.indirectMagic(summoned, null), mob.getMaxHealth() * params.ownerdamage);
+                }
+                return true;
+            }
+            return false;
+        });
 
         for (int i = 0; i < params.count; i++)
         {
@@ -140,56 +152,59 @@ public class SummonMobsGoal extends Goal
         summonedMobs.add(summoned);
     }
 
-    public static final String SUMM_INTERVAL = "interval";
-    public static final String SUMM_MAX      = "maxcount";
-    public static final String SUMM_COUNT    = "count";
-    public static final String ENTITY_ID     = "entityid";
-
-    /**
-     * Parses params for this AI
-     *
-     * @param jsonElement
-     * @return
-     */
-    public static IAIParams parse(final JsonObject jsonElement)
+    public static class SummonParams extends IAIParams.DefaultParams
     {
-        final SummonParams params = new SummonParams();
+        private int                                      interval    = 500;
+        private List<EntityType<? extends LivingEntity>> entityIDs   = new ArrayList<>();
+        private int                                      count       = 1;
+        private int                                      maxcount    = 2;
+        private float                                    ownerdamage = 0f;
 
-        final List<EntityType<? extends LivingEntity>> types = new ArrayList<>();
-        for (final JsonElement entityID : jsonElement.get(ENTITY_ID).getAsJsonArray())
+        public SummonParams(final JsonObject jsonData)
         {
-            types.add((EntityType<? extends LivingEntity>) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityID.getAsString())));
+            super(jsonData);
+            parse(jsonData);
         }
 
-        params.entityIDs = types;
-        if (jsonElement.has(SUMM_INTERVAL))
+        private static final String SUMM_INTERVAL = "interval";
+        private static final String SUMM_MAX      = "maxcount";
+        private static final String SUMM_COUNT    = "count";
+        private static final String ENTITY_ID     = "entityid";
+        private static final String OWNERDAMAGE   = "ownerdamagepct";
+
+        @Override
+        public IAIParams parse(final JsonObject jsonElement)
         {
-            params.interval = jsonElement.get(SUMM_INTERVAL).getAsInt();
-        }
+            super.parse(jsonElement);
 
-        if (jsonElement.has(SUMM_COUNT))
-        {
-            params.count = jsonElement.get(SUMM_COUNT).getAsInt();
-        }
+            final List<EntityType<? extends LivingEntity>> types = new ArrayList<>();
+            for (final JsonElement entityID : jsonElement.get(ENTITY_ID).getAsJsonArray())
+            {
+                types.add((EntityType<? extends LivingEntity>) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityID.getAsString())));
+            }
 
-        if (jsonElement.has(SUMM_MAX))
-        {
-            params.maxcount = jsonElement.get(SUMM_MAX).getAsInt();
-        }
+            entityIDs = types;
+            if (jsonElement.has(SUMM_INTERVAL))
+            {
+                interval = jsonElement.get(SUMM_INTERVAL).getAsInt();
+            }
 
+            if (jsonElement.has(SUMM_COUNT))
+            {
+                count = jsonElement.get(SUMM_COUNT).getAsInt();
+            }
 
-        return params;
-    }
+            if (jsonElement.has(SUMM_MAX))
+            {
+                maxcount = jsonElement.get(SUMM_MAX).getAsInt();
+            }
 
-    private static class SummonParams implements IAIParams
-    {
-        private int                                      interval  = 500;
-        private List<EntityType<? extends LivingEntity>> entityIDs = new ArrayList<>();
-        private int                                      count     = 1;
-        private int                                      maxcount  = 2;
+            if (jsonElement.has(OWNERDAMAGE))
+            {
+                ownerdamage = jsonElement.get(OWNERDAMAGE).getAsFloat() / 100f;
+            }
 
-        private SummonParams()
-        {
+            return this;
         }
     }
 }

@@ -49,23 +49,27 @@ public class WitherSkullAttackGoal extends SimpleRangedAttackGoal
         mob.level.addFreshEntity(witherskullentity);
     }
 
-    private static final String DANGEROUS = "dangerous";
-
-    public static IAIParams parse(final JsonObject jsonElement)
-    {
-        final WitherSkullParams params = new WitherSkullParams();
-        SimpleRangedAttackGoal.parse(jsonElement, params);
-
-        if (jsonElement.has(DANGEROUS))
-        {
-            params.dangerous = jsonElement.get(DANGEROUS).getAsBoolean();
-        }
-
-        return params;
-    }
-
-    private static class WitherSkullParams extends RangedParams
+    public static class WitherSkullParams extends RangedParams
     {
         private boolean dangerous = false;
+
+        public WitherSkullParams(final JsonObject jsonData)
+        {
+            super(jsonData);
+            parse(jsonData);
+        }
+
+        private static final String DANGEROUS = "dangerous";
+
+        @Override
+        public IAIParams parse(final JsonObject jsonElement)
+        {
+            super.parse(jsonElement);
+            if (jsonElement.has(DANGEROUS))
+            {
+                dangerous = jsonElement.get(DANGEROUS).getAsBoolean();
+            }
+            return this;
+        }
     }
 }

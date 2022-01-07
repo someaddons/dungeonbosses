@@ -116,6 +116,7 @@ dependencies {
     annotationProcessor "org.spongepowered:mixin:0.8.2:processor"
     implementation fg.deobf("curse.maven:bdungeons-510089:3476138")
     implementation fg.deobf("curse.maven:yungapi-421850:3494919")
+    implementation fg.deobf("curse.maven:castledungeons-399213:3461154")
     // arbitrary name - project id:fileid
     // implementation fg.deobf("curse.maven:cursed-347445:3181728")
 

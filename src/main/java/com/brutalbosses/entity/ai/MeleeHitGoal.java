@@ -40,7 +40,7 @@ public class MeleeHitGoal extends Goal
         if (target != null && target.isAlive())
         {
             this.target = target;
-            return true;
+            return params.healthPhaseCheck.test(mob);
         }
         else
         {
@@ -107,64 +107,7 @@ public class MeleeHitGoal extends Goal
         }
     }
 
-    public static final String ATKDIST    = "attackdist";
-    public static final String EXTDMG     = "damage";
-    public static final String POTION     = "potiononhit";
-    public static final String POTION_STR = "potionlevel";
-    public static final String POTION_DUR = "potionduration";
-    public static final String KNOCK      = "knockback";
-    public static final String COOLDOWN   = "cooldown";
-
-    /**
-     * Parses params for this AI
-     *
-     * @param jsonElement
-     * @return
-     */
-    public static IAIParams parse(final JsonObject jsonElement)
-    {
-        final MeleeHitParams params = new MeleeHitParams();
-        if (jsonElement.has(ATKDIST))
-        {
-            params.attackDistance = jsonElement.get(ATKDIST).getAsFloat();
-            params.attackDistance *= params.attackDistance;
-        }
-
-        if (jsonElement.has(EXTDMG))
-        {
-            params.extraDamage = jsonElement.get(EXTDMG).getAsFloat();
-        }
-
-        if (jsonElement.has(POTION_STR))
-        {
-            params.potionlevel = jsonElement.get(POTION_STR).getAsInt();
-        }
-
-        if (jsonElement.has(POTION_DUR))
-        {
-            params.potionduration = jsonElement.get(POTION_DUR).getAsInt();
-        }
-
-        if (jsonElement.has(COOLDOWN))
-        {
-            params.cooldown = jsonElement.get(COOLDOWN).getAsInt();
-        }
-
-        if (jsonElement.has(KNOCK))
-        {
-            params.knockback = jsonElement.get(KNOCK).getAsFloat();
-        }
-
-        if (jsonElement.has(POTION))
-        {
-            final ResourceLocation effectID = new ResourceLocation(jsonElement.get(POTION).getAsString());
-            params.onHitEffect = ForgeRegistries.POTIONS.getValue(effectID);
-        }
-
-        return params;
-    }
-
-    private static class MeleeHitParams implements IAIParams
+    public static class MeleeHitParams extends IAIParams.DefaultParams
     {
         private float  attackDistance = 2f;
         private float  extraDamage    = 2f;
@@ -174,8 +117,61 @@ public class MeleeHitGoal extends Goal
         private int    potionlevel    = 1;
         private int    potionduration = 60;
 
-        private MeleeHitParams()
+        public MeleeHitParams(final JsonObject jsonData)
         {
+            super(jsonData);
+            parse(jsonData);
+        }
+
+        private static final String ATKDIST    = "attackdist";
+        private static final String EXTDMG     = "damage";
+        private static final String POTION     = "potiononhit";
+        private static final String POTION_STR = "potionlevel";
+        private static final String POTION_DUR = "potionduration";
+        private static final String KNOCK      = "knockback";
+        private static final String COOLDOWN   = "cooldown";
+
+        @Override
+        public IAIParams parse(final JsonObject jsonElement)
+        {
+            super.parse(jsonElement);
+            if (jsonElement.has(ATKDIST))
+            {
+                attackDistance = jsonElement.get(ATKDIST).getAsFloat();
+                attackDistance *= attackDistance;
+            }
+
+            if (jsonElement.has(EXTDMG))
+            {
+                extraDamage = jsonElement.get(EXTDMG).getAsFloat();
+            }
+
+            if (jsonElement.has(POTION_STR))
+            {
+                potionlevel = jsonElement.get(POTION_STR).getAsInt();
+            }
+
+            if (jsonElement.has(POTION_DUR))
+            {
+                potionduration = jsonElement.get(POTION_DUR).getAsInt();
+            }
+
+            if (jsonElement.has(COOLDOWN))
+            {
+                cooldown = jsonElement.get(COOLDOWN).getAsInt();
+            }
+
+            if (jsonElement.has(KNOCK))
+            {
+                knockback = jsonElement.get(KNOCK).getAsFloat();
+            }
+
+            if (jsonElement.has(POTION))
+            {
+                final ResourceLocation effectID = new ResourceLocation(jsonElement.get(POTION).getAsString());
+                onHitEffect = ForgeRegistries.POTIONS.getValue(effectID);
+            }
+            return this;
         }
     }
 }

@@ -4,11 +4,15 @@ import com.brutalbosses.entity.BossSpawnHandler;
 import com.brutalbosses.world.RegionAwareTE;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.LockableLootTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -53,5 +57,26 @@ public class LockableLootTileEntityMixin implements RegionAwareTE
     public void setRegion(final IServerWorld region)
     {
         this.region = new WeakReference<>(region);
+    }
+
+    /**
+     * For mods spawning on the mainthread like castle dungeons
+     *
+     * @param reader
+     * @param pos
+     * @return
+     */
+    @Redirect(method = "setLootTable(Lnet/minecraft/world/IBlockReader;Ljava/util/Random;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/ResourceLocation;)V", at = @At(value = "INVOKE"
+      , target = "Lnet/minecraft/world/IBlockReader;getBlockEntity(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/tileentity/TileEntity;"))
+    private static TileEntity setLootTable(
+      final IBlockReader reader, final BlockPos pos)
+    {
+        final TileEntity te = reader.getBlockEntity(pos);
+        if (te instanceof RegionAwareTE && reader instanceof IServerWorld)
+        {
+            ((RegionAwareTE) te).setRegion((IServerWorld) reader);
+        }
+
+        return te;
     }
 }

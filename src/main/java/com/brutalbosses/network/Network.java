@@ -40,6 +40,13 @@ public class Network
               msg.read(p);
               return msg;
           }, BossOverlayMessage::handle);
+        channel.registerMessage(3, VanillaParticleMessage.class,
+          VanillaParticleMessage::write,
+          p -> {
+              final VanillaParticleMessage msg = new VanillaParticleMessage();
+              msg.read(p);
+              return msg;
+          }, VanillaParticleMessage::handle);
     }
 
     public void sendPacket(final ServerPlayerEntity playerEntity, final IMessage msg)
