@@ -38,6 +38,12 @@ public class BossSpawnHandler
             }
 
             final BossType bossType = possibleBosses.get(BrutalBosses.rand.nextInt(possibleBosses.size()));
+
+            if (bossType.getID().getPath().equals("dummyboss"))
+            {
+                return;
+            }
+
             spawnBoss(world, chest.getBlockPos(), bossType, chest);
         }
         else if (BrutalBosses.config.getCommonConfig().printChestLoottable.get())

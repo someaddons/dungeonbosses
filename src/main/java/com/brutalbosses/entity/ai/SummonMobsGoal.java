@@ -13,7 +13,7 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.monster.SpellcastingIllagerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
+import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -40,6 +40,12 @@ public class SummonMobsGoal extends Goal
     {
         this.mob = mob;
         params = (SummonParams) mob.getCapability(BossCapability.BOSS_CAP).orElse(null).getBossType().getAIParams(ID);
+        ScorePlayerTeam team = mob.level.getScoreboard().getPlayerTeam("bb:bossteam");
+        if (team == null)
+        {
+            team = mob.level.getScoreboard().addPlayerTeam("bb:bossteam");
+        }
+        mob.level.getScoreboard().addPlayerToTeam(mob.getScoreboardName(), team);
     }
 
     public boolean canUse()
@@ -97,7 +103,7 @@ public class SummonMobsGoal extends Goal
             {
                 if (params.ownerdamage > 0)
                 {
-                    mob.hurt(DamageSource.indirectMagic(summoned, null), mob.getMaxHealth() * params.ownerdamage);
+                    mob.setHealth(mob.getHealth() - mob.getMaxHealth() * params.ownerdamage);
                 }
                 return true;
             }
@@ -136,6 +142,13 @@ public class SummonMobsGoal extends Goal
 
         if (summoned instanceof MobEntity)
         {
+            ScorePlayerTeam team = mob.level.getScoreboard().getPlayerTeam("bb:bossteam");
+            if (team == null)
+            {
+                team = mob.level.getScoreboard().addPlayerTeam("bb:bossteam");
+            }
+            mob.level.getScoreboard().addPlayerToTeam(summoned.getScoreboardName(), team);
+
             ((MobEntity) summoned).setTarget(target);
             if (summoned instanceof IRangedAttackMob)
             {

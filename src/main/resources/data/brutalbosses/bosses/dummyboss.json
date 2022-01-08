@@ -1,0 +1,8 @@
+{
+  "entity": "minecraft:zombie",
+  "name": "Dummy the useless, used for adding fail chances to a loottables spawn list.",
+  "spawnatchest": {
+    "minecraft:chests/simple_dungeon": 500,
+    "minecraft:chests/shipwreck_supply": 1
+  }
+}

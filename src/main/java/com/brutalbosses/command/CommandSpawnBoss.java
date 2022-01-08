@@ -1,5 +1,6 @@
 package com.brutalbosses.command;
 
+import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.BossSpawnHandler;
 import com.brutalbosses.entity.BossType;
 import com.brutalbosses.entity.BossTypeManager;
@@ -40,39 +41,45 @@ public class CommandSpawnBoss implements Opcommand
 
     private int executeSpawnBoss(final CommandContext<CommandSource> context)
     {
-        final CommandSource source = context.getSource();
-        if (!checkPreCondition(context))
+        try
         {
-            return 0;
-        }
-
-        final String bossName = StringArgumentType.getString(context, "bossID");
-
-        if (bossName.equals("random"))
-        {
-            BossSpawnHandler.spawnRandomBoss(source.getLevel(), new BlockPos(source.getPosition()));
-            return 0;
-        }
-
-        if (bossName.equals("all"))
-        {
-            for (final BossType type : BossTypeManager.instance.bosses.values())
+            final CommandSource source = context.getSource();
+            if (!checkPreCondition(context))
             {
-                BossSpawnHandler.spawnBoss(source.getLevel(), new BlockPos(source.getPosition()), type, null);
+                return 0;
             }
-            return 0;
-        }
 
-        final ResourceLocation bossID = new ResourceLocation("brutalbosses", bossName);
-        final BossType bossType = BossTypeManager.instance.bosses.get(bossID);
-        if (bossType == null)
+            final String bossName = StringArgumentType.getString(context, "bossID");
+
+            if (bossName.equals("random"))
+            {
+                BossSpawnHandler.spawnRandomBoss(source.getLevel(), new BlockPos(source.getPosition()));
+                return 0;
+            }
+
+            if (bossName.equals("all"))
+            {
+                for (final BossType type : BossTypeManager.instance.bosses.values())
+                {
+                    BossSpawnHandler.spawnBoss(source.getLevel(), new BlockPos(source.getPosition()), type, null);
+                }
+                return 0;
+            }
+
+            final ResourceLocation bossID = new ResourceLocation("brutalbosses", bossName);
+            final BossType bossType = BossTypeManager.instance.bosses.get(bossID);
+            if (bossType == null)
+            {
+                source.sendFailure(new StringTextComponent("Enter a valid boss id(name of the json file), no boss found for:" + bossID));
+                return 0;
+            }
+
+            BossSpawnHandler.spawnBoss(source.getLevel(), new BlockPos(source.getPosition()), bossType, null);
+        }
+        catch (Error e)
         {
-            source.sendFailure(new StringTextComponent("Enter a valid boss id(name of the json file), no boss found for:" + bossID));
-            return 0;
+            BrutalBosses.LOGGER.error(e);
         }
-
-        BossSpawnHandler.spawnBoss(source.getLevel(), new BlockPos(source.getPosition()), bossType, null);
-
         return 0;
     }
 }
