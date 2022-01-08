@@ -26,15 +26,13 @@ public class BossSpawnHandler
      *
      * @param world
      * @param chest
-     * @param structure
-     * @param mutableboundingbox
      */
     public static void onChestPlaced(final IServerWorld world, final LockableLootTileEntity chest)
     {
         List<BossType> possibleBosses = BossTypeManager.instance.lootTableSpawnEntries.get(chest.lootTable);
         if (possibleBosses != null && !possibleBosses.isEmpty())
         {
-            if (BrutalBosses.rand.nextInt(100) < BrutalBosses.config.getCommonConfig().globalBossSpawnChance.get())
+            if (BrutalBosses.rand.nextInt(100) > BrutalBosses.config.getCommonConfig().globalBossSpawnChance.get())
             {
                 return;
             }
@@ -64,11 +62,16 @@ public class BossSpawnHandler
 
         if (chest != null)
         {
+            String structname = "unkown structure";
+            if (world instanceof PostStructureInfoGetter && ((PostStructureInfoGetter) world).getStructure() != null)
+            {
+                structname = ((PostStructureInfoGetter) world).getStructure().getFeatureName();
+            }
+
             final ResourceLocation lootTable = chest.lootTable;
             BrutalBosses.LOGGER.debug(
               "Spawning " + bossType.getID() + " at " + pos + " at " + chest.getDisplayName().getString() + " with:" + lootTable + " in "
-                + (((PostStructureInfoGetter) world).getStructure() != null ? ((PostStructureInfoGetter) world).getStructure()
-                                                                                .getFeatureName() : "unkown"));
+                + structname);
         }
 
         final BlockPos spawnPos = findSpawnPosForBoss(world, boss, pos);
