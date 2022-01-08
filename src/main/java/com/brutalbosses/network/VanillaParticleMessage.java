@@ -10,6 +10,8 @@ import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -92,6 +94,7 @@ public class VanillaParticleMessage implements IMessage
         return this;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void handle(final Supplier<NetworkEvent.Context> contextSupplier)
     {

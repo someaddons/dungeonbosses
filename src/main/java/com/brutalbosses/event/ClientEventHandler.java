@@ -1,6 +1,8 @@
 package com.brutalbosses.event;
 
+import com.brutalbosses.entity.ModEntities;
 import com.brutalbosses.entity.capability.BossCapability;
+import com.brutalbosses.entity.thrownentity.CSpriteRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ClientBossInfo;
 import net.minecraft.entity.Entity;
@@ -10,6 +12,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -142,5 +145,11 @@ public class ClientEventHandler
             this.boss = boss;
             this.cap = cap;
         }
+    }
+
+    public static void initRenderers()
+    {
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.THROWN_ITEMC,
+          manager -> new CSpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer(), 1.0f, true));
     }
 }

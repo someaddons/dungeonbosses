@@ -3,20 +3,16 @@ package com.brutalbosses;
 import com.brutalbosses.command.CommandSpawnBoss;
 import com.brutalbosses.config.Configuration;
 import com.brutalbosses.entity.BossTypeManager;
-import com.brutalbosses.entity.ModEntities;
-import com.brutalbosses.entity.thrownentity.CSpriteRenderer;
 import com.brutalbosses.event.ClientEventHandler;
 import com.brutalbosses.event.EventHandler;
 import com.brutalbosses.event.ModEventHandler;
 import com.brutalbosses.network.Network;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandSource;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -56,8 +52,7 @@ public class BrutalBosses
     {
         // Side safe client event handler
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(ClientEventHandler.class);
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.THROWN_ITEMC,
-          manager -> new CSpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer(), 1.0f, true));
+        ClientEventHandler.initRenderers();
     }
 
     private void setup(final FMLCommonSetupEvent event)
