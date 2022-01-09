@@ -1,6 +1,5 @@
 package com.brutalbosses.entity.ai;
 
-import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -18,10 +17,9 @@ public class OutofCombatRegen extends Goal
     private final float     amount;
     private       int       combatTimer = 0;
 
-    public OutofCombatRegen(MobEntity mob)
+    public OutofCombatRegen(MobEntity mob, final IAIParams params)
     {
-        final BossCapability cap = mob.getCapability(BossCapability.BOSS_CAP).orElse(null);
-        amount = ((CombatParams) cap.getBossType().getAIParams(ID)).amount;
+        amount = ((CombatParams) params).amount;
         this.mob = mob;
     }
 

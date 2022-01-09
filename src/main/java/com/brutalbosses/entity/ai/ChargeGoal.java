@@ -1,7 +1,6 @@
 package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
-import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -28,10 +27,9 @@ public class ChargeGoal extends Goal
     private       ChargeParams params;
     private       LivingEntity target = null;
 
-    public ChargeGoal(MobEntity mob)
+    public ChargeGoal(MobEntity mob, final IAIParams params)
     {
-        final BossCapability cap = mob.getCapability(BossCapability.BOSS_CAP).orElse(null);
-        params = ((ChargeParams) cap.getBossType().getAIParams(ID));
+        this.params = (ChargeParams) params;
         this.mob = mob;
     }
 

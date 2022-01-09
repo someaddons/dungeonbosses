@@ -240,13 +240,13 @@ public class BossJsonListener extends JsonReloadListener
                 for (final Map.Entry<String, JsonElement> aiEntry : aiData.getAsJsonObject().entrySet())
                 {
                     final ResourceLocation aiID = new ResourceLocation(aiEntry.getKey());
-                    if (!BossTypeManager.instance.aiRegistry.containsKey(aiID))
+                    if (!BossTypeManager.instance.aiCreatorRegistry.containsKey(aiID))
                     {
                         BrutalBosses.LOGGER.error("Unkown AI id:" + aiID + " in:" + entry.getKey());
                         continue;
                     }
 
-                    final Function<JsonObject, IAIParams> paramReader = BossTypeManager.instance.aiSuppliers.get(aiID);
+                    final Function<JsonObject, IAIParams> paramReader = BossTypeManager.instance.aiParamParsers.get(aiID);
 
                     IAIParams params = IAIParams.EMPTY;
                     if (paramReader != null && aiEntry.getValue().isJsonObject())

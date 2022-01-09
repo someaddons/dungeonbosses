@@ -11,9 +11,9 @@ public class WitherSkullAttackGoal extends SimpleRangedAttackGoal
 {
     public static final ResourceLocation ID = new ResourceLocation("brutalbosses:shootwitherskulls");
 
-    public WitherSkullAttackGoal(final MobEntity mob)
+    public WitherSkullAttackGoal(final MobEntity mob, final IAIParams params)
     {
-        super(mob);
+        super(mob, params);
     }
 
     @Override

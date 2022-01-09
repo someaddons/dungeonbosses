@@ -2,7 +2,6 @@ package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.BossSpawnHandler;
-import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.EntityType;
@@ -36,10 +35,10 @@ public class SummonMobsGoal extends Goal
 
     private final List<LivingEntity> summonedMobs = new ArrayList<>();
 
-    public SummonMobsGoal(MobEntity mob)
+    public SummonMobsGoal(MobEntity mob, final IAIParams params)
     {
         this.mob = mob;
-        params = (SummonParams) mob.getCapability(BossCapability.BOSS_CAP).orElse(null).getBossType().getAIParams(ID);
+        this.params = (SummonParams) params;
         ScorePlayerTeam team = mob.level.getScoreboard().getPlayerTeam("bb:bossteam");
         if (team == null)
         {

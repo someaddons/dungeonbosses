@@ -23,9 +23,9 @@ public class SpitCobwebGoal extends SimpleRangedAttackGoal
 {
     public static ResourceLocation ID = new ResourceLocation("brutalbosses:spitcobweb");
 
-    public SpitCobwebGoal(final MobEntity mob)
+    public SpitCobwebGoal(final MobEntity mob, final IAIParams params)
     {
-        super(mob);
+        super(mob, params);
     }
 
     @Override

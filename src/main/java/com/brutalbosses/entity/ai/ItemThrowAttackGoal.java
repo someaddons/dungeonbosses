@@ -25,9 +25,9 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
 {
     public static ResourceLocation ID = new ResourceLocation("brutalbosses:itemshootgoal");
 
-    public ItemThrowAttackGoal(final MobEntity mob)
+    public ItemThrowAttackGoal(final MobEntity mob, final IAIParams params)
     {
-        super(mob);
+        super(mob, params);
     }
 
     @Override

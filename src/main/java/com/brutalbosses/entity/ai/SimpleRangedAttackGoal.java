@@ -37,16 +37,16 @@ public abstract class SimpleRangedAttackGoal extends Goal
     private         boolean                isChargingUp       = false;
     private final   EntityPredicate        playerAoeFinder;
 
-    public SimpleRangedAttackGoal(MobEntity mob)
+    public SimpleRangedAttackGoal(MobEntity mob, final IAIParams params)
     {
         this.mob = mob;
         cap = mob.getCapability(BossCapability.BOSS_CAP).orElse(null);
-        params = (RangedParams) cap.getBossType().getAIParams(this.getID());
+        this.params = (RangedParams) params;
         this.speedModifier = 1.0f;
-        this.attackIntervalMin = (params.interval - 10);
-        this.attackIntervalMax = (params.interval + 10);
-        this.attackRadiusSqr = params.distance * params.distance;
-        playerAoeFinder = new EntityPredicate().range(params.distance);
+        this.attackIntervalMin = (this.params.interval - 10);
+        this.attackIntervalMax = (this.params.interval + 10);
+        this.attackRadiusSqr = this.params.distance * this.params.distance;
+        playerAoeFinder = new EntityPredicate().range(this.params.distance);
     }
 
     protected abstract ResourceLocation getID();

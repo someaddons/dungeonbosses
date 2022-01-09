@@ -1,7 +1,6 @@
 package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
-import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonObject;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
@@ -27,10 +26,9 @@ public class MeleeHitGoal extends Goal
     private       LivingEntity   target = null;
     private       MeleeHitParams params;
 
-    public MeleeHitGoal(MobEntity mob)
+    public MeleeHitGoal(MobEntity mob, final IAIParams params)
     {
-        final BossCapability cap = mob.getCapability(BossCapability.BOSS_CAP).orElse(null);
-        params = ((MeleeHitParams) cap.getBossType().getAIParams(ID));
+        this.params = (MeleeHitParams) params;
         this.mob = mob;
     }
 

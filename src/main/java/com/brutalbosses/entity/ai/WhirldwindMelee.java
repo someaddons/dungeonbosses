@@ -1,7 +1,6 @@
 package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
-import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -32,10 +31,9 @@ public class WhirldwindMelee extends Goal
     private       LivingEntity     target = null;
     private       WhirldWindParams params;
 
-    public WhirldwindMelee(MobEntity mob)
+    public WhirldwindMelee(MobEntity mob, final IAIParams params)
     {
-        final BossCapability cap = mob.getCapability(BossCapability.BOSS_CAP).orElse(null);
-        params = ((WhirldWindParams) cap.getBossType().getAIParams(ID));
+        this.params = (WhirldWindParams) params;
         this.mob = mob;
     }
 

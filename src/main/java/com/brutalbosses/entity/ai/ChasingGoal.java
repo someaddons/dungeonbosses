@@ -1,6 +1,5 @@
 package com.brutalbosses.entity.ai;
 
-import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -24,11 +23,10 @@ public class ChasingGoal extends Goal
     private       LivingEntity target = null;
     private final ChaseParams  params;
 
-    public ChasingGoal(MobEntity mob)
+    public ChasingGoal(MobEntity mob, final IAIParams params)
     {
-        final BossCapability cap = mob.getCapability(BossCapability.BOSS_CAP).orElse(null);
-        params = ((ChaseParams) cap.getBossType().getAIParams(ID));
-        chaseDist = params.chasedistance * params.chasedistance;
+        this.params = (ChaseParams) params;
+        chaseDist = this.params.chasedistance * this.params.chasedistance;
         this.mob = mob;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     }

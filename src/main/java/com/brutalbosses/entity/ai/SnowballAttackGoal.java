@@ -20,9 +20,14 @@ public class SnowballAttackGoal extends SimpleRangedAttackGoal
 {
     public static final ResourceLocation ID = new ResourceLocation("brutalbosses:shootsnowballs");
 
-    public SnowballAttackGoal(final MobEntity mob)
+    private static final double AIM_HEIGHT                     = 2.0D;
+    private static final double ARROW_SPEED                    = 1.0D;
+    private static final double AIM_SLIGHTLY_HIGHER_MULTIPLIER = 0.18;
+    private static final double SPEED_FOR_DIST                 = 35;
+
+    public SnowballAttackGoal(final MobEntity mob, final IAIParams params)
     {
-        super(mob);
+        super(mob, params);
     }
 
     @Override
@@ -42,13 +47,14 @@ public class SnowballAttackGoal extends SimpleRangedAttackGoal
     protected void doRangedAttack(@Nullable final ProjectileEntity snowballentity, final LivingEntity target)
     {
         snowballentity.noPhysics = false;
+        snowballentity.setNoGravity(false);
         positionProjectile(snowballentity, 1);
-        double eyeHeight = target.getEyeY() - (double) 1.1F;
-        double xDiff = target.getX() - snowballentity.getX();
-        double yDiff = eyeHeight - snowballentity.getY();
-        double zDiff = target.getZ() - snowballentity.getZ();
-        float f = MathHelper.sqrt(xDiff * xDiff + zDiff * zDiff) * 0.2F;
-        snowballentity.shoot(xDiff, yDiff + (double) f, zDiff, 1.6F, 3.0F);
+        final double xVector = target.getX() - snowballentity.getX();
+        final double yVector = target.getBoundingBox().minY + target.getBbHeight() / AIM_HEIGHT - snowballentity.getY();
+        final double zVector = target.getZ() - snowballentity.getZ();
+        final double distance = MathHelper.sqrt(xVector * xVector + zVector * zVector);
+        final double dist3d = MathHelper.sqrt(yVector * yVector + xVector * xVector + zVector * zVector);
+        snowballentity.shoot(xVector, yVector + distance * AIM_SLIGHTLY_HIGHER_MULTIPLIER, zVector, (float) (ARROW_SPEED * 1 + (dist3d / SPEED_FOR_DIST)), (float) 3.0f);
         mob.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 1.0F, 0.4F / (mob.getRandom().nextFloat() * 0.4F + 0.8F));
 
         if (snowballentity instanceof IOnProjectileHit)

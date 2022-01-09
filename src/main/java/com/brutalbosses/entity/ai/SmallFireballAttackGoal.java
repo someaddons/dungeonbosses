@@ -11,9 +11,9 @@ public class SmallFireballAttackGoal extends SimpleRangedAttackGoal
 {
     public static ResourceLocation ID = new ResourceLocation("brutalbosses:shootfireballs");
 
-    public SmallFireballAttackGoal(final MobEntity mob)
+    public SmallFireballAttackGoal(final MobEntity mob, final IAIParams params)
     {
-        super(mob);
+        super(mob, params);
     }
 
     @Override

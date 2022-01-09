@@ -192,11 +192,11 @@ public class BossType
             }
         }
 
-        for (final ResourceLocation aiID : aiData.keySet())
+        for (final Map.Entry<ResourceLocation, IAIParams> data : aiData.entrySet())
         {
-            if (BossTypeManager.instance.aiRegistry.containsKey(aiID))
+            if (BossTypeManager.instance.aiCreatorRegistry.containsKey(data.getKey()))
             {
-                BossTypeManager.instance.aiRegistry.get(aiID).accept(boss);
+                BossTypeManager.instance.aiCreatorRegistry.get(data.getKey()).accept(boss, data.getValue());
             }
         }
     }

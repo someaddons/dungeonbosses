@@ -3,7 +3,6 @@ package com.brutalbosses.entity.ai;
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.IOnProjectileHit;
 import com.brutalbosses.entity.ModEntities;
-import com.brutalbosses.entity.capability.BossCapability;
 import com.brutalbosses.entity.thrownentity.ThrownItemEntity;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -38,10 +37,9 @@ public class TemporaryPotionGoal extends Goal
     private       TempPotionParams params;
     private       LivingEntity     target = null;
 
-    public TemporaryPotionGoal(MobEntity mob)
+    public TemporaryPotionGoal(MobEntity mob, final IAIParams params)
     {
-        final BossCapability cap = mob.getCapability(BossCapability.BOSS_CAP).orElse(null);
-        params = ((TempPotionParams) cap.getBossType().getAIParams(ID));
+        this.params = (TempPotionParams) params;
         this.mob = mob;
     }
 
