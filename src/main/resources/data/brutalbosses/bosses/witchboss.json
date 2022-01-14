@@ -41,6 +41,17 @@
     "minecraft:chests/simple_dungeon": 1,
     "minecraft:chests/stronghold_library": 3,
     "minecraft:chests/jungle_temple": 3,
-    "minecraft:chests/woodland_mansion": 3
+    "minecraft:chests/woodland_mansion": 3,
+    "dungeons_enhanced:castle_library": 1,
+    "dungeons_arise:chests/jungle_tree_house/jungle_tree_house_treasure": 1,
+    "dungeons_arise:chests/shiraz_palace/shiraz_palace_library": 1,
+    "dungeons_arise:chests/undead_pirate_ship/undead_pirate_ship_enchants": 1,
+    "endrem:chests/biblio": 1,
+    "illagers_plus:structure/illager_tower_enchanting": 1,
+    "mostructures:jungle_temple_treasure": 1,
+    "dungeoncrawl:chests/stage_5": 1,
+    "dungeons_enhanced:jungle_monument_treasure": 1,
+    "dungeons_arise:chests/mining_system/mining_system_treasure": 1,
+    "dungeons_arise:chests/plague_asylum/plague_asylum_treasure": 1
   }
 }

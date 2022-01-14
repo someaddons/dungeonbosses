@@ -30,11 +30,18 @@
   },
   "spawnatchest": {
     "minecraft:chests/simple_dungeon": 1,
-    "minecraft:chests/stronghold_crossing": 3,
+    "minecraft:chests/stronghold_crossing": 1,
     "minecraft:chests/stronghold_corridor": 2,
     "minecraft:chests/pillager_outpost": 2,
     "minecraft:chests/woodland_mansion": 5,
     "betterdungeons:skeleton_dungeon/chests/common": 1,
-    "betterdungeons:skeleton_dungeon/chests/middle": 1
+    "betterdungeons:skeleton_dungeon/chests/middle": 1,
+    "dungeons_enhanced:castle_bedroom": 1,
+    "dungeons_plus:chests/tower/vex": 1,
+    "dungeons_arise:chests/heavenly_conqueror/heavenly_conqueror_treasure": 1,
+    "dungeons_arise:chests/heavenly_rider/heavenly_rider_treasure": 1,
+    "graveyard:chests/totem_loot": 1,
+    "dungeoncrawl:chests/stage_5": 1,
+    "dungeons_enhanced:large_dungeon_treasury": 1
   }
 }

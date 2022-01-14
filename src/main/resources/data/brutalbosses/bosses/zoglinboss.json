@@ -29,6 +29,10 @@
   },
   "spawnatchest": {
     "minecraft:chests/nether_bridge": 1,
-    "minecraft:chests/bastion_hoglin_stable": 5
+    "minecraft:chests/bastion_hoglin_stable": 5,
+    "dungeons_enhanced:stables": 1,
+    "graveyard:chests/large_loot": 1,
+    "valhelsia_structures:chests/spawner_dungeon": 1,
+    "dungeons_enhanced:chests/monster_maze/treasure": 1
   }
 }

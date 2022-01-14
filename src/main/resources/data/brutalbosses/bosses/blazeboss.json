@@ -25,6 +25,10 @@
   },
   "spawnatchest": {
     "minecraft:chests/nether_bridge": 2,
-    "minecraft:chests/bastion_treasure": 2
+    "minecraft:chests/bastion_treasure": 2,
+    "dungeons_arise:chests/foundry/foundry_lava_pit": 1,
+    "infernalexp:chests/desolate_bastion_outpost_chest": 1,
+    "infernalexp:chests/glowstone_canyon_ruin_chest": 2,
+    "dungeons_arise:chests/scorched_mines/scorched_mines_treasure": 1
   }
 }

@@ -28,6 +28,21 @@
     "minecraft:chests/stronghold_crossing": 2,
     "minecraft:chests/woodland_mansion": 5,
     "minecraft:chests/pillager_outpost": 5,
-    "minecraft:chests/simple_dungeon": 1
+    "minecraft:chests/simple_dungeon": 1,
+    "goblinsanddungeons:chests/camp_loot_table": 1,
+    "dungeons_enhanced:pillager_camp_general": 1,
+    "dungeons_arise:chests/bandit_towers/bandit_towers_normal": 1,
+    "dungeons_arise:chests/illager_campsite/illager_campsite_map": 1,
+    "dungeons_arise:chests/illager_fort/illager_fort_normal": 1,
+    "illagers_plus:structure/ice_castle_rare": 1,
+    "illagers_plus:structure/illager_archer_tower": 1,
+    "illagers_plus:structure/illager_centre": 1,
+    "illagers_plus:structure/fort_rare": 1,
+    "mostructures:pillager_treasure": 1,
+    "dungeoncrawl:chests/stage_4": 1,
+    "dungeons_enhanced:large_dungeon_treasury": 1,
+    "dungeons_plus:chests/vanilla_dungeon": 1,
+    "dungeons_arise:chests/mines_treasure_big": 1,
+    "illagers_plus:structure/illager_mine": 1
   }
 }

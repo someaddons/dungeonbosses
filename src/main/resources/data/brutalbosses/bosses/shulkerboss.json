@@ -28,6 +28,7 @@
   "spawnatchest": {
     "minecraft:chests/end_city_treasure": 5,
     "minecraft:chests/stronghold_library": 1,
-    "minecraft:chests/simple_dungeon": 1
+    "minecraft:chests/simple_dungeon": 1,
+    "totw_additions:chests/end_tower/end_tower_chest": 1
   }
 }

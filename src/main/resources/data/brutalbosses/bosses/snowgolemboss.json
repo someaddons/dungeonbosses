@@ -31,6 +31,8 @@
   },
   "spawnatchest": {
     "minecraft:chests/village/village_snowy_house": 1,
-    "minecraft:chests/igloo_chest": 2
+    "minecraft:chests/igloo_chest": 2,
+    "dungeons_plus:chests/snowy_temple/common": 1,
+    "dungeons_enhanced:chests/ice_pit/hall": 1
   }
 }

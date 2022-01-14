@@ -56,6 +56,13 @@
   },
   "spawnatchest": {
     "minecraft:chests/end_city_treasure": 10,
-    "minecraft:chests/pillager_outpost": 2
+    "minecraft:chests/pillager_outpost": 2,
+    "dungeons_arise:chests/shiraz_palace/shiraz_palace_library": 1,
+    "endrem:chests/biblio": 1,
+    "illagers_plus:structure/illager_tower_enchanting": 1,
+    "totw_additions:chests/end_tower/end_tower_chest": 1,
+    "dungeoncrawl:chests/stage_5": 1,
+    "dungeons_arise:chests/mines_treasure_big": 1,
+    "dungeons_arise:chests/plague_asylum/plague_asylum_treasure": 1
   }
 }

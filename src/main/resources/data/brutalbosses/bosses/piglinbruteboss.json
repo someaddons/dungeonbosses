@@ -34,6 +34,9 @@
     "minecraft:chests/bastion_treasure": 5,
     "minecraft:chests/bastion_other": 1,
     "minecraft:chests/bastion_bridge": 5,
-    "minecraft:chests/bastion_hoglin_stable": 1
+    "minecraft:chests/bastion_hoglin_stable": 1,
+    "totw_additions:chests/nether_tower/nether_tower_chest": 1,
+    "infernalexp:chests/desolate_bastion_outpost_chest": 1,
+    "infernalexp:chests/glowstone_canyon_ruin_chest": 1
   }
 }

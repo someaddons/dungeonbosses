@@ -29,6 +29,12 @@
   "spawnatchest": {
     "minecraft:chests/nether_bridge": 3,
     "minecraft:chests/bastion_bridge": 1,
-    "minecraft:chests/bastion_hoglin_stable": 1
+    "minecraft:chests/bastion_hoglin_stable": 1,
+    "dungeons_arise:chests/foundry/foundry_treasure": 1,
+    "illagers_plus:structure/illager_archer_tower": 1,
+    "totw_additions:chests/nether_tower/nether_tower_chest": 1,
+    "infernalexp:chests/desolate_bastion_outpost_chest": 1,
+    "infernalexp:chests/glowstone_canyon_ruin_chest": 1,
+    "dungeons_arise:chests/scorched_mines/scorched_mines_treasure": 1
   }
 }

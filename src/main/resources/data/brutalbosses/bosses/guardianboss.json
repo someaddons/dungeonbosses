@@ -28,11 +28,11 @@
     }
   },
   "spawnatchest": {
-    "minecraft:chests/simple_dungeon": 5,
     "minecraft:chests/underwater_ruin_small": 5,
     "minecraft:chests/underwater_ruin_big": 5,
     "minecraft:chests/shipwreck_map": 2,
     "minecraft:chests/shipwreck_supply": 2,
-    "minecraft:chests/shipwreck_treasure": 2
+    "minecraft:chests/shipwreck_treasure": 2,
+    "minecraft:chests/buried_treasure": 1
   }
 }

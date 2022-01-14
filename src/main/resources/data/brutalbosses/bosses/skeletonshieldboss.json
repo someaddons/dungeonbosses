@@ -41,6 +41,27 @@
     "betterdungeons:skeleton_dungeon/chests/middle": 1,
     "betterdungeons:zombie_dungeon/chests/common": 1,
     "betterdungeons:zombie_dungeon/chests/special": 5,
-    "betterdungeons:zombie_dungeon/chests/tombstone": 1
+    "betterdungeons:zombie_dungeon/chests/tombstone": 1,
+    "dungeons_enhanced:castle_cellar": 1,
+    "dungeons_enhanced:castle_coffin": 1,
+    "dungeons_enhanced:chests/tower_of_the_undead/treasure": 1,
+    "dungeons_arise:chests/illager_corsair/illager_corsair_treasure": 1,
+    "mostructures:pyramid_custom": 1,
+    "graveyard:chests/large_loot": 1,
+    "valhelsia_structures:chests/treasure": 1,
+    "valhelsia_structures:chests/castle_ruin": 1,
+    "valhelsia_structures:chests/spawner_dungeon": 1,
+    "minecraft:chests/abandoned_mineshaft": 1,
+    "betterstrongholds:chests/crypt": 1,
+    "betterstrongholds:chests/common": 1,
+    "dungeoncrawl:chests/stage_3": 1,
+    "dungeons_enhanced:desert_tomb": 1,
+    "dungeons_enhanced:chests/ice_pit/hall": 1,
+    "dungeons_enhanced:large_dungeon_treasury": 1,
+    "dungeons_plus:chests/vanilla_dungeon": 1,
+    "dungeons_plus:chests/bigger_dungeon/husk": 1,
+    "dungeons_arise:chests/mining_system/mining_system_treasure": 1,
+    "dungeons_arise:chests/mines_treasure_medium": 1,
+    "stoneholm:crypt": 1
   }
 }

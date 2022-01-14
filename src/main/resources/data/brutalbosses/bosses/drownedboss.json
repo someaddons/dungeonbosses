@@ -37,6 +37,11 @@
     "minecraft:chests/underwater_ruin_big": 10,
     "minecraft:chests/shipwreck_treasure": 10,
     "minecraft:chests/shipwreck_supply": 10,
-    "minecraft:chests/shipwreck_map": 10
+    "minecraft:chests/shipwreck_map": 10,
+    "dungeons_enhanced:castle_spring": 1,
+    "dungeons_plus:chests/warped_garden/common": 1,
+    "dungeons_arise:chests/illager_galley/illager_galley_treasure": 1,
+    "dungeons_arise:chests/typhon/typhon_treasure": 1,
+    "minecraft:chests/buried_treasure": 3
   }
 }

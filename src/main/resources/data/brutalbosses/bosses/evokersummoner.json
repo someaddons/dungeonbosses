@@ -53,6 +53,19 @@
     "minecraft:chests/woodland_mansion": 3,
     "minecraft:chests/ruined_portal": 1,
     "minecraft:chests/pillager_outpost": 2,
-    "minecraft:chests/jungle_temple": 1
+    "minecraft:chests/jungle_temple": 1,
+    "dungeons_arise:chests/bandit_towers/bandit_towers_treasure": 1,
+    "dungeons_arise:chests/illager_fort/illager_fort_treasure": 1,
+    "dungeons_arise:chests/jungle_tree_house/jungle_tree_house_treasure": 1,
+    "endrem:chests/biblio": 1,
+    "illagers_plus:structure/illager_centre": 1,
+    "illagers_plus:structure/fort_rare": 1,
+    "illagers_plus:structure/illager_tower_enchanting": 1,
+    "mostructures:pillager_treasure": 1,
+    "betterstrongholds:chests/common": 1,
+    "dungeoncrawl:chests/stage_5": 1,
+    "dungeons_enhanced:large_dungeon_treasury": 1,
+    "dungeons_arise:chests/mines_treasure_big": 1,
+    "dungeons_arise:chests/scorched_mines/scorched_mines_treasure": 1
   }
 }
