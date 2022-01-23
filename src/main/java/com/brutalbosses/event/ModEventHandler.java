@@ -11,6 +11,7 @@ public class ModEventHandler
     @SubscribeEvent
     public static void onConfigChanged(ModConfig.ModConfigEvent event)
     {
+
     }
 
     @SubscribeEvent

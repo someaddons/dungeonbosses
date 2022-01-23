@@ -1,6 +1,7 @@
 package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
+import com.brutalbosses.entity.BossSpawnHandler;
 import com.brutalbosses.entity.IOnProjectileHit;
 import com.brutalbosses.entity.thrownentity.ThrownItemEntity;
 import com.google.gson.JsonObject;
@@ -10,16 +11,22 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.IServerWorld;
+import net.minecraft.world.server.ServerWorld;
 
 public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
 {
@@ -49,12 +56,6 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
         pearlEntity.setPos(mob.getX(), mob.getY() + mob.getEyeHeight() - 0.5, mob.getZ());
         pearlEntity.shoot(xDiff, yDiff, zDiff, 0.8F, 3.0F);
 
-        if (!((ItemThrowParams) params).teleport)
-        {
-            pearlEntity.ownerUUID = null;
-            pearlEntity.ownerNetworkId = 0;
-        }
-
         pearlEntity.setItem(((ItemThrowParams) params).item);
         pearlEntity.setNoGravity(true);
         if (pearlEntity instanceof IOnProjectileHit)
@@ -62,6 +63,11 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
             ((IOnProjectileHit) pearlEntity).setMaxLifeTime(mob.level.getGameTime() + 20 * 20);
             ((IOnProjectileHit) pearlEntity).setOnHitAction(rayTraceResult ->
             {
+                if (!mob.isAlive())
+                {
+                    return;
+                }
+
                 if (rayTraceResult instanceof EntityRayTraceResult)
                 {
                     final Entity hitEntity = ((EntityRayTraceResult) rayTraceResult).getEntity();
@@ -92,6 +98,29 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                               false,
                               Explosion.Mode.BREAK);
                         }
+
+                        if (((ItemThrowParams) params).teleport)
+                        {
+                            double d0 = (double) (-MathHelper.sin(mob.yRot * ((float) Math.PI / 180)));
+                            double d1 = (double) MathHelper.cos(mob.yRot * ((float) Math.PI / 180));
+                            if (mob.level instanceof ServerWorld)
+                            {
+                                ((ServerWorld) mob.level).sendParticles(ParticleTypes.PORTAL,
+                                  mob.getX() + d0,
+                                  mob.getY(0.5D),
+                                  mob.getZ() + d1,
+                                  20,
+                                  d0,
+                                  0.0D,
+                                  d1,
+                                  0.0D);
+                            }
+
+                            mob.level.playSound((PlayerEntity) null, mob.xo, mob.yo, mob.zo, SoundEvents.ENDERMAN_TELEPORT, mob.getSoundSource(), 1.0F, 1.0F);
+                            mob.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+
+                            mob.teleportTo(pearlEntity.getX(), hitEntity.getY(), pearlEntity.getZ());
+                        }
                     }
                 }
                 else if (rayTraceResult instanceof BlockRayTraceResult)
@@ -116,6 +145,33 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                           (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier.get()),
                           false,
                           Explosion.Mode.NONE);
+                    }
+
+                    if (((ItemThrowParams) params).teleport)
+                    {
+                        final BlockPos tpPos = BossSpawnHandler.findSpawnPosForBoss((IServerWorld) mob.level, mob, hitPos);
+                        if (tpPos != null)
+                        {
+                            double d0 = (double) (-MathHelper.sin(mob.yRot * ((float) Math.PI / 180)));
+                            double d1 = (double) MathHelper.cos(mob.yRot * ((float) Math.PI / 180));
+                            if (mob.level instanceof ServerWorld)
+                            {
+                                ((ServerWorld) mob.level).sendParticles(ParticleTypes.PORTAL,
+                                  mob.getX() + d0,
+                                  mob.getY(0.5D),
+                                  mob.getZ() + d1,
+                                  20,
+                                  d0,
+                                  0.0D,
+                                  d1,
+                                  0.0D);
+                            }
+
+                            mob.level.playSound((PlayerEntity) null, mob.xo, mob.yo, mob.zo, SoundEvents.ENDERMAN_TELEPORT, mob.getSoundSource(), 1.0F, 1.0F);
+                            mob.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+
+                            mob.teleportTo(tpPos.getX(), tpPos.getY(), tpPos.getZ());
+                        }
                     }
                 }
             });
@@ -179,17 +235,17 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
 
             if (jsonElement.has(TELEPORT))
             {
-                teleport = true;
+                teleport = jsonElement.get(TELEPORT).getAsBoolean();
             }
 
             if (jsonElement.has(LIGHTNING))
             {
-                lighting = true;
+                lighting = jsonElement.get(LIGHTNING).getAsBoolean();
             }
 
             if (jsonElement.has(EXPLODE))
             {
-                explode = true;
+                explode = jsonElement.get(EXPLODE).getAsBoolean();
             }
 
             if (jsonElement.has(PR_SIZE))

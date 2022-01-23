@@ -33,8 +33,8 @@
       "item": "{id: \"minecraft:ender_pearl\", Count: 1b}",
       "projectile_count": 1,
       "teleport": true,
-      "damage": 4,
-      "projectile_interval": 50,
+      "damage": 3,
+      "projectile_interval": 100,
       "projectile_aoe": false,
       "projectile_distance": 40
     }

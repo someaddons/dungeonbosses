@@ -23,7 +23,7 @@
   "ai-goals": {
     "brutalbosses:shootwitherskulls": {
       "projectile_count": 2,
-      "projectile_interval": 600,
+      "projectile_interval": 200,
       "projectile_aoe": true,
       "projectile_distance": 30,
       "dangerous": true

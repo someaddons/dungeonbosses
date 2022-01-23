@@ -23,7 +23,7 @@
     "brutalbosses:shootfireballs": {
       "projectile_count": 7,
       "projectile_interval": 300,
-      "projectile_distance": 45
+      "projectile_distance": 65
     }
   },
   "spawnatchest": {

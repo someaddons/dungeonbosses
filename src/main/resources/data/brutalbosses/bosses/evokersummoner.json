@@ -32,7 +32,7 @@
       "chasedistance": 20
     },
     "brutalbosses:summonmobs": {
-      "interval": 600,
+      "interval": 400,
       "maxcount": 10,
       "count": 2,
       "entityid": [

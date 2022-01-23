@@ -47,6 +47,7 @@ public abstract class SimpleRangedAttackGoal extends Goal
         this.attackIntervalMax = (this.params.interval + 10);
         this.attackRadiusSqr = this.params.distance * this.params.distance;
         playerAoeFinder = new EntityPredicate().range(this.params.distance);
+        attackTime = ((RangedParams) params).interval / 2;
     }
 
     protected abstract ResourceLocation getID();
@@ -85,6 +86,7 @@ public abstract class SimpleRangedAttackGoal extends Goal
             projectileEntity.remove();
         }
         projectileEntities.clear();
+        attackTime = params.interval / 2;
     }
 
     public void tick()

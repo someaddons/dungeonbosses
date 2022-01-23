@@ -29,6 +29,7 @@
     "brutalbosses:itemshootgoal": {
       "item": "{id: \"minecraft:stone_bricks\", Count: 1b}",
       "projectile_count": 1,
+      "projectilesize": 1.5,
       "projectile_interval": 300,
       "damage": 4,
       "projectile_distance": 20
