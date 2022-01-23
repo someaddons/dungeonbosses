@@ -7,11 +7,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MeleeAttackGoal.class)
 /**
@@ -38,15 +38,15 @@ public class MeleeAttackGoalMixin
         }
     }
 
-    @Overwrite
-    protected void resetAttackCooldown()
+    @Inject(method = "checkAndPerformAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/MeleeAttackGoal;resetAttackCooldown()V", shift = At.Shift.AFTER))
+    private void resetAttackCooldown(final LivingEntity p_190102_1_, final double p_190102_2_, final CallbackInfo ci)
     {
         ticksUntilNextAttack = (int) (20 / attackSpeedMod);
     }
 
-    @Overwrite
-    protected double getAttackReachSqr(LivingEntity p_179512_1_)
+    @Inject(method = "getAttackReachSqr", at = @At("HEAD"), cancellable = true)
+    private void getAttackReachSqr(final LivingEntity entity, final CallbackInfoReturnable<Double> cir)
     {
-        return (double) (mob.getBbWidth() * 2.0F * this.mob.getBbWidth() * 2.0F + p_179512_1_.getBbWidth()) * scale;
+        cir.setReturnValue((double) (mob.getBbWidth() * 2.0F * this.mob.getBbWidth() * 2.0F + entity.getBbWidth()) * scale);
     }
 }
