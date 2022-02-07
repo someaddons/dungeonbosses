@@ -71,6 +71,11 @@ public class BossJsonListener extends JsonReloadListener
         final ImmutableMap.Builder<ResourceLocation, BossType> bossTypes = ImmutableMap.<ResourceLocation, BossType>builder();
         for (final Map.Entry<ResourceLocation, JsonElement> entry : jsonElementMap.entrySet())
         {
+            if (!entry.getKey().getNamespace().equals(BrutalBosses.MODID))
+            {
+                continue;
+            }
+
             final BossType bossType = tryParse(entry);
             if (bossType != null)
             {

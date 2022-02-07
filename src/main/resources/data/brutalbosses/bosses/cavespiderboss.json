@@ -28,8 +28,10 @@
       "interval": 600,
       "maxcount": 2,
       "count": 1,
-      "entityid": [
-        "minecraft:cave_spider"
+      "entities": [
+        {
+          "entityid": "minecraft:cave_spider"
+        }
       ]
     }
   },

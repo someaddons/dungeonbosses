@@ -35,13 +35,23 @@
       "interval": 400,
       "maxcount": 10,
       "count": 2,
-      "entityid": [
-        "minecraft:zombie",
-        "minecraft:skeleton",
-        "minecraft:zombie",
-        "minecraft:husk",
-        "minecraft:wither_skeleton",
-        "minecraft:stray"
+      "entities": [
+        {
+          "entityid": "minecraft:zombie",
+          "entitynbt": "{Brain: {memories: {}}, HurtByTimestamp: 251, IsBaby: 1b, Attributes: [{Base: 0.0d, Name: \"minecraft:zombie.spawn_reinforcements\"}, {Base: 0.08d, Name: \"forge:entity_gravity\"}, {Base: 0.23000000417232513d, Name: \"minecraft:generic.movement_speed\"}], Invulnerable: 0b, FallFlying: 0b, PortalCooldown: 0, AbsorptionAmount: 0.0f, InWaterTime: -1, FallDistance: 0.0f, CanUpdate: 1b, DeathTime: 0s, ForgeCaps: {\"brutalbosses:bosscap\": {}}, HandDropChances: [0.085f, 0.085f], PersistenceRequired: 0b, UUID: [I; -1356225159, 445793596, -1560838011, 528914832], Motion: [0.0d, -0.0784000015258789d, 0.0d], Health: 18.119999f, LeftHanded: 0b, Air: 300s, OnGround: 1b, Rotation: [88.88051f, 0.0f], HandItems: [{}, {}], ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f], Pos: [-59.22638885988113d, 55.0d, 100.53636996754722d], CanBreakDoors: 0b, Fire: -1s, ArmorItems: [{}, {}, {}, {}], CanPickUpLoot: 0b, HurtTime: 0s, DrownedConversionTime: -1}"
+        },
+        {
+          "entityid": "minecraft:skeleton"
+        },
+        {
+          "entityid": "minecraft:husk"
+        },
+        {
+          "entityid": "minecraft:wither_skeleton"
+        },
+        {
+          "entityid": "minecraft:stray"
+        }
       ]
     }
   },

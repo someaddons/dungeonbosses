@@ -21,7 +21,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class ThrownItemEntity extends ProjectileItemEntity
 {
     public static  ResourceLocation     ID           = new ResourceLocation(BrutalBosses.MODID, "thrownitem");
-    private static DataParameter<Float> DATA_VSSCALE = EntityDataManager.defineId(ProjectileItemEntity.class, DataSerializers.FLOAT);
+    private static DataParameter<Float> DATA_VSSCALE = EntityDataManager.defineId(ThrownItemEntity.class, DataSerializers.FLOAT);
 
     /**
      * Scale of the entity, synced

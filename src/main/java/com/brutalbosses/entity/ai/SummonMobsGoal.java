@@ -2,8 +2,10 @@ package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.BossSpawnHandler;
+import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
@@ -11,6 +13,8 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.monster.SpellcastingIllagerEntity;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.Hand;
@@ -19,8 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Simply chases the target at the required distance
@@ -122,7 +125,30 @@ public class SummonMobsGoal extends Goal
             return;
         }
 
-        final LivingEntity summoned = params.entityIDs.get(BrutalBosses.rand.nextInt(params.entityIDs.size())).create(mob.level);
+        final LivingEntity summoned;
+        final EntityType entityType = params.entityIDs.get(BrutalBosses.rand.nextInt(params.entityIDs.size()));
+
+        try
+        {
+            summoned = (LivingEntity) entityType.create(mob.level);
+            if (params.entityNBTData.containsKey(entityType.getRegistryName()))
+            {
+                summoned.load(params.entityNBTData.get(entityType.getRegistryName()));
+                summoned.setUUID(UUID.randomUUID());
+            }
+        }
+        catch (Exception e)
+        {
+            final BossCapability bossCapability = mob.getCapability(BossCapability.BOSS_CAP).orElse(null);
+            if (bossCapability != null)
+            {
+                BrutalBosses.LOGGER.warn("Failed summoning add for boss:" + bossCapability.getBossType().getID(), e);
+                return;
+            }
+            BrutalBosses.LOGGER.warn("Failed summoning addfor boss:", e);
+            return;
+        }
+
         final BlockPos spawnPos = BossSpawnHandler.findSpawnPosForBoss((ServerWorld) mob.level, summoned, mob.blockPosition());
 
         if (spawnPos == null)
@@ -166,11 +192,12 @@ public class SummonMobsGoal extends Goal
 
     public static class SummonParams extends IAIParams.DefaultParams
     {
-        private int                                      interval    = 500;
-        private List<EntityType<? extends LivingEntity>> entityIDs   = new ArrayList<>();
-        private int                                      count       = 1;
-        private int                                      maxcount    = 2;
-        private float                                    ownerdamage = 0f;
+        private int                                      interval      = 500;
+        private List<EntityType<? extends LivingEntity>> entityIDs     = new ArrayList<>();
+        private int                                      count         = 1;
+        private int                                      maxcount      = 2;
+        private float                                    ownerdamage   = 0f;
+        private Map<ResourceLocation, CompoundNBT>       entityNBTData = new HashMap<>();
 
         public SummonParams(final JsonObject jsonData)
         {
@@ -178,24 +205,45 @@ public class SummonMobsGoal extends Goal
             parse(jsonData);
         }
 
-        private static final String SUMM_INTERVAL = "interval";
-        private static final String SUMM_MAX      = "maxcount";
-        private static final String SUMM_COUNT    = "count";
-        private static final String ENTITY_ID     = "entityid";
-        private static final String OWNERDAMAGE   = "ownerdamagepct";
+        private static final String SUMM_INTERVAL   = "interval";
+        private static final String SUMM_MAX        = "maxcount";
+        private static final String SUMM_COUNT      = "count";
+        private static final String ENTITY_ID       = "entityid";
+        private static final String ENTITIES        = "entities";
+        private static final String OWNERDAMAGE     = "ownerdamagepct";
+        private static final String SUMM_ENTITY_NBT = "entitynbt";
 
         @Override
         public IAIParams parse(final JsonObject jsonElement)
         {
             super.parse(jsonElement);
 
-            final List<EntityType<? extends LivingEntity>> types = new ArrayList<>();
-            for (final JsonElement entityID : jsonElement.get(ENTITY_ID).getAsJsonArray())
+            if (jsonElement.has(ENTITIES))
             {
-                types.add((EntityType<? extends LivingEntity>) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityID.getAsString())));
+                final Map<ResourceLocation, CompoundNBT> entityData = new HashMap<>();
+                final List<EntityType<? extends LivingEntity>> types = new ArrayList<>();
+
+                for (JsonElement entityEntry : jsonElement.get(ENTITIES).getAsJsonArray())
+                {
+                    final ResourceLocation entityID = new ResourceLocation(((JsonObject) entityEntry).get(ENTITY_ID).getAsString());
+                    types.add((EntityType<? extends LivingEntity>) ForgeRegistries.ENTITIES.getValue(entityID));
+                    if (((JsonObject) entityEntry).has(SUMM_ENTITY_NBT))
+                    {
+                        try
+                        {
+                            entityData.put(entityID, JsonToNBT.parseTag(((JsonObject) entityEntry).get(SUMM_ENTITY_NBT).getAsString()));
+                        }
+                        catch (CommandSyntaxException e)
+                        {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+                entityIDs = types;
+                entityNBTData = entityData;
             }
 
-            entityIDs = types;
+
             if (jsonElement.has(SUMM_INTERVAL))
             {
                 interval = jsonElement.get(SUMM_INTERVAL).getAsInt();
