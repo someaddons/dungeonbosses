@@ -149,7 +149,7 @@ public class EventHandler
                         return;
                     }
 
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 0; i < cap.getBossType().getItemLootCount(); i++)
                     {
                         final ItemEntity itementity =
                           new ItemEntity(event.getEntity().level, event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), list.get(

@@ -53,6 +53,7 @@ public class BossJsonListener extends JsonReloadListener
     public static final String Name             = "name";
     public static final String SCALE            = "visualscale";
     public static final String EXP              = "experience";
+    public static final String ITEM_LOOT_COUNT  = "droppeditemamount";
 
     /**
      * Random
@@ -138,6 +139,11 @@ public class BossJsonListener extends JsonReloadListener
             if (data.has(EXP))
             {
                 bossType.setExperienceDrop(data.get(EXP).getAsInt());
+            }
+
+            if (data.has(ITEM_LOOT_COUNT))
+            {
+                bossType.setItemLootCount(data.get(ITEM_LOOT_COUNT).getAsInt());
             }
 
             if (data.has(EFFECTS))

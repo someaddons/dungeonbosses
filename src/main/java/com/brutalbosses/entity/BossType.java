@@ -53,6 +53,7 @@ public class BossType
     private String desc;
     private float  scale             = 1.0f;
     private int    experienceDropped = 1;
+    private int    itemLootCount     = 3;
 
     public BossType(final EntityType entityToUse, final ResourceLocation id)
     {
@@ -370,5 +371,15 @@ public class BossType
     public IAIParams getAIParams(final ResourceLocation id)
     {
         return aiData.get(id);
+    }
+
+    public int getItemLootCount()
+    {
+        return itemLootCount;
+    }
+
+    public void setItemLootCount(final int itemLootCount)
+    {
+        this.itemLootCount = itemLootCount;
     }
 }

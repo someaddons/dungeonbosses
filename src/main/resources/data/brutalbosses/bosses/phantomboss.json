@@ -38,6 +38,7 @@
     "totw_additions:chests/end_tower/end_tower_chest": 3,
     "graveyard:chests/totem_loot": 1,
     "valhelsia_structures:chests/castle_ruin": 2,
-    "infernalexp:chests/basalt_delta_ruin_chest": 1
+    "infernalexp:chests/basalt_delta_ruin_chest": 1,
+    "dungeons_arise:chests/aviary/aviary_barrels": 1
   }
 }

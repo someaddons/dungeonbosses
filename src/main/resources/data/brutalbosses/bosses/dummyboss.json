@@ -80,7 +80,7 @@
     "betterdungeons:spider_dungeon/chests/egg_room": 7,
     "betterdungeons:zombie_dungeon/chests/common": 25,
     "betterstrongholds:chests/crypt": 10,
-    "betterstrongholds:chests/common": 15,
+    "betterstrongholds:chests/common": 35,
     "dungeoncrawl:chests/stage_3": 15,
     "dungeoncrawl:chests/stage_4": 10,
     "dungeoncrawl:chests/stage_5": 10,
@@ -99,6 +99,7 @@
     "illagers_plus:structure/illager_mine": 10,
     "stoneholm:crypt": 1,
     "minecraft:chests/buried_treasure": 5,
-    "minecraft:chests/jungle_temple_dispenser": 10
+    "minecraft:chests/jungle_temple_dispenser": 10,
+    "dungeons_arise:chests/aviary/aviary_barrels": 10
   }
 }
