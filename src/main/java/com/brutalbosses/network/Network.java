@@ -47,6 +47,13 @@ public class Network
               msg.read(p);
               return msg;
           }, VanillaParticleMessage::handle);
+        channel.registerMessage(4, BossTypeSyncMessage.class,
+          BossTypeSyncMessage::write,
+          p -> {
+              final BossTypeSyncMessage msg = new BossTypeSyncMessage();
+              msg.read(p);
+              return msg;
+          }, BossTypeSyncMessage::handle);
     }
 
     public void sendPacket(final ServerPlayerEntity playerEntity, final IMessage msg)

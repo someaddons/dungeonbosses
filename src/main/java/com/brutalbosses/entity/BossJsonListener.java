@@ -60,7 +60,9 @@ public class BossJsonListener extends JsonReloadListener
      */
     private static final Random rand = new Random();
 
-    public BossJsonListener()
+    public static final BossJsonListener instance = new BossJsonListener();
+
+    private BossJsonListener()
     {
         super(GSON, "bosses");
     }

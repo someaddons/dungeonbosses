@@ -7,6 +7,7 @@ import com.brutalbosses.entity.CustomAttributes;
 import com.brutalbosses.entity.capability.BossCapability;
 import com.brutalbosses.network.BossCapMessage;
 import com.brutalbosses.network.BossOverlayMessage;
+import com.brutalbosses.network.BossTypeSyncMessage;
 import com.brutalbosses.network.Network;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
@@ -166,7 +167,7 @@ public class EventHandler
     {
         final Entity entity = evt.getObject();
 
-        if (BossTypeManager.instance.isValidBossEntity(entity))
+        if (entity.level.isClientSide || BossTypeManager.instance.isValidBossEntity(entity))
         {
             evt.addCapability(BossCapability.ID, new BossCapability(entity));
         }
@@ -175,7 +176,7 @@ public class EventHandler
     @SubscribeEvent
     public static void onAddReloadListenerEvent(final AddReloadListenerEvent event)
     {
-        event.addListener(new BossJsonListener());
+        event.addListener(BossJsonListener.instance);
     }
 
     @SubscribeEvent
@@ -192,5 +193,11 @@ public class EventHandler
                 Network.instance.sendPacket((ServerPlayerEntity) playerEntity, new BossCapMessage(bossCapability));
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onTrack(PlayerEvent.PlayerLoggedInEvent event)
+    {
+        Network.instance.sendPacket((ServerPlayerEntity) event.getPlayer(), new BossTypeSyncMessage(BossTypeManager.instance.bosses.values()));
     }
 }

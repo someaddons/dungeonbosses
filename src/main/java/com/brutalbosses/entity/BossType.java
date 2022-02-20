@@ -13,11 +13,13 @@ import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.monster.SpellcastingIllagerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -381,5 +383,42 @@ public class BossType
     public void setItemLootCount(final int itemLootCount)
     {
         this.itemLootCount = itemLootCount;
+    }
+
+    /**
+     * Serialize nbt to client
+     *
+     * @return
+     */
+    public CompoundNBT serializeToClient()
+    {
+        final CompoundNBT compoundNBT = new CompoundNBT();
+        compoundNBT.putString("id", id.toString());
+        compoundNBT.putString("etype", entityToUse.getRegistryName().toString());
+        compoundNBT.putFloat("scale", scale);
+
+
+        return compoundNBT;
+    }
+
+    /**
+     * Serialize nbt to client
+     *
+     * @return
+     */
+    public static BossType deserializeAtClient(final CompoundNBT compoundNBT)
+    {
+        final ResourceLocation id = ResourceLocation.tryParse(compoundNBT.getString("id"));
+        final ResourceLocation entity = ResourceLocation.tryParse(compoundNBT.getString("etype"));
+        final EntityType type = ForgeRegistries.ENTITIES.getValue(entity);
+
+        if (type == null)
+        {
+            return null;
+        }
+
+        final BossType bossType = new BossType(type, id);
+        bossType.setVisualScale(compoundNBT.getFloat("scale"));
+        return bossType;
     }
 }
