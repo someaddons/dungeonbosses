@@ -1,15 +1,15 @@
 package com.brutalbosses.network;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public interface IMessage
 {
-    void write(PacketBuffer buffer);
+    void write(FriendlyByteBuf buffer);
 
-    IMessage read(PacketBuffer buffer);
+    IMessage read(FriendlyByteBuf buffer);
 
     void handle(Supplier<NetworkEvent.Context> contextSupplier);
 }

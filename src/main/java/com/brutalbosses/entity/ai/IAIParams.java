@@ -2,7 +2,7 @@ package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
 import com.google.gson.JsonObject;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.function.Predicate;
 

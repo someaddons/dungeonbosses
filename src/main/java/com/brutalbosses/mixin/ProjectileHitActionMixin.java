@@ -1,12 +1,12 @@
 package com.brutalbosses.mixin;
 
 import com.brutalbosses.entity.IOnProjectileHit;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,22 +14,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Consumer;
 
-@Mixin(ProjectileEntity.class)
+@Mixin(Projectile.class)
 public abstract class ProjectileHitActionMixin extends Entity implements IOnProjectileHit
 {
     private long maxLifeTime = 0;
 
-    public ProjectileHitActionMixin(final EntityType<?> p_i48580_1_, final World p_i48580_2_)
+    public ProjectileHitActionMixin(final EntityType<?> p_i48580_1_, final Level p_i48580_2_)
     {
         super(p_i48580_1_, p_i48580_2_);
     }
 
-    private Consumer<RayTraceResult> onHitAction = null;
+    private Consumer<HitResult> onHitAction = null;
 
     private float damageModifier = 0f;
 
     @Inject(method = "onHit", at = @At("HEAD"), cancellable = true)
-    public void onHitCallback(final RayTraceResult rayTraceResult, final CallbackInfo ci)
+    public void onHitCallback(final HitResult rayTraceResult, final CallbackInfo ci)
     {
         if (onHitAction != null)
         {
@@ -44,12 +44,12 @@ public abstract class ProjectileHitActionMixin extends Entity implements IOnProj
         super.tick();
         if (maxLifeTime != 0 && level.getGameTime() > maxLifeTime)
         {
-            remove();
+            remove(Entity.RemovalReason.DISCARDED);
         }
     }
 
     @Override
-    public boolean save(final CompoundNBT nbt)
+    public boolean save(final CompoundTag nbt)
     {
         if (maxLifeTime != 0)
         {
@@ -59,7 +59,7 @@ public abstract class ProjectileHitActionMixin extends Entity implements IOnProj
     }
 
     @Override
-    public void setOnHitAction(final Consumer<RayTraceResult> action)
+    public void setOnHitAction(final Consumer<HitResult> action)
     {
         onHitAction = action;
     }

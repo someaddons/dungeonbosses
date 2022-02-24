@@ -1,8 +1,8 @@
 package com.brutalbosses.world;
 
-import net.minecraft.world.IServerWorld;
+import net.minecraft.world.level.ServerLevelAccessor;
 
 public interface RegionAwareTE
 {
-    public void setRegion(final IServerWorld region);
+    public void setRegion(final ServerLevelAccessor region);
 }

@@ -9,26 +9,26 @@ import com.brutalbosses.network.BossCapMessage;
 import com.brutalbosses.network.BossOverlayMessage;
 import com.brutalbosses.network.BossTypeSyncMessage;
 import com.brutalbosses.network.Network;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.LootTable;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IndirectEntityDamageSource;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -67,12 +67,12 @@ public class EventHandler
     @SubscribeEvent
     public static void applyProjectileDamageBoost(final LivingHurtEvent event)
     {
-        if (event.getSource().getEntity() instanceof PlayerEntity && event.getEntity() instanceof MobEntity)
+        if (event.getSource().getEntity() instanceof Player && event.getEntity() instanceof Mob)
         {
             final BossCapability cap = event.getEntity().getCapability(BossCapability.BOSS_CAP).orElse(null);
             if (cap != null && cap.isBoss())
             {
-                Network.instance.sendPacket((ServerPlayerEntity) event.getSource().getEntity(), new BossOverlayMessage(event.getEntity().getId()));
+                Network.instance.sendPacket((ServerPlayer) event.getSource().getEntity(), new BossOverlayMessage(event.getEntity().getId()));
             }
             return;
         }
@@ -96,13 +96,13 @@ public class EventHandler
             return;
         }
 
-        final TileEntity te = event.getEntity().level.getBlockEntity(event.getPos());
-        if (te instanceof LockableLootTileEntity && ((LockableLootTileEntity) te).lootTable != null)
+        final BlockEntity te = event.getEntity().level.getBlockEntity(event.getPos());
+        if (te instanceof RandomizableContainerBlockEntity && ((RandomizableContainerBlockEntity) te).lootTable != null)
         {
             event.getPlayer()
-              .sendMessage(new StringTextComponent("[Loottable: " + ((LockableLootTileEntity) te).lootTable + "]").setStyle(Style.EMPTY.withColor(TextFormatting.GOLD)
-                                                                                                                              .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD,
-                                                                                                                                ((LockableLootTileEntity) te).lootTable.toString()))),
+              .sendMessage(new TextComponent("[Loottable: " + ((RandomizableContainerBlockEntity) te).lootTable + "]").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)
+                  .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD,
+                    ((RandomizableContainerBlockEntity) te).lootTable.toString()))),
                 event.getPlayer().getUUID());
         }
     }
@@ -110,7 +110,7 @@ public class EventHandler
     @SubscribeEvent
     public static void onBossDeath(final LivingDeathEvent event)
     {
-        if (!event.getEntity().level.isClientSide() && event.getSource().getEntity() instanceof ServerPlayerEntity)
+        if (!event.getEntity().level.isClientSide() && event.getSource().getEntity() instanceof ServerPlayer)
         {
             final BossCapability cap = event.getEntity().getCapability(BossCapability.BOSS_CAP).orElse(null);
             if (cap != null && cap.isBoss())
@@ -118,34 +118,34 @@ public class EventHandler
                 int exp = cap.getBossType().getExperienceDrop();
                 while (exp > 0)
                 {
-                    int orbValue = ExperienceOrbEntity.getExperienceValue(exp);
+                    int orbValue = ExperienceOrb.getExperienceValue(exp);
                     exp -= orbValue;
-                    event.getEntity().level.addFreshEntity(new ExperienceOrbEntity(event.getEntity().level,
+                    event.getEntity().level.addFreshEntity(new ExperienceOrb(event.getEntity().level,
                       event.getEntity().getX(),
                       event.getEntity().getY(),
                       event.getEntity().getZ(),
                       orbValue));
                 }
 
-                final int gearDropCount = Math.min(EquipmentSlotType.values().length, (int) cap.getBossType().getCustomAttributeValueOrDefault(DROP_GEAR, 0));
+                final int gearDropCount = Math.min(EquipmentSlot.values().length, (int) cap.getBossType().getCustomAttributeValueOrDefault(DROP_GEAR, 0));
 
                 for (int i = 0; i < gearDropCount; i++)
                 {
                     final ItemEntity itementity =
                       new ItemEntity(event.getEntity().level, event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(),
-                        event.getEntityLiving().getItemBySlot(EquipmentSlotType.values()[i]));
+                        event.getEntityLiving().getItemBySlot(EquipmentSlot.values()[i]));
                     event.getEntity().level.addFreshEntity(itementity);
                 }
 
                 if (cap.getLootTable() != null)
                 {
-                    final LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerWorld) event.getEntity().level))
-                                                                      .withParameter(LootParameters.ORIGIN, event.getEntity().position())
-                                                                      .withParameter(LootParameters.THIS_ENTITY, event.getSource().getEntity())
-                                                                      .withLuck(((ServerPlayerEntity) event.getSource().getEntity()).getLuck());
+                    final LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel) event.getEntity().level))
+                      .withParameter(LootContextParams.ORIGIN, event.getEntity().position())
+                      .withParameter(LootContextParams.THIS_ENTITY, event.getSource().getEntity())
+                      .withLuck(((ServerPlayer) event.getSource().getEntity()).getLuck());
 
                     final LootTable loottable = event.getEntity().level.getServer().getLootTables().get(cap.getLootTable());
-                    final List<ItemStack> list = loottable.getRandomItems(lootcontext$builder.create(LootParameterSets.CHEST));
+                    final List<ItemStack> list = loottable.getRandomItems(lootcontext$builder.create(LootContextParamSets.CHEST));
 
                     if (list.isEmpty())
                     {
@@ -185,14 +185,14 @@ public class EventHandler
     public static void onTrack(PlayerEvent.StartTracking event)
     {
         final Entity entity = event.getTarget();
-        final PlayerEntity playerEntity = event.getPlayer();
+        final Player Player = event.getPlayer();
 
-        if (playerEntity instanceof ServerPlayerEntity)
+        if (Player instanceof ServerPlayer)
         {
             final BossCapability bossCapability = entity.getCapability(BossCapability.BOSS_CAP).orElse(null);
             if (bossCapability != null)
             {
-                Network.instance.sendPacket((ServerPlayerEntity) playerEntity, new BossCapMessage(bossCapability));
+                Network.instance.sendPacket((ServerPlayer) Player, new BossCapMessage(bossCapability));
             }
         }
     }
@@ -202,7 +202,7 @@ public class EventHandler
     {
         DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
         {
-            Network.instance.sendPacket((ServerPlayerEntity) event.getPlayer(), new BossTypeSyncMessage(BossTypeManager.instance.bosses.values()));
+            Network.instance.sendPacket((ServerPlayer) event.getPlayer(), new BossTypeSyncMessage(BossTypeManager.instance.bosses.values()));
         });
     }
 }

@@ -1,11 +1,11 @@
 package com.brutalbosses.network;
 
 import com.brutalbosses.BrutalBosses;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 public class Network
 {
@@ -56,8 +56,8 @@ public class Network
           }, BossTypeSyncMessage::handle);
     }
 
-    public void sendPacket(final ServerPlayerEntity playerEntity, final IMessage msg)
+    public void sendPacket(final ServerPlayer Player, final IMessage msg)
     {
-        channel.send(PacketDistributor.PLAYER.with(() -> playerEntity), msg);
+        channel.send(PacketDistributor.PLAYER.with(() -> Player), msg);
     }
 }

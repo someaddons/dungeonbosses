@@ -3,10 +3,10 @@ package com.brutalbosses.network;
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.event.ClientEventHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -28,13 +28,13 @@ public class BossOverlayMessage implements IMessage
     }
 
     @Override
-    public void write(final PacketBuffer buffer)
+    public void write(final FriendlyByteBuf buffer)
     {
         buffer.writeInt(entityID);
     }
 
     @Override
-    public BossOverlayMessage read(final PacketBuffer buffer)
+    public BossOverlayMessage read(final FriendlyByteBuf buffer)
     {
         entityID = buffer.readInt();
         return this;

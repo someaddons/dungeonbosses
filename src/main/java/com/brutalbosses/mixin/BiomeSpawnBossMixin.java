@@ -1,13 +1,16 @@
 package com.brutalbosses.mixin;
 
 import com.brutalbosses.world.PostStructureInfoGetter;
-import net.minecraft.util.SharedSeedRandom;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.WorldGenRegion;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.StructureManager;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.SectionPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,32 +19,45 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
 
-@Mixin(Biome.class)
+@Mixin(ChunkGenerator.class)
 /**
  * Sets the currently generating structure
  */
 public class BiomeSpawnBossMixin
 {
-    @Inject(method = "generate", at = @At(value = "INVOKE", target = "Ljava/util/stream/Stream;forEach(Ljava/util/function/Consumer;)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "applyBiomeDecoration", at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
     public void beforeStructure(
-      final StructureManager structureManager,
-      final ChunkGenerator chunkGenerator,
-      final WorldGenRegion worldGenRegion,
-      final long p_242427_4_,
-      final SharedSeedRandom p_242427_6_, final BlockPos pos, final CallbackInfo ci, List list, int i, int j, int k, Iterator var12, Structure structure)
+      final WorldGenLevel worldGenRegion,
+      final ChunkAccess supplier,
+      final StructureFeatureManager structurefeature,
+      final CallbackInfo ci,
+      final ChunkPos chunkpos,
+      final SectionPos sectionpos,
+      final BlockPos blockpos,
+      final Map map,
+      final List list,
+      final WorldgenRandom worldgenrandom,
+      final long i,
+      final Set set,
+      final int j,
+      final Registry registry,
+      final Registry registry1,
+      final int k,
+      final int l,
+      final int i1,
+      final Iterator var19,
+      final StructureFeature structurefeature1, final Supplier supplier2)
     {
         final PostStructureInfoGetter infoGetter = (PostStructureInfoGetter) worldGenRegion;
-        infoGetter.setCurrent(structure);
+        infoGetter.setCurrent(structurefeature1);
     }
 
-    @Inject(method = "generate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/gen/feature/structure/StructureManager;startsForFeature(Lnet/minecraft/util/math/SectionPos;Lnet/minecraft/world/gen/feature/structure/Structure;)Ljava/util/stream/Stream;", shift = At.Shift.AFTER))
-    public void afterStructures(
-      final StructureManager structureManager,
-      final ChunkGenerator chunkGenerator,
-      final WorldGenRegion worldGenRegion,
-      final long p_242427_4_,
-      final SharedSeedRandom p_242427_6_, final BlockPos pos, final CallbackInfo ci)
+    @Inject(method = "applyBiomeDecoration", at = @At(value = "RETURN"))
+    public void afterStructures(final WorldGenLevel worldGenRegion, final ChunkAccess p_187713_, final StructureFeatureManager p_187714_, final CallbackInfo ci)
     {
         final PostStructureInfoGetter infoGetter = (PostStructureInfoGetter) worldGenRegion;
         infoGetter.setCurrent(null);

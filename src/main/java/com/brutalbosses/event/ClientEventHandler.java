@@ -4,15 +4,13 @@ import com.brutalbosses.entity.ModEntities;
 import com.brutalbosses.entity.capability.BossCapability;
 import com.brutalbosses.entity.thrownentity.CSpriteRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ClientBossInfo;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.play.server.SUpdateBossInfoPacket;
-import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -70,8 +68,8 @@ public class ClientEventHandler
             return;
         }
 
-        final Entity target = Minecraft.getInstance().hitResult != null && Minecraft.getInstance().hitResult instanceof EntityRayTraceResult
-                                ? ((EntityRayTraceResult) Minecraft.getInstance().hitResult).getEntity()
+        final Entity target = Minecraft.getInstance().hitResult != null && Minecraft.getInstance().hitResult instanceof EntityHitResult
+                                ? ((EntityHitResult) Minecraft.getInstance().hitResult).getEntity()
                                 : null;
 
         checkEntity(target);
@@ -80,7 +78,7 @@ public class ClientEventHandler
         for (final Iterator<Map.Entry<Entity, ClientBossUI>> iterator = bossInfoMap.entrySet().iterator(); iterator.hasNext(); )
         {
             final Map.Entry<Entity, ClientBossUI> entry = iterator.next();
-            entry.getValue().bossInfo.update(new SUpdateBossInfoPacketInfoHolder(entry.getKey(), entry.getValue().cap, SUpdateBossInfoPacket.Operation.UPDATE_PCT));
+            entry.getValue().bossInfo.update((LivingEntity) entry.getKey(), entry.getValue().cap);
             if (!entry.getKey().isAlive() || entry.getValue().timeOut < entry.getKey().level.getGameTime()
                   || entry.getKey().blockPosition().distManhattan(event.player.blockPosition()) > 50)
             {
@@ -89,7 +87,7 @@ public class ClientEventHandler
             }
             else
             {
-                if (event.player.canSee(entry.getKey()))
+                if (event.player.hasLineOfSight(entry.getKey()))
                 {
                     entry.getValue().timeOut = event.player.level.getGameTime() + 20 * 30;
                 }
@@ -104,9 +102,9 @@ public class ClientEventHandler
      * @param cap
      * @return
      */
-    private static ClientBossUI createBossGUI(final Entity target, final BossCapability cap)
+    private static ClientBossUI createBossGUI(final LivingEntity target, final BossCapability cap)
     {
-        ClientBossUI ui = new ClientBossUI(new ClientBossInfo(new SUpdateBossInfoPacketInfoHolder(target, cap, SUpdateBossInfoPacket.Operation.ADD)), target, cap);
+        ClientBossUI ui = new ClientBossUI(new ClientBossEvent(target, cap), target, cap);
         Minecraft.getInstance().gui.getBossOverlay().events.put(ui.bossInfo.getId(), ui.bossInfo);
         return ui;
     }
@@ -125,7 +123,7 @@ public class ClientEventHandler
                 }
                 else
                 {
-                    bossInfoMap.put(target, createBossGUI(target, cap));
+                    bossInfoMap.put(target, createBossGUI((LivingEntity) target, cap));
                 }
             }
         }
@@ -133,23 +131,24 @@ public class ClientEventHandler
 
     private static class ClientBossUI
     {
-        private ClientBossInfo bossInfo;
-        private long           timeOut;
-        private Entity         boss;
-        private BossCapability cap;
+        private ClientBossEvent bossInfo;
+        private long            timeOut;
+        private Entity          boss;
+        private BossCapability  cap;
 
-        private ClientBossUI(final ClientBossInfo bossInfo, final Entity boss, final BossCapability cap)
+        private ClientBossUI(final ClientBossEvent bossEVent, final Entity boss, final BossCapability cap)
         {
-            this.bossInfo = bossInfo;
+            this.bossInfo = bossEVent;
             this.timeOut = boss.level.getGameTime() + 20 * 30;
             this.boss = boss;
             this.cap = cap;
         }
     }
 
-    public static void initRenderers()
+    @SubscribeEvent
+    public static void initRenderers(EntityRenderersEvent.RegisterRenderers event)
     {
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.THROWN_ITEMC,
+        event.registerEntityRenderer(ModEntities.THROWN_ITEMC,
           manager -> new CSpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer(), 1.0f, true));
     }
 }

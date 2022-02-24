@@ -1,10 +1,10 @@
 package com.brutalbosses.entity.ai;
 
 import com.google.gson.JsonObject;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 /**
  * Simply chases the target at the required distance
@@ -13,11 +13,11 @@ public class OutofCombatRegen extends Goal
 {
     public static ResourceLocation ID = new ResourceLocation("brutalbosses:aftercombatregen");
 
-    private final MobEntity mob;
-    private final float     amount;
+    private final Mob   mob;
+    private final float amount;
     private       int       combatTimer = 0;
 
-    public OutofCombatRegen(MobEntity mob, final IAIParams params)
+    public OutofCombatRegen(Mob mob, final IAIParams params)
     {
         amount = ((CombatParams) params).amount;
         this.mob = mob;

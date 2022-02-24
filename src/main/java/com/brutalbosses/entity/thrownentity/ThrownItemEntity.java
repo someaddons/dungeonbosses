@@ -2,33 +2,33 @@ package com.brutalbosses.entity.thrownentity;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.ModEntities;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.projectile.ProjectileItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkHooks;
 
 /**
  * Custom thrown item entity
  */
-public class ThrownItemEntity extends ProjectileItemEntity
+public class ThrownItemEntity extends ThrowableItemProjectile
 {
-    public static  ResourceLocation     ID           = new ResourceLocation(BrutalBosses.MODID, "thrownitem");
-    private static DataParameter<Float> DATA_VSSCALE = EntityDataManager.defineId(ThrownItemEntity.class, DataSerializers.FLOAT);
+    public static  ResourceLocation          ID           = new ResourceLocation(BrutalBosses.MODID, "thrownitem");
+    private static EntityDataAccessor<Float> DATA_VSSCALE = SynchedEntityData.defineId(ThrownItemEntity.class, EntityDataSerializers.FLOAT);
 
     /**
      * Scale of the entity, synced
      */
     private float scale = 1.0f;
 
-    public ThrownItemEntity(final EntityType<? extends ProjectileItemEntity> type, final World world)
+    public ThrownItemEntity(final EntityType<? extends ThrowableItemProjectile> type, final Level world)
     {
         super(type, world);
         noCulling = true;
@@ -40,7 +40,7 @@ public class ThrownItemEntity extends ProjectileItemEntity
         this.getEntityData().define(DATA_VSSCALE, 1.0f);
     }
 
-    public void onSyncedDataUpdated(DataParameter<?> dataParameter)
+    public void onSyncedDataUpdated(EntityDataAccessor<?> dataParameter)
     {
         super.onSyncedDataUpdated(dataParameter);
         if (dataParameter == DATA_VSSCALE)
@@ -49,7 +49,7 @@ public class ThrownItemEntity extends ProjectileItemEntity
         }
     }
 
-    public ThrownItemEntity(final World level, final MobEntity mob)
+    public ThrownItemEntity(final Level level, final Mob mob)
     {
         super(ModEntities.THROWN_ITEMC, mob, level);
         noCulling = true;
@@ -62,7 +62,7 @@ public class ThrownItemEntity extends ProjectileItemEntity
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }

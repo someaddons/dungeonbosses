@@ -1,13 +1,13 @@
 package com.brutalbosses.entity;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 
 public class PosUtil
 {
-    public static Direction getFacing(final Vector3d from, final Vector3d to)
+    public static Direction getFacing(final Vec3 from, final Vec3 to)
     {
-        final Vector3d vector = to.subtract(from);
+        final Vec3 vector = to.subtract(from);
 
         if (Math.abs(vector.x()) > Math.abs(vector.z()))
         {

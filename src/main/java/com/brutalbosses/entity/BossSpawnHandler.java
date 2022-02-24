@@ -2,15 +2,15 @@ package com.brutalbosses.entity;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.world.PostStructureInfoGetter;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.material.Material;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class BossSpawnHandler
      * @param world
      * @param chest
      */
-    public static void onChestPlaced(final IServerWorld world, final LockableLootTileEntity chest)
+    public static void onChestPlaced(final ServerLevelAccessor world, final RandomizableContainerBlockEntity chest)
     {
         List<BossType> possibleBosses = BossTypeManager.instance.lootTableSpawnEntries.get(chest.lootTable);
         if (possibleBosses != null && !possibleBosses.isEmpty())
@@ -57,9 +57,9 @@ public class BossSpawnHandler
      *
      * @param world
      */
-    public static void spawnBoss(final IServerWorld world, final BlockPos pos, final BossType bossType, @Nullable final LockableLootTileEntity chest)
+    public static void spawnBoss(final ServerLevelAccessor world, final BlockPos pos, final BossType bossType, @Nullable final RandomizableContainerBlockEntity chest)
     {
-        final MobEntity boss = bossType.createBossEntity(world.getLevel());
+        final Mob boss = bossType.createBossEntity(world.getLevel());
 
         if (boss == null)
         {
@@ -83,7 +83,7 @@ public class BossSpawnHandler
         final BlockPos spawnPos = findSpawnPosForBoss(world, boss, pos);
         if (spawnPos == null)
         {
-            boss.remove();
+            boss.remove(Entity.RemovalReason.DISCARDED);
             return;
         }
         else
@@ -100,7 +100,7 @@ public class BossSpawnHandler
         world.addFreshEntity(boss);
     }
 
-    public static BlockPos findSpawnPosForBoss(final IServerWorld world, final Entity boss, final BlockPos pos)
+    public static BlockPos findSpawnPosForBoss(final BlockGetter world, final Entity boss, final BlockPos pos)
     {
         final BlockPos spawnPos = findAround(world, pos, 15, 10,
           (w, p) ->
@@ -111,11 +111,11 @@ public class BossSpawnHandler
                   return false;
               }
 
-              for (int x = MathHelper.floor((-boss.getBbWidth() + 1) / 2); x <= MathHelper.ceil((boss.getBbWidth() - 1) / 2); x++)
+              for (int x = Mth.floor((-boss.getBbWidth() + 1) / 2); x <= Mth.ceil((boss.getBbWidth() - 1) / 2); x++)
               {
-                  for (int z = MathHelper.floor((-boss.getBbWidth() + 1) / 2); z <= MathHelper.ceil((boss.getBbWidth() - 1) / 2); z++)
+                  for (int z = Mth.floor((-boss.getBbWidth() + 1) / 2); z <= Mth.ceil((boss.getBbWidth() - 1) / 2); z++)
                   {
-                      for (int y = 0; y <= MathHelper.ceil(boss.getBbHeight()); y++)
+                      for (int y = 0; y <= Mth.ceil(boss.getBbHeight()); y++)
                       {
                           final Material material = w.getBlockState(p.offset(x, y, z)).getMaterial();
                           if (!(material == Material.AIR || material == Material.WATER || material == Material.WATER_PLANT))
@@ -138,7 +138,7 @@ public class BossSpawnHandler
      * @param world
      * @param pos
      */
-    public static void spawnRandomBoss(final IServerWorld world, final BlockPos pos)
+    public static void spawnRandomBoss(final ServerLevelAccessor world, final BlockPos pos)
     {
         final List<BossType> list = new ArrayList<>(BossTypeManager.instance.bosses.values());
         final BossType bossType = list.get(BrutalBosses.rand.nextInt(list.size()));
@@ -154,7 +154,7 @@ public class BossSpawnHandler
      * @param predicate check predicate for the right block
      * @return position or null
      */
-    public static BlockPos findAround(final IServerWorld world, final BlockPos start, final int vRange, final int hRange, final BiPredicate<IBlockReader, BlockPos> predicate)
+    public static BlockPos findAround(final BlockGetter world, final BlockPos start, final int vRange, final int hRange, final BiPredicate<BlockGetter, BlockPos> predicate)
     {
         if (vRange < 1 && hRange < 1)
         {

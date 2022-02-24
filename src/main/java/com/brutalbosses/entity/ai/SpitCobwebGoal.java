@@ -2,28 +2,27 @@ package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.IOnProjectileHit;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.monster.SpiderEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.LlamaSpitEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.LlamaSpit;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 
 public class SpitCobwebGoal extends SimpleRangedAttackGoal
 {
     public static ResourceLocation ID = new ResourceLocation("brutalbosses:spitcobweb");
 
-    public SpitCobwebGoal(final MobEntity mob, final IAIParams params)
+    public SpitCobwebGoal(final Mob mob, final IAIParams params)
     {
         super(mob, params);
     }
@@ -40,39 +39,39 @@ public class SpitCobwebGoal extends SimpleRangedAttackGoal
         final boolean canUse = super.canUse();
         if (canUse)
         {
-            if (mob instanceof SpiderEntity && target.getY() <= mob.getY())
+            if (mob instanceof Spider && target.getY() <= mob.getY())
             {
-                ((SpiderEntity) mob).setClimbing(false);
+                ((Spider) mob).setClimbing(false);
             }
         }
         return canUse;
     }
 
     @Override
-    protected ProjectileEntity createProjectile()
+    protected Projectile createProjectile()
     {
-        final LlamaSpitEntity spitEntity = EntityType.LLAMA_SPIT.create(mob.level);
+        final LlamaSpit spitEntity = EntityType.LLAMA_SPIT.create(mob.level);
         return spitEntity;
     }
 
     @Override
-    protected void positionProjectile(final ProjectileEntity projectileEntity, final int number)
+    protected void positionProjectile(final Projectile Projectile, final int number)
     {
-        projectileEntity.setPos(mob.getX(), mob.getY() + mob.getEyeHeight(), mob.getZ());
+        Projectile.setPos(mob.getX(), mob.getY() + mob.getEyeHeight(), mob.getZ());
     }
 
     @Override
-    protected void doRangedAttack(final ProjectileEntity projectileEntity, final LivingEntity target)
+    protected void doRangedAttack(final Projectile Projectile, final LivingEntity target)
     {
-        projectileEntity.noPhysics = false;
-        positionProjectile(projectileEntity, 1);
+        Projectile.noPhysics = false;
+        positionProjectile(Projectile, 1);
 
         double xDiff = target.getX() - mob.getX();
-        double yDiff = target.getY(0.3333333333333333D) - projectileEntity.getY();
+        double yDiff = target.getY(0.3333333333333333D) - Projectile.getY();
         double zDiff = target.getZ() - mob.getZ();
-        float f = MathHelper.sqrt(xDiff * xDiff + zDiff * zDiff) * 0.2F;
-        projectileEntity.shoot(xDiff, yDiff + (double) f, zDiff, 0.6F, 10.0F);
-        mob.level.playSound((PlayerEntity) null,
+        float f = (float) (Math.sqrt(xDiff * xDiff + zDiff * zDiff) * 0.2F);
+        Projectile.shoot(xDiff, yDiff + (double) f, zDiff, 0.6F, 10.0F);
+        mob.level.playSound((Player) null,
           mob.getX(),
           mob.getY(),
           mob.getZ(),
@@ -81,22 +80,22 @@ public class SpitCobwebGoal extends SimpleRangedAttackGoal
           1.0F,
           2F + (BrutalBosses.rand.nextFloat() - BrutalBosses.rand.nextFloat()) * 0.2F);
 
-        if (projectileEntity instanceof IOnProjectileHit)
+        if (Projectile instanceof IOnProjectileHit)
         {
-            ((IOnProjectileHit) projectileEntity).setOnHitAction(rayTraceResult ->
+            ((IOnProjectileHit) Projectile).setOnHitAction(rayTraceResult ->
             {
-                if (rayTraceResult instanceof EntityRayTraceResult)
+                if (rayTraceResult instanceof EntityHitResult)
                 {
-                    final Entity hitEntity = ((EntityRayTraceResult) rayTraceResult).getEntity();
+                    final Entity hitEntity = ((EntityHitResult) rayTraceResult).getEntity();
                     if (hitEntity != null)
                     {
                         trySpawnCobweb(hitEntity.blockPosition());
                     }
                 }
-                else if (rayTraceResult instanceof BlockRayTraceResult)
+                else if (rayTraceResult instanceof BlockHitResult)
                 {
-                    final BlockPos hitPos = ((BlockRayTraceResult) rayTraceResult).getBlockPos();
-                    trySpawnCobweb(hitPos.relative(((BlockRayTraceResult) rayTraceResult).getDirection(), 1));
+                    final BlockPos hitPos = ((BlockHitResult) rayTraceResult).getBlockPos();
+                    trySpawnCobweb(hitPos.relative(((BlockHitResult) rayTraceResult).getDirection(), 1));
                 }
             });
         }

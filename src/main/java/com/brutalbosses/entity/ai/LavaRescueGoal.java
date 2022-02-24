@@ -2,11 +2,12 @@ package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.entity.BossSpawnHandler;
 import com.brutalbosses.entity.capability.BossCapability;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 public class LavaRescueGoal extends Goal
 {
@@ -14,9 +15,9 @@ public class LavaRescueGoal extends Goal
 
     int inLavaTicks = 0;
     int counter     = 0;
-    private MobEntity entity;
+    private Mob entity;
 
-    public LavaRescueGoal(final MobEntity entity)
+    public LavaRescueGoal(final Mob entity)
     {
         this.entity = entity;
     }
@@ -47,20 +48,20 @@ public class LavaRescueGoal extends Goal
                 }
                 else
                 {
-                    tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerWorld) entity.level, entity, entity.blockPosition());
+                    tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) entity.level, entity, entity.blockPosition());
                     if (tpPos == null)
                     {
                         final BossCapability cap = entity.getCapability(BossCapability.BOSS_CAP).orElse(null);
                         if (cap != null)
                         {
-                            tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerWorld) entity.level, entity, cap.getSpawnPos());
+                            tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) entity.level, entity, cap.getSpawnPos());
                         }
                     }
                 }
 
                 if (tpPos == null)
                 {
-                    entity.remove();
+                    entity.remove(Entity.RemovalReason.DISCARDED);
                 }
                 else
                 {

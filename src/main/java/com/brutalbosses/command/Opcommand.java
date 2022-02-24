@@ -1,14 +1,14 @@
 package com.brutalbosses.command;
 
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.command.CommandSource;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 
 public interface Opcommand extends ICommand
 {
     @Override
-    default boolean checkPreCondition(final CommandContext<CommandSource> context)
+    default boolean checkPreCondition(final CommandContext<CommandSourceStack> context)
     {
         if (context.getSource().hasPermission(OP_PERM_LEVEL))
         {
@@ -16,19 +16,19 @@ public interface Opcommand extends ICommand
         }
 
         final Entity sender = context.getSource().getEntity();
-        if (!(sender instanceof PlayerEntity))
+        if (!(sender instanceof Player))
         {
             return false;
         }
 
-        if (!isPlayerOped((PlayerEntity) sender))
+        if (!isPlayerOped((Player) sender))
         {
             return false;
         }
         return true;
     }
 
-    static boolean isPlayerOped(final PlayerEntity player)
+    static boolean isPlayerOped(final Player player)
     {
         if (player.getServer() == null)
         {

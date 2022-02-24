@@ -6,21 +6,21 @@ import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.monster.SpellcastingIllagerEntity;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.monster.SpellcasterIllager;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
@@ -32,17 +32,17 @@ public class SummonMobsGoal extends Goal
 {
     public static ResourceLocation ID = new ResourceLocation("brutalbosses:summonmobs");
 
-    private final MobEntity    mob;
+    private final Mob          mob;
     private       LivingEntity target = null;
     private final SummonParams params;
 
     private final List<LivingEntity> summonedMobs = new ArrayList<>();
 
-    public SummonMobsGoal(MobEntity mob, final IAIParams params)
+    public SummonMobsGoal(Mob mob, final IAIParams params)
     {
         this.mob = mob;
         this.params = (SummonParams) params;
-        ScorePlayerTeam team = mob.level.getScoreboard().getPlayerTeam("bb:bossteam");
+        PlayerTeam team = mob.level.getScoreboard().getPlayerTeam("bb:bossteam");
         if (team == null)
         {
             team = mob.level.getScoreboard().addPlayerTeam("bb:bossteam");
@@ -83,18 +83,18 @@ public class SummonMobsGoal extends Goal
         {
             if (ticksToNextUpdate < 30)
             {
-                if (mob instanceof SpellcastingIllagerEntity)
+                if (mob instanceof SpellcasterIllager)
                 {
-                    ((SpellcastingIllagerEntity) mob).setIsCastingSpell(SpellcastingIllagerEntity.SpellType.WOLOLO);
+                    ((SpellcasterIllager) mob).setIsCastingSpell(SpellcasterIllager.IllagerSpell.WOLOLO);
                 }
             }
 
             return;
         }
 
-        if (mob instanceof SpellcastingIllagerEntity)
+        if (mob instanceof SpellcasterIllager)
         {
-            ((SpellcastingIllagerEntity) mob).setIsCastingSpell(SpellcastingIllagerEntity.SpellType.NONE);
+            ((SpellcasterIllager) mob).setIsCastingSpell(SpellcasterIllager.IllagerSpell.NONE);
         }
 
         ticksToNextUpdate = params.interval;
@@ -149,13 +149,13 @@ public class SummonMobsGoal extends Goal
             return;
         }
 
-        final BlockPos spawnPos = BossSpawnHandler.findSpawnPosForBoss((ServerWorld) mob.level, summoned, mob.blockPosition());
+        final BlockPos spawnPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) mob.level, summoned, mob.blockPosition());
 
         if (spawnPos == null)
         {
             return;
         }
-        ((ServerWorld) mob.level).sendParticles(ParticleTypes.CLOUD,
+        ((ServerLevel) mob.level).sendParticles(ParticleTypes.CLOUD,
           spawnPos.getX(),
           spawnPos.getY() + 1,
           spawnPos.getZ(),
@@ -165,23 +165,23 @@ public class SummonMobsGoal extends Goal
           0,
           0.0D);
 
-        if (summoned instanceof MobEntity)
+        if (summoned instanceof Mob)
         {
-            ScorePlayerTeam team = mob.level.getScoreboard().getPlayerTeam("bb:bossteam");
+            PlayerTeam team = mob.level.getScoreboard().getPlayerTeam("bb:bossteam");
             if (team == null)
             {
                 team = mob.level.getScoreboard().addPlayerTeam("bb:bossteam");
             }
             mob.level.getScoreboard().addPlayerToTeam(summoned.getScoreboardName(), team);
 
-            ((MobEntity) summoned).setTarget(target);
-            if (summoned instanceof IRangedAttackMob)
+            ((Mob) summoned).setTarget(target);
+            if (summoned instanceof RangedAttackMob)
             {
-                summoned.setItemInHand(Hand.MAIN_HAND, Items.BOW.getDefaultInstance());
+                summoned.setItemInHand(InteractionHand.MAIN_HAND, Items.BOW.getDefaultInstance());
             }
             else
             {
-                summoned.setItemInHand(Hand.MAIN_HAND, Items.IRON_SWORD.getDefaultInstance());
+                summoned.setItemInHand(InteractionHand.MAIN_HAND, Items.IRON_SWORD.getDefaultInstance());
             }
         }
 
@@ -197,7 +197,7 @@ public class SummonMobsGoal extends Goal
         private int                                      count         = 1;
         private int                                      maxcount      = 2;
         private float                                    ownerdamage   = 0f;
-        private Map<ResourceLocation, CompoundNBT>       entityNBTData = new HashMap<>();
+        private Map<ResourceLocation, CompoundTag>       entityNBTData = new HashMap<>();
 
         public SummonParams(final JsonObject jsonData)
         {
@@ -220,7 +220,7 @@ public class SummonMobsGoal extends Goal
 
             if (jsonElement.has(ENTITIES))
             {
-                final Map<ResourceLocation, CompoundNBT> entityData = new HashMap<>();
+                final Map<ResourceLocation, CompoundTag> entityData = new HashMap<>();
                 final List<EntityType<? extends LivingEntity>> types = new ArrayList<>();
 
                 for (JsonElement entityEntry : jsonElement.get(ENTITIES).getAsJsonArray())
@@ -231,7 +231,7 @@ public class SummonMobsGoal extends Goal
                     {
                         try
                         {
-                            entityData.put(entityID, JsonToNBT.parseTag(((JsonObject) entityEntry).get(SUMM_ENTITY_NBT).getAsString()));
+                            entityData.put(entityID, TagParser.parseTag(((JsonObject) entityEntry).get(SUMM_ENTITY_NBT).getAsString()));
                         }
                         catch (CommandSyntaxException e)
                         {

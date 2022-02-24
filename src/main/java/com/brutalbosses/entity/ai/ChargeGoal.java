@@ -2,17 +2,17 @@ package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
 import com.google.gson.JsonObject;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.pathfinder.Path;
 
 /**
  * Occasionally charge at an entity
@@ -23,11 +23,11 @@ public class ChargeGoal extends Goal
 
     private static final AttributeModifier speedMod = new AttributeModifier("brutalbosses:speedbuff", 2, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
-    private final MobEntity    mob;
+    private final Mob          mob;
     private       ChargeParams params;
     private       LivingEntity target = null;
 
-    public ChargeGoal(MobEntity mob, final IAIParams params)
+    public ChargeGoal(Mob mob, final IAIParams params)
     {
         this.params = (ChargeParams) params;
         this.mob = mob;
@@ -87,11 +87,11 @@ public class ChargeGoal extends Goal
                   1.0F,
                   1.0F);
 
-                double d0 = (double) (-MathHelper.sin(mob.yRot * ((float) Math.PI / 180)));
-                double d1 = (double) MathHelper.cos(mob.yRot * ((float) Math.PI / 180));
-                if (mob.level instanceof ServerWorld)
+                double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
+                double d1 = (double) Mth.cos(mob.getYRot() * ((float) Math.PI / 180));
+                if (mob.level instanceof ServerLevel)
                 {
-                    ((ServerWorld) mob.level).sendParticles(ParticleTypes.CLOUD,
+                    ((ServerLevel) mob.level).sendParticles(ParticleTypes.CLOUD,
                       mob.getX() + d0,
                       mob.getY(0.5D),
                       mob.getZ() + d1,
@@ -122,11 +122,11 @@ public class ChargeGoal extends Goal
               1.0F,
               1.0F);
 
-            double d0 = (double) (-MathHelper.sin(mob.yRot * ((float) Math.PI / 180)));
-            double d1 = (double) MathHelper.cos(mob.yRot * ((float) Math.PI / 180));
-            if (mob.level instanceof ServerWorld)
+            double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
+            double d1 = (double) Mth.cos(mob.getYRot() * ((float) Math.PI / 180));
+            if (mob.level instanceof ServerLevel)
             {
-                ((ServerWorld) mob.level).sendParticles(ParticleTypes.CLOUD,
+                ((ServerLevel) mob.level).sendParticles(ParticleTypes.CLOUD,
                   mob.getX() + d0,
                   mob.getY(0.5D),
                   mob.getZ() + d1,

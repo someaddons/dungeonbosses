@@ -1,17 +1,18 @@
 package com.brutalbosses.entity.ai;
 
 import com.google.gson.JsonObject;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.WitherSkullEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.WitherSkull;
 
 public class WitherSkullAttackGoal extends SimpleRangedAttackGoal
 {
     public static final ResourceLocation ID = new ResourceLocation("brutalbosses:shootwitherskulls");
 
-    public WitherSkullAttackGoal(final MobEntity mob, final IAIParams params)
+    public WitherSkullAttackGoal(final Mob mob, final IAIParams params)
     {
         super(mob, params);
     }
@@ -23,29 +24,29 @@ public class WitherSkullAttackGoal extends SimpleRangedAttackGoal
     }
 
     @Override
-    protected ProjectileEntity createProjectile()
+    protected Projectile createProjectile()
     {
-        WitherSkullEntity witherskullentity = new WitherSkullEntity(mob.level, mob, 0, 0, 0);
+        WitherSkull witherskullentity = new WitherSkull(mob.level, mob, 0, 0, 0);
         return witherskullentity;
     }
 
     @Override
-    protected void doRangedAttack(final ProjectileEntity projectileEntity, final LivingEntity target)
+    protected void doRangedAttack(final Projectile Projectile, final LivingEntity target)
     {
-        projectileEntity.remove();
+        Projectile.remove(Entity.RemovalReason.DISCARDED);
 
-        double xDiff = target.getX() - projectileEntity.getX();
-        double yDiff = target.getY(0.5D) - projectileEntity.getY();
-        double zDiff = target.getZ() - projectileEntity.getZ();
+        double xDiff = target.getX() - Projectile.getX();
+        double yDiff = target.getY(0.5D) - Projectile.getY();
+        double zDiff = target.getZ() - Projectile.getZ();
 
 
-        final WitherSkullEntity witherskullentity = new WitherSkullEntity(mob.level, mob, xDiff, yDiff, zDiff);
+        final WitherSkull witherskullentity = new WitherSkull(mob.level, mob, xDiff, yDiff, zDiff);
         witherskullentity.setOwner(mob);
         if (((WitherSkullParams) params).dangerous)
         {
             witherskullentity.setDangerous(true);
         }
-        witherskullentity.setPos(projectileEntity.getX(), projectileEntity.getY(), projectileEntity.getZ());
+        witherskullentity.setPos(Projectile.getX(), Projectile.getY(), Projectile.getZ());
         mob.level.addFreshEntity(witherskullentity);
     }
 

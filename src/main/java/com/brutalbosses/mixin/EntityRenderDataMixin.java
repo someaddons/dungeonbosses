@@ -1,8 +1,8 @@
 package com.brutalbosses.mixin;
 
 import com.brutalbosses.entity.CustomEntityRenderData;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySize;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.Shadow;
 public class EntityRenderDataMixin implements CustomEntityRenderData
 {
     @Shadow
-    private EntitySize dimensions;
-    private float      visualScale = 1.0f;
+    private EntityDimensions dimensions;
+    private float            visualScale = 1.0f;
 
     @Override
     public float getVisualScale()
@@ -26,7 +26,7 @@ public class EntityRenderDataMixin implements CustomEntityRenderData
     }
 
     @Override
-    public void setDimension(final EntitySize size)
+    public void setDimension(final EntityDimensions size)
     {
         dimensions = size;
     }

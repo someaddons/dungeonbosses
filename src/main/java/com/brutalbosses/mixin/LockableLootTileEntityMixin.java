@@ -2,13 +2,13 @@ package com.brutalbosses.mixin;
 
 import com.brutalbosses.entity.BossSpawnHandler;
 import com.brutalbosses.world.RegionAwareTE;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,35 +18,35 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.lang.ref.WeakReference;
 
-@Mixin(LockableLootTileEntity.class)
+@Mixin(RandomizableContainerBlockEntity.class)
 public class LockableLootTileEntityMixin implements RegionAwareTE
 {
-    private boolean                     spawnedBoss = false;
-    private WeakReference<IServerWorld> region      = new WeakReference<>(null);
+    private boolean                            spawnedBoss = false;
+    private WeakReference<ServerLevelAccessor> region      = new WeakReference<>(null);
 
-    @Inject(method = "setLootTable(Lnet/minecraft/util/ResourceLocation;J)V", at = @At("RETURN"))
+    @Inject(method = "setLootTable(Lnet/minecraft/resources/ResourceLocation;J)V", at = @At("RETURN"))
     private void onSetLoot(final ResourceLocation lootTable, final long seed, final CallbackInfo ci)
     {
-        final IServerWorld world = region.get();
+        final ServerLevelAccessor world = region.get();
         if (world != null && !spawnedBoss)
         {
             spawnedBoss = true;
-            BossSpawnHandler.onChestPlaced(world, (LockableLootTileEntity) (Object) this);
+            BossSpawnHandler.onChestPlaced(world, (RandomizableContainerBlockEntity) (Object) this);
         }
 
         region.clear();
     }
 
     @Inject(method = "tryLoadLootTable", at = @At("RETURN"))
-    private void onLoadLoot(final CompoundNBT p_184283_1_, final CallbackInfoReturnable<Boolean> cir)
+    private void onLoadLoot(final CompoundTag p_184283_1_, final CallbackInfoReturnable<Boolean> cir)
     {
         if (cir.getReturnValue())
         {
-            final IServerWorld world = region.get();
+            final ServerLevelAccessor world = region.get();
             if (world != null && !spawnedBoss)
             {
                 spawnedBoss = true;
-                BossSpawnHandler.onChestPlaced(world, (LockableLootTileEntity) (Object) this);
+                BossSpawnHandler.onChestPlaced(world, (RandomizableContainerBlockEntity) (Object) this);
             }
 
             region.clear();
@@ -54,7 +54,7 @@ public class LockableLootTileEntityMixin implements RegionAwareTE
     }
 
     @Override
-    public void setRegion(final IServerWorld region)
+    public void setRegion(final ServerLevelAccessor region)
     {
         this.region = new WeakReference<>(region);
     }
@@ -66,15 +66,15 @@ public class LockableLootTileEntityMixin implements RegionAwareTE
      * @param pos
      * @return
      */
-    @Redirect(method = "setLootTable(Lnet/minecraft/world/IBlockReader;Ljava/util/Random;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/ResourceLocation;)V", at = @At(value = "INVOKE"
-      , target = "Lnet/minecraft/world/IBlockReader;getBlockEntity(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/tileentity/TileEntity;"))
-    private static TileEntity setLootTable(
-      final IBlockReader reader, final BlockPos pos)
+    @Redirect(method = "setLootTable(Lnet/minecraft/world/level/BlockGetter;Ljava/util/Random;Lnet/minecraft/core/BlockPos;Lnet/minecraft/resources/ResourceLocation;)V", at = @At(value = "INVOKE"
+      , target = "Lnet/minecraft/world/level/BlockGetter;getBlockEntity(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/entity/BlockEntity;"))
+    private static BlockEntity setLootTable(
+      final BlockGetter reader, final BlockPos pos)
     {
-        final TileEntity te = reader.getBlockEntity(pos);
-        if (te instanceof RegionAwareTE && reader instanceof IServerWorld)
+        final BlockEntity te = reader.getBlockEntity(pos);
+        if (te instanceof RegionAwareTE && reader instanceof ServerLevelAccessor)
         {
-            ((RegionAwareTE) te).setRegion((IServerWorld) reader);
+            ((RegionAwareTE) te).setRegion((ServerLevelAccessor) reader);
         }
 
         return te;

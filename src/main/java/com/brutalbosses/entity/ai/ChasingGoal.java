@@ -1,13 +1,13 @@
 package com.brutalbosses.entity.ai;
 
 import com.google.gson.JsonObject;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.pathfinder.Node;
+import net.minecraft.world.level.pathfinder.Path;
 
 import java.util.EnumSet;
 
@@ -18,12 +18,12 @@ public class ChasingGoal extends Goal
 {
     public static ResourceLocation ID = new ResourceLocation("brutalbosses:chasetarget");
 
-    private final MobEntity    mob;
+    private final Mob          mob;
     private       float        chaseDist;
     private       LivingEntity target = null;
     private final ChaseParams  params;
 
-    public ChasingGoal(MobEntity mob, final IAIParams params)
+    public ChasingGoal(Mob mob, final IAIParams params)
     {
         this.params = (ChaseParams) params;
         chaseDist = this.params.chasedistance * this.params.chasedistance;
@@ -64,7 +64,7 @@ public class ChasingGoal extends Goal
 
         ticksToNextUpdate = (int) Math.max(4, (distSqr / 100));
 
-        if (distSqr <= (double) this.chaseDist && this.mob.getSensing().canSee(this.target))
+        if (distSqr <= (double) this.chaseDist && this.mob.getSensing().hasLineOfSight(this.target))
         {
             this.mob.getNavigation().stop();
         }
@@ -73,12 +73,12 @@ public class ChasingGoal extends Goal
             final Path path = mob.getNavigation().getPath();
             if (path != null)
             {
-                final PathPoint endNode = path.getEndNode();
+                final Node endNode = path.getEndNode();
                 if (endNode != null)
                 {
                     final BlockPos endPos = new BlockPos(endNode.x, endNode.y, endNode.z);
                     final double endPosDist = this.target.distanceToSqr(endPos.getX(), endPos.getY(), endPos.getZ());
-                    if (endPosDist > chaseDist || !this.mob.getSensing().canSee(this.target))
+                    if (endPosDist > chaseDist || !this.mob.getSensing().hasLineOfSight(this.target))
                     {
                         this.mob.getNavigation().moveTo(this.target, 1.0f);
                     }

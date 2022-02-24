@@ -3,31 +3,30 @@ package com.brutalbosses.entity.capability;
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.BossType;
 import com.brutalbosses.entity.BossTypeManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BossCapability implements ICapabilitySerializable<INBT>
+public class BossCapability implements ICapabilitySerializable<Tag>
 {
-    @CapabilityInject(BossCapability.class)
-    public static final Capability<BossCapability> BOSS_CAP = null;
-
-    private BossType                     bossEntry = null;
-    private Entity                       entity    = null;
-    private ResourceLocation             lootTable = null;
-    private BlockPos                     spawnPos  = BlockPos.ZERO;
-    private LazyOptional<BossCapability> optional  = LazyOptional.of(() -> this);
+    public static final Capability<BossCapability>   BOSS_CAP  = CapabilityManager.get(new CapabilityToken<>() {});
+    private             BossType                     bossEntry = null;
+    private             Entity                       entity    = null;
+    private             ResourceLocation             lootTable = null;
+    private             BlockPos                     spawnPos  = BlockPos.ZERO;
+    private             LazyOptional<BossCapability> optional  = LazyOptional.of(() -> this);
 
     private final static String KEY         = "bbosspath";
     private final static String NAMESPACE   = "bbossnamesp";
@@ -62,61 +61,61 @@ public class BossCapability implements ICapabilitySerializable<INBT>
     }
 
     @Override
-    public INBT serializeNBT()
+    public CompoundTag serializeNBT()
     {
         if (bossEntry == null)
         {
-            return new CompoundNBT();
+            return new CompoundTag();
         }
 
-        final CompoundNBT compoundNBT = new CompoundNBT();
-        compoundNBT.putString(NAMESPACE, bossEntry.getID().getNamespace());
-        compoundNBT.putString(KEY, bossEntry.getID().getPath());
+        final CompoundTag CompoundTag = new CompoundTag();
+        CompoundTag.putString(NAMESPACE, bossEntry.getID().getNamespace());
+        CompoundTag.putString(KEY, bossEntry.getID().getPath());
 
         if (lootTable != null)
         {
-            compoundNBT.putString(LTKEY, lootTable.getNamespace());
-            compoundNBT.putString(LTNAMESPACE, lootTable.getPath());
+            CompoundTag.putString(LTKEY, lootTable.getNamespace());
+            CompoundTag.putString(LTNAMESPACE, lootTable.getPath());
         }
 
         if (spawnPos != BlockPos.ZERO)
         {
-            compoundNBT.putInt(XSPAWN, spawnPos.getX());
-            compoundNBT.putInt(YSPAWN, spawnPos.getY());
-            compoundNBT.putInt(ZSPAWN, spawnPos.getZ());
+            CompoundTag.putInt(XSPAWN, spawnPos.getX());
+            CompoundTag.putInt(YSPAWN, spawnPos.getY());
+            CompoundTag.putInt(ZSPAWN, spawnPos.getZ());
         }
 
-        return compoundNBT;
+        return CompoundTag;
     }
 
     @Override
-    public void deserializeNBT(final INBT nbt)
+    public void deserializeNBT(final Tag nbt)
     {
         if (nbt == null)
         {
             return;
         }
 
-        final CompoundNBT compoundNBT = (CompoundNBT) nbt;
+        final CompoundTag CompoundTag = (CompoundTag) nbt;
 
-        if (!compoundNBT.contains(NAMESPACE) || !compoundNBT.contains(KEY))
+        if (!CompoundTag.contains(NAMESPACE) || !CompoundTag.contains(KEY))
         {
             return;
         }
 
-        final String nameSpace = compoundNBT.getString(NAMESPACE);
-        final String path = compoundNBT.getString(KEY);
+        final String nameSpace = CompoundTag.getString(NAMESPACE);
+        final String path = CompoundTag.getString(KEY);
 
         final ResourceLocation id = new ResourceLocation(nameSpace, path);
 
-        if (compoundNBT.contains(LTKEY) && compoundNBT.contains(LTNAMESPACE))
+        if (CompoundTag.contains(LTKEY) && CompoundTag.contains(LTNAMESPACE))
         {
-            lootTable = new ResourceLocation(compoundNBT.get(LTKEY).getAsString(), compoundNBT.get(LTNAMESPACE).getAsString());
+            lootTable = new ResourceLocation(CompoundTag.get(LTKEY).getAsString(), CompoundTag.get(LTNAMESPACE).getAsString());
         }
 
-        if (compoundNBT.contains(XSPAWN))
+        if (CompoundTag.contains(XSPAWN))
         {
-            spawnPos = new BlockPos(compoundNBT.getInt(XSPAWN), compoundNBT.getInt(YSPAWN), compoundNBT.getInt(ZSPAWN));
+            spawnPos = new BlockPos(CompoundTag.getInt(XSPAWN), CompoundTag.getInt(YSPAWN), CompoundTag.getInt(ZSPAWN));
         }
 
         bossEntry = BossTypeManager.instance.bosses.get(id);

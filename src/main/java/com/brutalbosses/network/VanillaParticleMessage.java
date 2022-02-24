@@ -2,18 +2,18 @@ package com.brutalbosses.network;
 
 import com.brutalbosses.BrutalBosses;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Random;
@@ -36,11 +36,11 @@ public class VanillaParticleMessage implements IMessage
     /**
      * Particle id
      */
-    private BasicParticleType type;
+    private SimpleParticleType type;
 
     public VanillaParticleMessage() {super();}
 
-    public VanillaParticleMessage(final double x, final double y, final double z, final BasicParticleType type)
+    public VanillaParticleMessage(final double x, final double y, final double z, final SimpleParticleType type)
     {
         this.x = x;
         this.y = y;
@@ -57,7 +57,7 @@ public class VanillaParticleMessage implements IMessage
      * @param y            y pos
      * @param z            z pos
      */
-    private void spawnParticles(BasicParticleType particleType, World world, double x, double y, double z)
+    private void spawnParticles(SimpleParticleType particleType, Level world, double x, double y, double z)
     {
         final Random rand = new Random();
         for (int i = 0; i < 5; ++i)
@@ -65,7 +65,7 @@ public class VanillaParticleMessage implements IMessage
             double d0 = rand.nextGaussian() * 0.02D;
             double d1 = rand.nextGaussian() * 0.02D;
             double d2 = rand.nextGaussian() * 0.02D;
-            world.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Items.BONE)),
+            world.addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.BONE)),
               x + (rand.nextFloat() * WIDTH * 2.0F) - WIDTH,
               y + 1.0D + (rand.nextFloat() * CITIZEN_HEIGHT),
               z + (rand.nextFloat() * WIDTH * 2.0F) - WIDTH,
@@ -76,7 +76,7 @@ public class VanillaParticleMessage implements IMessage
     }
 
     @Override
-    public void write(final PacketBuffer buffer)
+    public void write(final FriendlyByteBuf buffer)
     {
         buffer.writeDouble(x);
         buffer.writeDouble(y);
@@ -85,12 +85,12 @@ public class VanillaParticleMessage implements IMessage
     }
 
     @Override
-    public IMessage read(final PacketBuffer buffer)
+    public IMessage read(final FriendlyByteBuf buffer)
     {
         x = buffer.readDouble();
         y = buffer.readDouble();
         z = buffer.readDouble();
-        this.type = (BasicParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(buffer.readResourceLocation());
+        this.type = (SimpleParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(buffer.readResourceLocation());
         return this;
     }
 
@@ -103,7 +103,7 @@ public class VanillaParticleMessage implements IMessage
             BrutalBosses.LOGGER.error("Boss capability message sent to the wrong side!", new Exception());
             return;
         }
-        final ClientWorld world = Minecraft.getInstance().level;
+        final ClientLevel world = Minecraft.getInstance().level;
 
         spawnParticles(type, world, x, y, z);
     }

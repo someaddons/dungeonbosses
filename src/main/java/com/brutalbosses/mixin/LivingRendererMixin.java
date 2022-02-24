@@ -1,22 +1,23 @@
 package com.brutalbosses.mixin;
 
 import com.brutalbosses.entity.CustomEntityRenderData;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.entity.LivingEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(LivingRenderer.class)
+@Mixin(LivingEntityRenderer.class)
 public abstract class LivingRendererMixin<T extends LivingEntity>
 {
-    @Shadow
-    protected abstract void scale(final T p_225620_1_, final MatrixStack p_225620_2_, final float p_225620_3_);
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingRenderer;scale(Lnet/minecraft/entity/LivingEntity;Lcom/mojang/blaze3d/matrix/MatrixStack;F)V"))
-    private void on(final LivingRenderer livingRenderer, final T entity, final MatrixStack stack, final float value)
+    @Shadow
+    protected abstract void scale(final T p_115314_, final PoseStack p_115315_, final float p_115316_);
+
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;scale(Lnet/minecraft/world/entity/LivingEntity;Lcom/mojang/blaze3d/vertex/PoseStack;F)V"))
+    private void on(final LivingEntityRenderer livingRenderer, final T entity, final PoseStack stack, final float value)
     {
         if (entity instanceof CustomEntityRenderData)
         {

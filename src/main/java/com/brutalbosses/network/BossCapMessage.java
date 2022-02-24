@@ -3,11 +3,11 @@ package com.brutalbosses.network;
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.capability.BossCapability;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -16,7 +16,7 @@ public class BossCapMessage implements IMessage
     BossCapability cap = null;
 
     private int         entityID = -1;
-    private CompoundNBT nbt      = null;
+    private CompoundTag nbt      = null;
 
     public BossCapMessage(final BossCapability cap)
     {
@@ -29,14 +29,14 @@ public class BossCapMessage implements IMessage
     }
 
     @Override
-    public void write(final PacketBuffer buffer)
+    public void write(final FriendlyByteBuf buffer)
     {
         buffer.writeInt(cap.getEntity().getId());
-        buffer.writeNbt((CompoundNBT) cap.serializeNBT());
+        buffer.writeNbt((CompoundTag) cap.serializeNBT());
     }
 
     @Override
-    public BossCapMessage read(final PacketBuffer buffer)
+    public BossCapMessage read(final FriendlyByteBuf buffer)
     {
         entityID = buffer.readInt();
         nbt = buffer.readNbt();

@@ -4,11 +4,11 @@ import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.BossType;
 import com.brutalbosses.entity.BossTypeManager;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,17 +30,17 @@ public class BossTypeSyncMessage implements IMessage
     }
 
     @Override
-    public void write(final PacketBuffer buffer)
+    public void write(final FriendlyByteBuf buffer)
     {
         buffer.writeInt(bossTypes.size());
         for (final BossType type : bossTypes)
         {
-            buffer.writeNbt((CompoundNBT) type.serializeToClient());
+            buffer.writeNbt((CompoundTag) type.serializeToClient());
         }
     }
 
     @Override
-    public BossTypeSyncMessage read(final PacketBuffer buffer)
+    public BossTypeSyncMessage read(final FriendlyByteBuf buffer)
     {
         final int count = buffer.readInt();
         bossTypes = new ArrayList<>();

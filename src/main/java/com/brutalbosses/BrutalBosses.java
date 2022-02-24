@@ -8,17 +8,18 @@ import com.brutalbosses.event.EventHandler;
 import com.brutalbosses.event.ModEventHandler;
 import com.brutalbosses.network.Network;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.minecraft.command.CommandSource;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.FMLNetworkConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,8 +38,7 @@ public class BrutalBosses
 
     public BrutalBosses()
     {
-        ModLoadingContext.get()
-          .registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> org.apache.commons.lang3.tuple.Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
+        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> "", (c, b) -> true));
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, config.getCommonConfig().ForgeConfigSpecBuilder);
         Mod.EventBusSubscriber.Bus.MOD.bus().get().register(ModEventHandler.class);
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(EventHandler.class);
@@ -52,19 +52,23 @@ public class BrutalBosses
     {
         // Side safe client event handler
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(ClientEventHandler.class);
-        ClientEventHandler.initRenderers();
     }
 
     private void setup(final FMLCommonSetupEvent event)
     {
         LOGGER.info(MODID + " mod initialized");
-        BossTypeManager.instance.register();
         Network.instance.registerMessages();
+    }
+
+    @SubscribeEvent
+    public void registerCap(RegisterCapabilitiesEvent event)
+    {
+        BossTypeManager.instance.register(event);
     }
 
     public void onCommandsRegister(final RegisterCommandsEvent event)
     {
-        LiteralArgumentBuilder<CommandSource> root = LiteralArgumentBuilder.literal(MODID);
+        LiteralArgumentBuilder<CommandSourceStack> root = LiteralArgumentBuilder.literal(MODID);
         // Adds all command trees to the dispatcher to register the commands.
         event.getDispatcher().register(root.then(new CommandSpawnBoss().build()));
     }

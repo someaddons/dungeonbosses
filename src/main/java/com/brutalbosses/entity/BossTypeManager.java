@@ -7,18 +7,19 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonObject;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
-import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.RangedCrossbowAttackGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.CrossbowAttackMob;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -30,91 +31,90 @@ import java.util.function.Function;
  */
 public class BossTypeManager
 {
-    public              Map<ResourceLocation, BossType>                        bosses                = ImmutableMap.of();
-    public              Set<ResourceLocation>                                  entityTypes           = ImmutableSet.of();
-    public static final BossTypeManager                                        instance              = new BossTypeManager();
-    public              Map<ResourceLocation, BiConsumer<Entity, IAIParams>>   aiCreatorRegistry     = ImmutableMap.of();
-    public              Map<ResourceLocation, Function<JsonObject, IAIParams>> aiParamParsers        = ImmutableMap.of();
+    public              Map<ResourceLocation, BossType> bosses      = ImmutableMap.of();
+    public              Set<ResourceLocation>           entityTypes = ImmutableSet.of();
+    public static final BossTypeManager                                        instance          = new BossTypeManager();
+    public              Map<ResourceLocation, BiConsumer<Entity, IAIParams>>   aiCreatorRegistry = ImmutableMap.of();
+    public              Map<ResourceLocation, Function<JsonObject, IAIParams>> aiParamParsers    = ImmutableMap.of();
     public              ImmutableMap<ResourceLocation, List<BossType>>         lootTableSpawnEntries = ImmutableMap.of();
-
     private BossTypeManager()
     {
 
 
         registerAI(new ResourceLocation("minecraft:randomwalk"),
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new RandomWalkingGoal((CreatureEntity) entity, 0.8d, 20)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new RandomStrollGoal((PathfinderMob) entity, 0.8d, 20)),
           null);
 
         registerAI(new ResourceLocation("minecraft:meleeattack"),
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new MeleeAttackGoal((CreatureEntity) entity, 1.0d, true)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new MeleeAttackGoal((PathfinderMob) entity, 1.0d, true)),
           null);
 
         registerAI(new ResourceLocation("minecraft:crossbow"),
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000,
-            new RangedCrossbowAttackGoal<>((MonsterEntity & IRangedAttackMob & ICrossbowUser) entity, 1.0d, 30)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000,
+            new RangedCrossbowAttackGoal<>((Monster & RangedAttackMob & CrossbowAttackMob) entity, 1.0d, 30)),
           null);
 
         registerAI(MeleeShieldAttackGoal.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2001, new MeleeShieldAttackGoal((MobEntity) entity, 1.0d)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2001, new MeleeShieldAttackGoal((Mob) entity, 1.0d)),
           null);
 
         registerAI(new ResourceLocation("minecraft:target"),
-          (entity, params) -> ((MobEntity) entity).targetSelector.addGoal(-2000, new NearestAttackableTargetGoal<>((MobEntity) entity, PlayerEntity.class, true)),
+          (entity, params) -> ((Mob) entity).targetSelector.addGoal(-2000, new NearestAttackableTargetGoal<>((Mob) entity, Player.class, true)),
           null);
 
         registerAI(LavaRescueGoal.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new LavaRescueGoal((MobEntity) entity)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new LavaRescueGoal((Mob) entity)),
           null);
 
         registerAI(ChasingGoal.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2001, new ChasingGoal((MobEntity) entity, params)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2001, new ChasingGoal((Mob) entity, params)),
           ChasingGoal.ChaseParams::new);
 
         registerAI(SmallFireballAttackGoal.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new SmallFireballAttackGoal((MobEntity) entity, params)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new SmallFireballAttackGoal((Mob) entity, params)),
           SimpleRangedAttackGoal.RangedParams::new);
 
         registerAI(WitherSkullAttackGoal.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new WitherSkullAttackGoal((MobEntity) entity, params)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new WitherSkullAttackGoal((Mob) entity, params)),
           WitherSkullAttackGoal.WitherSkullParams::new);
 
         registerAI(SnowballAttackGoal.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new SnowballAttackGoal((MobEntity) entity, params)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new SnowballAttackGoal((Mob) entity, params)),
           SimpleRangedAttackGoal.RangedParams::new);
 
-        registerAI(OutofCombatRegen.ID, (entity, params) -> ((MobEntity) entity).targetSelector.addGoal(-2000, new OutofCombatRegen((MobEntity) entity, params)),
+        registerAI(OutofCombatRegen.ID, (entity, params) -> ((Mob) entity).targetSelector.addGoal(-2000, new OutofCombatRegen((Mob) entity, params)),
           OutofCombatRegen.CombatParams::new);
 
         registerAI(SpitCobwebGoal.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new SpitCobwebGoal((MobEntity) entity, params)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new SpitCobwebGoal((Mob) entity, params)),
           SimpleRangedAttackGoal.RangedParams::new);
 
         registerAI(SummonMobsGoal.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new SummonMobsGoal((MobEntity) entity, params)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new SummonMobsGoal((Mob) entity, params)),
           SummonMobsGoal.SummonParams::new);
 
         registerAI(WhirldwindMelee.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new WhirldwindMelee((MobEntity) entity, params)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new WhirldwindMelee((Mob) entity, params)),
           WhirldwindMelee.WhirldWindParams::new);
 
         registerAI(MeleeHitGoal.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new MeleeHitGoal((MobEntity) entity, params)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new MeleeHitGoal((Mob) entity, params)),
           MeleeHitGoal.MeleeHitParams::new);
 
         registerAI(ChargeGoal.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new ChargeGoal((MobEntity) entity, params)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new ChargeGoal((Mob) entity, params)),
           ChargeGoal.ChargeParams::new);
 
         registerAI(BigFireballAttackGoal.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new BigFireballAttackGoal((MobEntity) entity, params)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new BigFireballAttackGoal((Mob) entity, params)),
           BigFireballAttackGoal.RangedParams::new);
 
         registerAI(ItemThrowAttackGoal.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new ItemThrowAttackGoal((MobEntity) entity, params)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new ItemThrowAttackGoal((Mob) entity, params)),
           ItemThrowAttackGoal.ItemThrowParams::new);
 
         registerAI(TemporaryPotionGoal.ID,
-          (entity, params) -> ((MobEntity) entity).goalSelector.addGoal(-2000, new TemporaryPotionGoal((MobEntity) entity, params)),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new TemporaryPotionGoal((Mob) entity, params)),
           TemporaryPotionGoal.TempPotionParams::new);
     }
 
@@ -192,23 +192,9 @@ public class BossTypeManager
     /**
      * Registers the capability manager
      */
-    public void register()
+    public void register(RegisterCapabilitiesEvent event)
     {
-        CapabilityManager.INSTANCE.register(BossCapability.class, new Capability.IStorage<BossCapability>()
-        {
-            @Nullable
-            @Override
-            public INBT writeNBT(final Capability<BossCapability> capability, final BossCapability instance, final Direction side)
-            {
-                return capability.writeNBT(instance, side);
-            }
-
-            @Override
-            public void readNBT(final Capability<BossCapability> capability, final BossCapability instance, final Direction side, final INBT nbt)
-            {
-                capability.readNBT(instance, side, nbt);
-            }
-        }, BossCapability::new);
+        event.register(BossCapability.class);
     }
 
     /**

@@ -7,19 +7,19 @@ import com.brutalbosses.entity.thrownentity.ThrownItemEntity;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -27,17 +27,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Applies a temporary potion and displays a banner to give a hint at its effects
+ * Applies a temporary potion and displays a banner to give a hint at its MobEffects
  */
 public class TemporaryPotionGoal extends Goal
 {
     public static ResourceLocation ID = new ResourceLocation("brutalbosses:temppotions");
 
-    private final MobEntity        mob;
+    private final Mob              mob;
     private       TempPotionParams params;
     private       LivingEntity     target = null;
 
-    public TemporaryPotionGoal(MobEntity mob, final IAIParams params)
+    public TemporaryPotionGoal(Mob mob, final IAIParams params)
     {
         this.params = (TempPotionParams) params;
         this.mob = mob;
@@ -60,10 +60,10 @@ public class TemporaryPotionGoal extends Goal
     public void stop()
     {
         this.target = null;
-        for (final Tuple<Effect, Integer> potion : params.potions)
+        for (final Tuple<MobEffect, Integer> potion : params.potions)
         {
-            final EffectInstance effectInstance = mob.getEffect(potion.getA());
-            if (effectInstance != null && effectInstance.getDuration() < params.duration)
+            final MobEffectInstance MobEffectInstance = mob.getEffect(potion.getA());
+            if (MobEffectInstance != null && MobEffectInstance.getDuration() < params.duration)
             {
                 mob.removeEffect(potion.getA());
             }
@@ -81,9 +81,9 @@ public class TemporaryPotionGoal extends Goal
 
         ticksToNextUpdate = (int) params.interval;
 
-        for (final Tuple<Effect, Integer> potion : params.potions)
+        for (final Tuple<MobEffect, Integer> potion : params.potions)
         {
-            mob.addEffect(new EffectInstance(potion.getA(), params.duration, potion.getB()));
+            mob.addEffect(new MobEffectInstance(potion.getA(), params.duration, potion.getB()));
         }
 
         if (params.item != null)
@@ -106,11 +106,11 @@ public class TemporaryPotionGoal extends Goal
           1.0F,
           1.0F);
 
-        double d0 = (double) (-MathHelper.sin(mob.yRot * ((float) Math.PI / 180)));
-        double d1 = (double) MathHelper.cos(mob.yRot * ((float) Math.PI / 180));
-        if (mob.level instanceof ServerWorld)
+        double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
+        double d1 = (double) Mth.cos(mob.getYRot() * ((float) Math.PI / 180));
+        if (mob.level instanceof ServerLevel)
         {
-            ((ServerWorld) mob.level).sendParticles(ParticleTypes.CLOUD,
+            ((ServerLevel) mob.level).sendParticles(ParticleTypes.CLOUD,
               mob.getX() + d0,
               mob.getY(0.5D),
               mob.getZ() + d1,
@@ -124,11 +124,11 @@ public class TemporaryPotionGoal extends Goal
 
     public static class TempPotionParams extends IAIParams.DefaultParams
     {
-        private int                          duration        = 100;
-        private float                        interval        = 200;
-        private List<Tuple<Effect, Integer>> potions         = new ArrayList<>();
-        private ItemStack                    item            = null;
-        private float                        visibleitemsize = 2.0f;
+        private int                             duration        = 100;
+        private float                           interval        = 200;
+        private List<Tuple<MobEffect, Integer>> potions         = new ArrayList<>();
+        private ItemStack                       item            = null;
+        private float                           visibleitemsize = 2.0f;
 
         public TempPotionParams(final JsonObject jsonData)
         {
@@ -166,7 +166,7 @@ public class TemporaryPotionGoal extends Goal
             {
                 try
                 {
-                    item = ItemStack.of(JsonToNBT.parseTag(jsonElement.get(ITEM).getAsString()));
+                    item = ItemStack.of(TagParser.parseTag(jsonElement.get(ITEM).getAsString()));
                 }
                 catch (CommandSyntaxException e)
                 {
@@ -180,7 +180,7 @@ public class TemporaryPotionGoal extends Goal
                 potions = new ArrayList<>();
                 for (Map.Entry<String, JsonElement> data : jsonElement.get(POTIONS).getAsJsonObject().entrySet())
                 {
-                    potions.add(new Tuple<>(ForgeRegistries.POTIONS.getValue(ResourceLocation.tryParse(data.getKey())), data.getValue().getAsInt()));
+                    potions.add(new Tuple<>(ForgeRegistries.MOB_EFFECTS.getValue(ResourceLocation.tryParse(data.getKey())), data.getValue().getAsInt()));
                 }
             }
 

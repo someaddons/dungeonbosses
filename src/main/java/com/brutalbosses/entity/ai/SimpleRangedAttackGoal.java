@@ -5,39 +5,40 @@ import com.brutalbosses.entity.IOnProjectileHit;
 import com.brutalbosses.entity.PosUtil;
 import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonObject;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.monster.SpellcastingIllagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import com.mojang.math.Vector3d;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.monster.SpellcasterIllager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SimpleRangedAttackGoal extends Goal
 {
-    protected final MobEntity              mob;
-    protected       LivingEntity           target;
-    protected       int                    attackTime         = -1;
-    protected       double                 speedModifier;
-    protected       int                    seeTime;
-    protected       int                    attackIntervalMin;
-    protected       int                    attackIntervalMax;
-    protected       float                  attackRadiusSqr;
-    protected final BossCapability         cap;
-    protected final RangedParams           params;
-    private final   List<ProjectileEntity> projectileEntities = new ArrayList<>();
-    private         boolean                isChargingUp       = false;
-    private final   EntityPredicate        playerAoeFinder;
+    protected final Mob                 mob;
+    protected       LivingEntity        target;
+    protected       int                 attackTime         = -1;
+    protected       double              speedModifier;
+    protected       int                 seeTime;
+    protected       int                 attackIntervalMin;
+    protected       int                 attackIntervalMax;
+    protected       float               attackRadiusSqr;
+    protected final BossCapability      cap;
+    protected final RangedParams        params;
+    private final   List<Projectile>    projectileEntities = new ArrayList<>();
+    private         boolean             isChargingUp       = false;
+    private final   TargetingConditions playerAoeFinder;
 
-    public SimpleRangedAttackGoal(MobEntity mob, final IAIParams params)
+    public SimpleRangedAttackGoal(Mob mob, final IAIParams params)
     {
         this.mob = mob;
         cap = mob.getCapability(BossCapability.BOSS_CAP).orElse(null);
@@ -46,7 +47,7 @@ public abstract class SimpleRangedAttackGoal extends Goal
         this.attackIntervalMin = (this.params.interval - 10);
         this.attackIntervalMax = (this.params.interval + 10);
         this.attackRadiusSqr = this.params.distance * this.params.distance;
-        playerAoeFinder = new EntityPredicate().range(this.params.distance);
+        playerAoeFinder = TargetingConditions.forCombat().range(this.params.distance);
         attackTime = ((RangedParams) params).interval / 2;
     }
 
@@ -81,9 +82,9 @@ public abstract class SimpleRangedAttackGoal extends Goal
         this.target = null;
         this.seeTime = 0;
 
-        for (final ProjectileEntity projectileEntity : projectileEntities)
+        for (final Projectile Projectile : projectileEntities)
         {
-            projectileEntity.remove();
+            Projectile.remove(Entity.RemovalReason.DISCARDED);
         }
         projectileEntities.clear();
         attackTime = params.interval / 2;
@@ -92,7 +93,7 @@ public abstract class SimpleRangedAttackGoal extends Goal
     public void tick()
     {
         double distSqr = this.mob.distanceToSqr(this.target.getX(), this.target.getY(), this.target.getZ());
-        boolean canSee = this.mob.getSensing().canSee(this.target);
+        boolean canSee = this.mob.getSensing().hasLineOfSight(this.target);
         if (canSee)
         {
             ++this.seeTime;
@@ -109,17 +110,17 @@ public abstract class SimpleRangedAttackGoal extends Goal
         {
             for (int i = 0; i < projectileEntities.size(); i++)
             {
-                final ProjectileEntity projectileEntity = projectileEntities.get(i);
-                if (projectileEntity != null)
+                final Projectile Projectile = projectileEntities.get(i);
+                if (Projectile != null)
                 {
-                    if (!projectileEntity.isAlive())
+                    if (!Projectile.isAlive())
                     {
                         projectileEntities.remove(i);
                         i--;
                     }
                     else
                     {
-                        positionProjectile(projectileEntity, i + 1);
+                        positionProjectile(Projectile, i + 1);
                     }
                 }
             }
@@ -159,9 +160,9 @@ public abstract class SimpleRangedAttackGoal extends Goal
                 // Charge one projectile every 0.25s
                 if (nextCount == params.count)
                 {
-                    if (mob instanceof SpellcastingIllagerEntity)
+                    if (mob instanceof SpellcasterIllager)
                     {
-                        ((SpellcastingIllagerEntity) mob).setIsCastingSpell(SpellcastingIllagerEntity.SpellType.NONE);
+                        ((SpellcasterIllager) mob).setIsCastingSpell(SpellcasterIllager.IllagerSpell.NONE);
                     }
                     isChargingUp = false;
                     // Delay before shooting
@@ -169,9 +170,9 @@ public abstract class SimpleRangedAttackGoal extends Goal
                 }
                 else
                 {
-                    if (mob instanceof SpellcastingIllagerEntity)
+                    if (mob instanceof SpellcasterIllager)
                     {
-                        ((SpellcastingIllagerEntity) mob).setIsCastingSpell(SpellcastingIllagerEntity.SpellType.WOLOLO);
+                        ((SpellcasterIllager) mob).setIsCastingSpell(SpellcasterIllager.IllagerSpell.WOLOLO);
                     }
                     attackTime = 5;
                 }
@@ -180,28 +181,28 @@ public abstract class SimpleRangedAttackGoal extends Goal
 
             if (params.count > 1 && projectileEntities.size() % 2 == 0)
             {
-                final PlayerEntity closest = mob.level.getNearestPlayer(mob, params.distance);
+                final Player closest = mob.level.getNearestPlayer(mob, params.distance);
                 if (closest != null)
                 {
                     target = closest;
                 }
             }
 
-            final ProjectileEntity projectileEntity = projectileEntities.remove(projectileEntities.size() - 1);
+            final Projectile Projectile = projectileEntities.remove(projectileEntities.size() - 1);
 
             if (params.aoe)
             {
-                projectileEntity.remove();
-                List<PlayerEntity> players =
-                  mob.level.getNearbyEntities(PlayerEntity.class, playerAoeFinder, mob, mob.getBoundingBox().inflate(params.distance, 15, params.distance));
+                Projectile.remove(Entity.RemovalReason.DISCARDED);
+                List<Player> players =
+                  mob.level.getNearbyEntities(Player.class, playerAoeFinder, mob, mob.getBoundingBox().inflate(params.distance, 15, params.distance));
                 boolean containedTarget = false;
 
-                for (final PlayerEntity playerEntity : players)
+                for (final Player Player : players)
                 {
-                    final ProjectileEntity aoe = createProjectile();
-                    aoe.setPos(projectileEntity.getX(), projectileEntity.getY(), projectileEntity.getZ());
-                    doRangedAttack(aoe, playerEntity);
-                    if (playerEntity == target)
+                    final Projectile aoe = createProjectile();
+                    aoe.setPos(Projectile.getX(), Projectile.getY(), Projectile.getZ());
+                    doRangedAttack(aoe, Player);
+                    if (Player == target)
                     {
                         containedTarget = true;
                     }
@@ -209,14 +210,14 @@ public abstract class SimpleRangedAttackGoal extends Goal
 
                 if (!containedTarget)
                 {
-                    final ProjectileEntity aoe = createProjectile();
-                    aoe.setPos(projectileEntity.getX(), projectileEntity.getY(), projectileEntity.getZ());
+                    final Projectile aoe = createProjectile();
+                    aoe.setPos(Projectile.getX(), Projectile.getY(), Projectile.getZ());
                     doRangedAttack(aoe, target);
                 }
             }
             else
             {
-                doRangedAttack(projectileEntity, target);
+                doRangedAttack(Projectile, target);
             }
 
             if (!projectileEntities.isEmpty())
@@ -225,15 +226,15 @@ public abstract class SimpleRangedAttackGoal extends Goal
                 return;
             }
 
-            relativeAttackDist = MathHelper.sqrt(distSqr) / this.params.distance;
-            this.attackTime = MathHelper.floor(
+            relativeAttackDist = (float) (Math.sqrt(distSqr) / this.params.distance);
+            this.attackTime = Mth.floor(
               (1 + BrutalBosses.rand.nextFloat() * 0.5f) * (relativeAttackDist * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin))
                                 - 5 * params.count;
         }
         else if (this.attackTime < 0)
         {
-            relativeAttackDist = MathHelper.sqrt(distSqr) / this.params.distance;
-            this.attackTime = MathHelper.floor(
+            relativeAttackDist = (float) (Math.sqrt(distSqr) / this.params.distance);
+            this.attackTime = Mth.floor(
               (1 + BrutalBosses.rand.nextFloat() * 0.5f) * (relativeAttackDist * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin))
                                 - Math.min(5 * params.count, attackIntervalMin - 5);
         }
@@ -244,9 +245,9 @@ public abstract class SimpleRangedAttackGoal extends Goal
      *
      * @return
      */
-    protected abstract ProjectileEntity createProjectile();
+    protected abstract Projectile createProjectile();
 
-    protected abstract void doRangedAttack(final ProjectileEntity projectileEntity, final LivingEntity target);
+    protected abstract void doRangedAttack(final Projectile Projectile, final LivingEntity target);
 
     /**
      * Creates a projectile for the given number and positions it
@@ -254,35 +255,35 @@ public abstract class SimpleRangedAttackGoal extends Goal
      * @param number
      * @return
      */
-    protected ProjectileEntity createProjectile(int number)
+    protected Projectile createProjectile(int number)
     {
-        final ProjectileEntity projectileEntity = createProjectile();
+        final Projectile Projectile = createProjectile();
 
-        positionProjectile(projectileEntity, number);
-        projectileEntity.noPhysics = true;
-        projectileEntity.setNoGravity(true);
-        projectileEntity.setOwner(mob);
-        if (projectileEntity instanceof IOnProjectileHit)
+        positionProjectile(Projectile, number);
+        Projectile.noPhysics = true;
+        Projectile.setNoGravity(true);
+        Projectile.setOwner(mob);
+        if (Projectile instanceof IOnProjectileHit)
         {
-            ((IOnProjectileHit) projectileEntity).setMaxLifeTime(mob.level.getGameTime() + 20 * 60);
+            ((IOnProjectileHit) Projectile).setMaxLifeTime(mob.level.getGameTime() + 20 * 60);
         }
 
-        mob.level.addFreshEntity(projectileEntity);
-        return projectileEntity;
+        mob.level.addFreshEntity(Projectile);
+        return Projectile;
     }
 
     /**
      * Positions the projectiles in a circle around the entity
      *
-     * @param projectileEntity
+     * @param Projectile
      * @param number
      */
-    protected void positionProjectile(final ProjectileEntity projectileEntity, final int number)
+    protected void positionProjectile(final Projectile Projectile, final int number)
     {
         if (params.count == 1)
         {
             final Direction dir = PosUtil.getFacing(mob.position(), target.position()).getClockWise();
-            projectileEntity.setPos(mob.getX() + dir.getCounterClockWise().getStepX() * 0.5,
+            Projectile.setPos(mob.getX() + dir.getCounterClockWise().getStepX() * 0.5,
               mob.getY() + mob.getEyeHeight() - 0.5,
               mob.getZ() + dir.getCounterClockWise().getStepZ() * 0.5);
             return;
@@ -297,9 +298,9 @@ public abstract class SimpleRangedAttackGoal extends Goal
 
         Vector3d offSet = new Vector3d(xzRatio * dir.getStepX(), -y, xzRatio * dir.getStepZ());
 
-        center = center.add(offSet);
-        center = center.add(dir.getCounterClockWise().getStepX() * 0.5, 0, dir.getCounterClockWise().getStepZ() * 0.5);
-        projectileEntity.setPos(center.x, center.y, center.z);
+        center.add(offSet);
+        center.add(new Vector3d(dir.getCounterClockWise().getStepX() * 0.5, 0, dir.getCounterClockWise().getStepZ() * 0.5));
+        Projectile.setPos(center.x, center.y, center.z);
     }
 
     public static class RangedParams extends IAIParams.DefaultParams

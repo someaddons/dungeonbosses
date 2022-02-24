@@ -1,12 +1,12 @@
 package com.brutalbosses.entity;
 
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.phys.HitResult;
 
 import java.util.function.Consumer;
 
 public interface IOnProjectileHit
 {
-    public void setOnHitAction(final Consumer<RayTraceResult> action);
+    public void setOnHitAction(final Consumer<HitResult> action);
 
     public void setAddDamage(final float modifier);
 

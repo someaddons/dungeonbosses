@@ -1,6 +1,6 @@
 package com.brutalbosses.entity;
 
-import net.minecraft.entity.EntitySize;
+import net.minecraft.world.entity.EntityDimensions;
 
 public interface CustomEntityRenderData
 {
@@ -8,5 +8,5 @@ public interface CustomEntityRenderData
 
     public void setVisualScale(final float scale);
 
-    void setDimension(EntitySize size);
+    void setDimension(EntityDimensions size);
 }

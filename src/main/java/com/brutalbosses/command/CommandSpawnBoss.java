@@ -7,10 +7,10 @@ import com.brutalbosses.entity.BossTypeManager;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.command.CommandSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Print out total network stats
@@ -18,10 +18,10 @@ import net.minecraft.util.text.StringTextComponent;
 public class CommandSpawnBoss implements Opcommand
 {
     @Override
-    public int onExecute(final CommandContext<CommandSource> context)
+    public int onExecute(final CommandContext<CommandSourceStack> context)
     {
-        final CommandSource source = context.getSource();
-        source.sendFailure(new StringTextComponent("Enter a valid boss id(name of the json file)"));
+        final CommandSourceStack source = context.getSource();
+        source.sendFailure(new TextComponent("Enter a valid boss id(name of the json file)"));
         return 0;
     }
 
@@ -32,18 +32,18 @@ public class CommandSpawnBoss implements Opcommand
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSource> build()
+    public LiteralArgumentBuilder<CommandSourceStack> build()
     {
         return
           ICommand.newLiteral(getName())
             .then(ICommand.newArgument("bossID", StringArgumentType.word()).executes(this::executeSpawnBoss)).executes(this::checkPreConditionAndExecute);
     }
 
-    private int executeSpawnBoss(final CommandContext<CommandSource> context)
+    private int executeSpawnBoss(final CommandContext<CommandSourceStack> context)
     {
         try
         {
-            final CommandSource source = context.getSource();
+            final CommandSourceStack source = context.getSource();
             if (!checkPreCondition(context))
             {
                 return 0;
@@ -70,7 +70,7 @@ public class CommandSpawnBoss implements Opcommand
             final BossType bossType = BossTypeManager.instance.bosses.get(bossID);
             if (bossType == null)
             {
-                source.sendFailure(new StringTextComponent("Enter a valid boss id(name of the json file), no boss found for:" + bossID));
+                source.sendFailure(new TextComponent("Enter a valid boss id(name of the json file), no boss found for:" + bossID));
                 return 0;
             }
 

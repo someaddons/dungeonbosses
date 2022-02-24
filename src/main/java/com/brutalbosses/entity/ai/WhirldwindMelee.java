@@ -2,36 +2,37 @@ package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
 import com.google.gson.JsonObject;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Simple whirldwind attack, can apply potion effects here!
+ * Simple whirldwind attack, can apply potion MobEffects here!
  */
 public class WhirldwindMelee extends Goal
 {
     public static ResourceLocation ID = new ResourceLocation("brutalbosses:whirldwind");
 
-    private final MobEntity        mob;
+    private final Mob              mob;
     private       LivingEntity     target = null;
     private       WhirldWindParams params;
 
-    public WhirldwindMelee(MobEntity mob, final IAIParams params)
+    public WhirldwindMelee(Mob mob, final IAIParams params)
     {
         this.params = (WhirldWindParams) params;
         this.mob = mob;
@@ -71,7 +72,7 @@ public class WhirldwindMelee extends Goal
         if (distSqr < params.attackDistance * params.attackDistance && BrutalBosses.rand.nextInt(40) == 0)
         {
             attackTimer = params.cooldown;
-            final List<LivingEntity> entities = mob.level.getLoadedEntitiesOfClass(PlayerEntity.class, mob.getBoundingBox().inflate(2.0D, 0.5D, 2.0D));
+            List<LivingEntity> entities = new ArrayList<>(mob.level.getEntitiesOfClass(Player.class, mob.getBoundingBox().inflate(2.0D, 0.5D, 2.0D)));
             if (!entities.contains(mob.getTarget()))
             {
                 entities.add(mob.getTarget());
@@ -89,11 +90,11 @@ public class WhirldwindMelee extends Goal
                     {
                         livingentity.knockback(
                           params.knockback,
-                          MathHelper.sin(livingentity.yRot * ((float) Math.PI)),
-                          (-MathHelper.cos(livingentity.yRot * ((float) Math.PI))));
+                          Mth.sin(livingentity.getYRot() * ((float) Math.PI)),
+                          (-Mth.cos(livingentity.getYRot() * ((float) Math.PI))));
                     }
 
-                    this.mob.swing(Hand.MAIN_HAND);
+                    this.mob.swing(InteractionHand.MAIN_HAND);
                     float damage = params.extraDamage;
                     if (mob.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE))
                     {
@@ -101,9 +102,9 @@ public class WhirldwindMelee extends Goal
                     }
                     livingentity.hurt(DamageSource.mobAttack(mob), damage);
 
-                    if (params.onHitEffect != null)
+                    if (params.onHitMobEffect != null)
                     {
-                        livingentity.addEffect(new EffectInstance(params.onHitEffect, params.potionduration, params.potionlevel));
+                        livingentity.addEffect(new MobEffectInstance(params.onHitMobEffect, params.potionduration, params.potionlevel));
                     }
                 }
             }
@@ -117,11 +118,11 @@ public class WhirldwindMelee extends Goal
               1.0F,
               1.0F);
 
-            double d0 = (double) (-MathHelper.sin(mob.yRot * ((float) Math.PI / 180)));
-            double d1 = (double) MathHelper.cos(mob.yRot * ((float) Math.PI / 180));
-            if (mob.level instanceof ServerWorld)
+            double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
+            double d1 = (double) Mth.cos(mob.getYRot() * ((float) Math.PI / 180));
+            if (mob.level instanceof ServerLevel)
             {
-                ((ServerWorld) mob.level).sendParticles(ParticleTypes.SWEEP_ATTACK,
+                ((ServerLevel) mob.level).sendParticles(ParticleTypes.SWEEP_ATTACK,
                   mob.getX() + d0,
                   mob.getY(0.5D),
                   mob.getZ() + d1,
@@ -136,14 +137,14 @@ public class WhirldwindMelee extends Goal
 
     public static class WhirldWindParams extends IAIParams.DefaultParams
     {
-        private float   attackDistance = 4f;
-        private float   extraDamage    = 2f;
-        private Effect  onHitEffect    = null;
-        private float   knockback      = 4f;
-        private int     cooldown       = 80;
-        private int     potionlevel    = 1;
-        private int     potionduration = 60;
-        private boolean knockup        = false;
+        private float     attackDistance = 4f;
+        private float     extraDamage    = 2f;
+        private MobEffect onHitMobEffect = null;
+        private float     knockback      = 4f;
+        private int       cooldown       = 80;
+        private int       potionlevel    = 1;
+        private int       potionduration = 60;
+        private boolean   knockup        = false;
 
         public WhirldWindParams(final JsonObject jsonData)
         {
@@ -202,8 +203,8 @@ public class WhirldwindMelee extends Goal
 
             if (jsonElement.has(POTION))
             {
-                final ResourceLocation effectID = new ResourceLocation(jsonElement.get(POTION).getAsString());
-                onHitEffect = ForgeRegistries.POTIONS.getValue(effectID);
+                final ResourceLocation MobEffectID = new ResourceLocation(jsonElement.get(POTION).getAsString());
+                onHitMobEffect = ForgeRegistries.MOB_EFFECTS.getValue(MobEffectID);
             }
 
             return this;

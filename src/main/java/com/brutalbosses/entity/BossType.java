@@ -3,22 +3,18 @@ package com.brutalbosses.entity;
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.ai.IAIParams;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
-import net.minecraft.entity.monster.SpellcastingIllagerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.monster.SpellcasterIllager;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Iterator;
@@ -42,12 +38,12 @@ public class BossType
      */
     private final ResourceLocation id;
 
-    private ImmutableMap<Effect, Integer>              potionEffects    = ImmutableMap.of();
-    private ImmutableMap<EquipmentSlotType, ItemStack> gearMap          = ImmutableMap.of();
-    private ImmutableMap<ResourceLocation, IAIParams>  aiData           = ImmutableMap.of();
-    private ImmutableMap<Attribute, Float>             attributes       = ImmutableMap.of();
-    private ImmutableMap<ResourceLocation, Integer>    spawnTables      = ImmutableMap.of();
-    private ImmutableMap<String, Float>                customAttributes = ImmutableMap.of();
+    private ImmutableMap<MobEffect, Integer>          potionMobEffects = ImmutableMap.of();
+    private ImmutableMap<EquipmentSlot, ItemStack>    gearMap          = ImmutableMap.of();
+    private ImmutableMap<ResourceLocation, IAIParams> aiData           = ImmutableMap.of();
+    private ImmutableMap<Attribute, Float>            attributes       = ImmutableMap.of();
+    private ImmutableMap<ResourceLocation, Integer>   spawnTables      = ImmutableMap.of();
+    private ImmutableMap<String, Float>               customAttributes = ImmutableMap.of();
 
     /**
      * Name desc
@@ -69,20 +65,20 @@ public class BossType
      * @param world
      * @return
      */
-    public MobEntity createBossEntity(final World world)
+    public Mob createBossEntity(final Level world)
     {
         final Entity entity = entityToUse.create(world);
 
-        if (!(entity instanceof MobEntity))
+        if (!(entity instanceof Mob))
         {
             BrutalBosses.LOGGER.warn("Not supported boss entity:" + entityToUse.getRegistryName());
             return null;
         }
 
         entity.getCapability(BOSS_CAP).orElse(null).setBossType(this);
-        initForEntity((MobEntity) entity);
+        initForEntity((Mob) entity);
 
-        return (MobEntity) entity;
+        return (Mob) entity;
     }
 
     /**
@@ -109,21 +105,21 @@ public class BossType
         initGear(boss);
         initStats(boss);
         initAI(boss);
-        if (boss instanceof MobEntity)
+        if (boss instanceof Mob)
         {
-            ((MobEntity) boss).setPersistenceRequired();
+            ((Mob) boss).setPersistenceRequired();
             if (boss.getAttributes().hasAttribute(Attributes.FOLLOW_RANGE))
             {
-                // ((MobEntity) boss).restrictTo(boss.getCapability(BOSS_CAP).orElse(null).getSpawnPos(), (int) boss.getAttribute(Attributes.FOLLOW_RANGE).getValue());
+                // ((Mob) boss).restrictTo(boss.getCapability(BOSS_CAP).orElse(null).getSpawnPos(), (int) boss.getAttribute(Attributes.FOLLOW_RANGE).getValue());
             }
         }
 
-        boss.setCustomName(new StringTextComponent(desc));
+        boss.setCustomName(new TextComponent(desc));
         boss.setCustomNameVisible(true);
     }
 
     /**
-     * Inits stats and effects
+     * Inits stats and MobEffects
      *
      * @param boss
      */
@@ -153,9 +149,9 @@ public class BossType
 
         boss.setHealth(boss.getMaxHealth() * healthPct);
 
-        for (final Map.Entry<Effect, Integer> effectEntry : potionEffects.entrySet())
+        for (final Map.Entry<MobEffect, Integer> MobEffectEntry : potionMobEffects.entrySet())
         {
-            boss.addEffect(new EffectInstance(effectEntry.getKey(), 10000000, effectEntry.getValue()));
+            boss.addEffect(new MobEffectInstance(MobEffectEntry.getKey(), 10000000, MobEffectEntry.getValue()));
         }
     }
 
@@ -166,9 +162,9 @@ public class BossType
      */
     private void initGear(final LivingEntity boss)
     {
-        if (boss instanceof MobEntity)
+        if (boss instanceof Mob)
         {
-            for (final Map.Entry<EquipmentSlotType, ItemStack> gearEntry : gearMap.entrySet())
+            for (final Map.Entry<EquipmentSlot, ItemStack> gearEntry : gearMap.entrySet())
             {
                 boss.setItemSlot(gearEntry.getKey(), gearEntry.getValue());
             }
@@ -182,12 +178,12 @@ public class BossType
      */
     private void initAI(final LivingEntity boss)
     {
-        if (customAttributes.containsKey(REMOVESPELLAI) && boss instanceof MobEntity)
+        if (customAttributes.containsKey(REMOVESPELLAI) && boss instanceof Mob)
         {
-            for (final Iterator<PrioritizedGoal> iterator = ((MobEntity) boss).goalSelector.availableGoals.iterator(); iterator.hasNext(); )
+            for (final Iterator<WrappedGoal> iterator = ((Mob) boss).goalSelector.availableGoals.iterator(); iterator.hasNext(); )
             {
-                final PrioritizedGoal goal = iterator.next();
-                if (goal.getGoal() instanceof SpellcastingIllagerEntity.UseSpellGoal)
+                final WrappedGoal goal = iterator.next();
+                if (goal.getGoal() instanceof SpellcasterIllager.SpellcasterUseSpellGoal)
                 {
                     goal.stop();
                     iterator.remove();
@@ -210,13 +206,13 @@ public class BossType
     }
 
     /**
-     * Sets the Potion effects
+     * Sets the Potion MobEffects
      *
-     * @param potionEffects
+     * @param potionMobEffects
      */
-    public void setEffects(final ImmutableMap<Effect, Integer> potionEffects)
+    public void setMobEffects(final ImmutableMap<MobEffect, Integer> potionMobEffects)
     {
-        this.potionEffects = potionEffects;
+        this.potionMobEffects = potionMobEffects;
     }
 
     /**
@@ -224,7 +220,7 @@ public class BossType
      *
      * @param gearMap
      */
-    public void setGear(final ImmutableMap<EquipmentSlotType, ItemStack> gearMap)
+    public void setGear(final ImmutableMap<EquipmentSlot, ItemStack> gearMap)
     {
         this.gearMap = gearMap;
     }
@@ -390,15 +386,15 @@ public class BossType
      *
      * @return
      */
-    public CompoundNBT serializeToClient()
+    public CompoundTag serializeToClient()
     {
-        final CompoundNBT compoundNBT = new CompoundNBT();
-        compoundNBT.putString("id", id.toString());
-        compoundNBT.putString("etype", entityToUse.getRegistryName().toString());
-        compoundNBT.putFloat("scale", scale);
+        final CompoundTag CompoundTag = new CompoundTag();
+        CompoundTag.putString("id", id.toString());
+        CompoundTag.putString("etype", entityToUse.getRegistryName().toString());
+        CompoundTag.putFloat("scale", scale);
 
 
-        return compoundNBT;
+        return CompoundTag;
     }
 
     /**
@@ -406,10 +402,10 @@ public class BossType
      *
      * @return
      */
-    public static BossType deserializeAtClient(final CompoundNBT compoundNBT)
+    public static BossType deserializeAtClient(final CompoundTag CompoundTag)
     {
-        final ResourceLocation id = ResourceLocation.tryParse(compoundNBT.getString("id"));
-        final ResourceLocation entity = ResourceLocation.tryParse(compoundNBT.getString("etype"));
+        final ResourceLocation id = ResourceLocation.tryParse(CompoundTag.getString("id"));
+        final ResourceLocation entity = ResourceLocation.tryParse(CompoundTag.getString("etype"));
         final EntityType type = ForgeRegistries.ENTITIES.getValue(entity);
 
         if (type == null)
@@ -418,7 +414,7 @@ public class BossType
         }
 
         final BossType bossType = new BossType(type, id);
-        bossType.setVisualScale(compoundNBT.getFloat("scale"));
+        bossType.setVisualScale(CompoundTag.getFloat("scale"));
         return bossType;
     }
 }

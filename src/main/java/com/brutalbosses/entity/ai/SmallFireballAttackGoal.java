@@ -1,17 +1,17 @@
 package com.brutalbosses.entity.ai;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.SmallFireballEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.SmallFireball;
 
 public class SmallFireballAttackGoal extends SimpleRangedAttackGoal
 {
     public static ResourceLocation ID = new ResourceLocation("brutalbosses:shootfireballs");
 
-    public SmallFireballAttackGoal(final MobEntity mob, final IAIParams params)
+    public SmallFireballAttackGoal(final Mob mob, final IAIParams params)
     {
         super(mob, params);
     }
@@ -23,16 +23,16 @@ public class SmallFireballAttackGoal extends SimpleRangedAttackGoal
     }
 
     @Override
-    protected void doRangedAttack(final ProjectileEntity projectileEntity, final LivingEntity target)
+    protected void doRangedAttack(final Projectile Projectile, final LivingEntity target)
     {
-        projectileEntity.remove();
+        Projectile.remove(Entity.RemovalReason.DISCARDED);
         double xDiff = target.getX() - mob.getX();
         double yDiff = target.getY(0.5D) - mob.getY(0.5D);
         double zDiff = target.getZ() - mob.getZ();
 
-        float distVariance = MathHelper.sqrt(MathHelper.sqrt(this.mob.distanceToSqr(this.target.getX(), this.target.getY(), this.target.getZ()))) * 0.5F;
+        float distVariance = (float) (Math.sqrt(Math.sqrt(this.mob.distanceToSqr(this.target.getX(), this.target.getY(), this.target.getZ()))) * 0.5F);
 
-        final SmallFireballEntity fireballEntity = new SmallFireballEntity(mob.level,
+        final SmallFireball fireballEntity = new SmallFireball(mob.level,
           mob,
           xDiff + mob.getRandom().nextGaussian() * (double) distVariance,
           yDiff,
@@ -43,9 +43,9 @@ public class SmallFireballAttackGoal extends SimpleRangedAttackGoal
     }
 
     @Override
-    protected ProjectileEntity createProjectile()
+    protected Projectile createProjectile()
     {
-        final SmallFireballEntity fireballEntity = new SmallFireballEntity(mob.level,
+        final SmallFireball fireballEntity = new SmallFireball(mob.level,
           mob,
           0,
           0,

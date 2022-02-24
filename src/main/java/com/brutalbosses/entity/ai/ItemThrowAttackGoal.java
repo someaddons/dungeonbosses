@@ -6,33 +6,29 @@ import com.brutalbosses.entity.IOnProjectileHit;
 import com.brutalbosses.entity.thrownentity.ThrownItemEntity;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 
 public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
 {
     public static ResourceLocation ID = new ResourceLocation("brutalbosses:itemshootgoal");
 
-    public ItemThrowAttackGoal(final MobEntity mob, final IAIParams params)
+    public ItemThrowAttackGoal(final Mob mob, final IAIParams params)
     {
         super(mob, params);
     }
@@ -44,9 +40,9 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
     }
 
     @Override
-    protected void doRangedAttack(final ProjectileEntity projectileEntity, final LivingEntity target)
+    protected void doRangedAttack(final Projectile Projectile, final LivingEntity target)
     {
-        projectileEntity.remove();
+        Projectile.remove(Entity.RemovalReason.DISCARDED);
 
         double xDiff = target.getX() - mob.getX();
         double yDiff = target.getY(0.5D) - (mob.getY() + mob.getEyeHeight() - 0.5);
@@ -68,9 +64,9 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                     return;
                 }
 
-                if (rayTraceResult instanceof EntityRayTraceResult)
+                if (rayTraceResult instanceof EntityHitResult)
                 {
-                    final Entity hitEntity = ((EntityRayTraceResult) rayTraceResult).getEntity();
+                    final Entity hitEntity = ((EntityHitResult) rayTraceResult).getEntity();
                     if (hitEntity instanceof LivingEntity && hitEntity != mob)
                     {
                         if (((ItemThrowParams) params).damage > 0)
@@ -80,7 +76,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
 
                         if (((ItemThrowParams) params).lighting)
                         {
-                            LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(hitEntity.level);
+                            LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(hitEntity.level);
                             lightningboltentity.moveTo(hitEntity.getX(), hitEntity.getY(), hitEntity.getZ());
                             lightningboltentity.setVisualOnly(false);
                             mob.level.addFreshEntity(lightningboltentity);
@@ -96,16 +92,16 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                               hitEntity.getZ(),
                               (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier.get()) * pearlEntity.getScale(),
                               false,
-                              Explosion.Mode.BREAK);
+                              Explosion.BlockInteraction.BREAK);
                         }
 
                         if (((ItemThrowParams) params).teleport)
                         {
-                            double d0 = (double) (-MathHelper.sin(mob.yRot * ((float) Math.PI / 180)));
-                            double d1 = (double) MathHelper.cos(mob.yRot * ((float) Math.PI / 180));
-                            if (mob.level instanceof ServerWorld)
+                            double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
+                            double d1 = (double) Mth.cos(mob.getYRot() * ((float) Math.PI / 180));
+                            if (mob.level instanceof ServerLevel)
                             {
-                                ((ServerWorld) mob.level).sendParticles(ParticleTypes.PORTAL,
+                                ((ServerLevel) mob.level).sendParticles(ParticleTypes.PORTAL,
                                   mob.getX() + d0,
                                   mob.getY(0.5D),
                                   mob.getZ() + d1,
@@ -116,19 +112,19 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                                   0.0D);
                             }
 
-                            mob.level.playSound((PlayerEntity) null, mob.xo, mob.yo, mob.zo, SoundEvents.ENDERMAN_TELEPORT, mob.getSoundSource(), 1.0F, 1.0F);
+                            mob.level.playSound((Player) null, mob.xo, mob.yo, mob.zo, SoundEvents.ENDERMAN_TELEPORT, mob.getSoundSource(), 1.0F, 1.0F);
                             mob.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
 
                             mob.teleportTo(pearlEntity.getX(), hitEntity.getY(), pearlEntity.getZ());
                         }
                     }
                 }
-                else if (rayTraceResult instanceof BlockRayTraceResult)
+                else if (rayTraceResult instanceof BlockHitResult)
                 {
-                    final BlockPos hitPos = ((BlockRayTraceResult) rayTraceResult).getBlockPos();
+                    final BlockPos hitPos = ((BlockHitResult) rayTraceResult).getBlockPos();
                     if (((ItemThrowParams) params).lighting)
                     {
-                        LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(mob.level);
+                        LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(mob.level);
                         lightningboltentity.moveTo(hitPos.getX(), hitPos.getY(), hitPos.getZ());
                         lightningboltentity.setVisualOnly(false);
                         mob.level.addFreshEntity(lightningboltentity);
@@ -144,19 +140,19 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                           hitPos.getZ(),
                           (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier.get()),
                           false,
-                          Explosion.Mode.NONE);
+                          Explosion.BlockInteraction.NONE);
                     }
 
                     if (((ItemThrowParams) params).teleport)
                     {
-                        final BlockPos tpPos = BossSpawnHandler.findSpawnPosForBoss((IServerWorld) mob.level, mob, hitPos);
+                        final BlockPos tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevelAccessor) mob.level, mob, hitPos);
                         if (tpPos != null)
                         {
-                            double d0 = (double) (-MathHelper.sin(mob.yRot * ((float) Math.PI / 180)));
-                            double d1 = (double) MathHelper.cos(mob.yRot * ((float) Math.PI / 180));
-                            if (mob.level instanceof ServerWorld)
+                            double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
+                            double d1 = (double) Mth.cos(mob.getYRot() * ((float) Math.PI / 180));
+                            if (mob.level instanceof ServerLevel)
                             {
-                                ((ServerWorld) mob.level).sendParticles(ParticleTypes.PORTAL,
+                                ((ServerLevel) mob.level).sendParticles(ParticleTypes.PORTAL,
                                   mob.getX() + d0,
                                   mob.getY(0.5D),
                                   mob.getZ() + d1,
@@ -167,7 +163,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                                   0.0D);
                             }
 
-                            mob.level.playSound((PlayerEntity) null, mob.xo, mob.yo, mob.zo, SoundEvents.ENDERMAN_TELEPORT, mob.getSoundSource(), 1.0F, 1.0F);
+                            mob.level.playSound((Player) null, mob.xo, mob.yo, mob.zo, SoundEvents.ENDERMAN_TELEPORT, mob.getSoundSource(), 1.0F, 1.0F);
                             mob.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
 
                             mob.teleportTo(tpPos.getX(), tpPos.getY(), tpPos.getZ());
@@ -181,7 +177,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
     }
 
     @Override
-    protected ProjectileEntity createProjectile()
+    protected Projectile createProjectile()
     {
         final ThrownItemEntity pearlEntity = new ThrownItemEntity(mob.level, mob);
         pearlEntity.setItem(((ItemThrowParams) params).item);
@@ -220,7 +216,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
             {
                 try
                 {
-                    item = ItemStack.of(JsonToNBT.parseTag(jsonElement.get(ITEM).getAsString()));
+                    item = ItemStack.of(TagParser.parseTag(jsonElement.get(ITEM).getAsString()));
                 }
                 catch (CommandSyntaxException e)
                 {
