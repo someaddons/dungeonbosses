@@ -65,7 +65,7 @@ public class ClientEventHandler
     @SubscribeEvent()
     public static void onPlayerTick(TickEvent.PlayerTickEvent event)
     {
-        if (event.player.level.isClientSide() || event.player.level.getGameTime() % 5 != 0)
+        if (!event.player.level.isClientSide() || event.player.level.getGameTime() % 5 != 0)
         {
             return;
         }

@@ -29,6 +29,7 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -36,6 +37,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 
 import java.util.List;
 
@@ -196,8 +198,11 @@ public class EventHandler
     }
 
     @SubscribeEvent
-    public static void onTrack(PlayerEvent.PlayerLoggedInEvent event)
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event)
     {
-        Network.instance.sendPacket((ServerPlayerEntity) event.getPlayer(), new BossTypeSyncMessage(BossTypeManager.instance.bosses.values()));
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
+        {
+            Network.instance.sendPacket((ServerPlayerEntity) event.getPlayer(), new BossTypeSyncMessage(BossTypeManager.instance.bosses.values()));
+        });
     }
 }
