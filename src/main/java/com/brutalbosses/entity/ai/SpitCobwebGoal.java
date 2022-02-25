@@ -55,22 +55,25 @@ public class SpitCobwebGoal extends SimpleRangedAttackGoal
     }
 
     @Override
-    protected void positionProjectile(final Projectile Projectile, final int number)
+    protected void positionProjectile(final Projectile projectile, final int number)
     {
-        Projectile.setPos(mob.getX(), mob.getY() + mob.getEyeHeight(), mob.getZ());
+        projectile.setPos(mob.getX(), mob.getY() + mob.getEyeHeight(), mob.getZ());
     }
 
     @Override
-    protected void doRangedAttack(final Projectile Projectile, final LivingEntity target)
+    protected void doRangedAttack(Projectile projectile, final LivingEntity target)
     {
-        Projectile.noPhysics = false;
-        positionProjectile(Projectile, 1);
+        projectile.discard();
+        projectile = createProjectile();
+        projectile.setNoGravity(true);
+        positionProjectile(projectile, 1);
+        mob.level.addFreshEntity(projectile);
 
         double xDiff = target.getX() - mob.getX();
-        double yDiff = target.getY(0.3333333333333333D) - Projectile.getY();
+        double yDiff = target.getY(0.3333333333333333D) - projectile.getY();
         double zDiff = target.getZ() - mob.getZ();
         float f = (float) (Math.sqrt(xDiff * xDiff + zDiff * zDiff) * 0.2F);
-        Projectile.shoot(xDiff, yDiff + (double) f, zDiff, 0.6F, 10.0F);
+        projectile.shoot(xDiff, yDiff + (double) f, zDiff, 0.9F, 10.0F);
         mob.level.playSound((Player) null,
           mob.getX(),
           mob.getY(),
@@ -80,9 +83,9 @@ public class SpitCobwebGoal extends SimpleRangedAttackGoal
           1.0F,
           2F + (BrutalBosses.rand.nextFloat() - BrutalBosses.rand.nextFloat()) * 0.2F);
 
-        if (Projectile instanceof IOnProjectileHit)
+        if (projectile instanceof IOnProjectileHit)
         {
-            ((IOnProjectileHit) Projectile).setOnHitAction(rayTraceResult ->
+            ((IOnProjectileHit) projectile).setOnHitAction(rayTraceResult ->
             {
                 if (rayTraceResult instanceof EntityHitResult)
                 {

@@ -4,15 +4,18 @@ import com.brutalbosses.command.CommandSpawnBoss;
 import com.brutalbosses.config.Configuration;
 import com.brutalbosses.entity.BossTypeManager;
 import com.brutalbosses.event.ClientEventHandler;
+import com.brutalbosses.event.ClientRendererRegister;
 import com.brutalbosses.event.EventHandler;
 import com.brutalbosses.event.ModEventHandler;
 import com.brutalbosses.network.Network;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -44,14 +47,8 @@ public class BrutalBosses
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(EventHandler.class);
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().addListener(this::onCommandsRegister);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
-    }
-
-    @SubscribeEvent
-    public void clientSetup(FMLClientSetupEvent event)
-    {
-        // Side safe client event handler
-        Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(ClientEventHandler.class);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(ClientEventHandler.class));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Mod.EventBusSubscriber.Bus.MOD.bus().get().register(ClientRendererRegister.class));
     }
 
     private void setup(final FMLCommonSetupEvent event)

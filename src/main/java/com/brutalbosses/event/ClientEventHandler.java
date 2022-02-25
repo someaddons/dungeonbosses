@@ -18,7 +18,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientEventHandler
-{/*
+{
+    /*
     @SubscribeEvent
     public static void preRender(final RenderLivingEvent.Pre event)
     {
@@ -50,7 +51,7 @@ public class ClientEventHandler
     static
     {
         // Not sure why this is needed
-        Minecraft.getInstance().gui.getBossOverlay().events = new ConcurrentHashMap<>();
+        //Minecraft.getInstance().gui.getBossOverlay().events = new ConcurrentHashMap<>();
     }
     @SubscribeEvent
     public static void onWorldUnload(WorldEvent.Unload event)
@@ -143,12 +144,5 @@ public class ClientEventHandler
             this.boss = boss;
             this.cap = cap;
         }
-    }
-
-    @SubscribeEvent
-    public static void initRenderers(EntityRenderersEvent.RegisterRenderers event)
-    {
-        event.registerEntityRenderer(ModEntities.THROWN_ITEMC,
-          manager -> new CSpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer(), 1.0f, true));
     }
 }
