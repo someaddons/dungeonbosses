@@ -62,10 +62,13 @@ public class SpitCobwebGoal extends SimpleRangedAttackGoal
     }
 
     @Override
-    protected void doRangedAttack(final ProjectileEntity projectileEntity, final LivingEntity target)
+    protected void doRangedAttack(ProjectileEntity projectileEntity, final LivingEntity target)
     {
-        projectileEntity.noPhysics = false;
+        projectileEntity.remove();
+        projectileEntity = createProjectile();
+        projectileEntity.setNoGravity(true);
         positionProjectile(projectileEntity, 1);
+        mob.level.addFreshEntity(projectileEntity);
 
         double xDiff = target.getX() - mob.getX();
         double yDiff = target.getY(0.3333333333333333D) - projectileEntity.getY();
