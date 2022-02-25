@@ -17,7 +17,6 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientEventHandler
 {/*
@@ -51,8 +50,8 @@ public class ClientEventHandler
     private static Map<Entity, ClientBossUI> bossInfoMap = new HashMap<>();
     static
     {
-        // Not sure why this is needed
-        Minecraft.getInstance().gui.getBossOverlay().events = new ConcurrentHashMap<>();
+        // Not sure why this is needed conflicts with infernal mobs
+        //Minecraft.getInstance().gui.getBossOverlay().events = new ConcurrentHashMap<>();
     }
     @SubscribeEvent
     public static void onWorldUnload(WorldEvent.Unload event)
