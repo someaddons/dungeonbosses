@@ -5,7 +5,7 @@
   "refmap": "brutalbosses.refmap.json",
   "mixins": [
     "SpawnerBlockListener",
-    "BiomeSpawnBossMixin",
+    "StructureSpawnBossMixin",
     "LockableLootTileEntityMixin",
     "MeleeAttackGoalMixin",
     "ProjectileHitActionMixin"
