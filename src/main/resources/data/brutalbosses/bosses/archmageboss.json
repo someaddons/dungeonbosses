@@ -3,6 +3,7 @@
   "name": "Agizahr the Archmage",
   "visualscale": 0.7,
   "experience": 300,
+  "showbossbar": false,
   "effects": {
     "minecraft:slowness": 2,
     "minecraft:resistance": 3,

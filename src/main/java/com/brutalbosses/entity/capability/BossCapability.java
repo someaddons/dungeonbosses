@@ -36,6 +36,7 @@ public class BossCapability implements ICapabilitySerializable<INBT>
     private final static String XSPAWN      = "spX";
     private final static String YSPAWN      = "spY";
     private final static String ZSPAWN      = "spZ";
+    private final static String SHOWBOSSBAR = "shb";
 
     public static ResourceLocation ID = new ResourceLocation(BrutalBosses.MODID, "bosscap");
 
@@ -86,6 +87,8 @@ public class BossCapability implements ICapabilitySerializable<INBT>
             compoundNBT.putInt(ZSPAWN, spawnPos.getZ());
         }
 
+        compoundNBT.putBoolean(SHOWBOSSBAR, bossEntry.showBossBar());
+
         return compoundNBT;
     }
 
@@ -135,6 +138,8 @@ public class BossCapability implements ICapabilitySerializable<INBT>
                 bossEntry.initForClientEntity((LivingEntity) entity);
             }
         }
+
+        bossEntry.setBossBar(compoundNBT.getBoolean(SHOWBOSSBAR));
     }
 
     public void setBossType(final BossType bossEntry)

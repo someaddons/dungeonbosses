@@ -52,10 +52,11 @@ public class BossType
     /**
      * Name desc
      */
-    private String desc;
-    private float  scale             = 1.0f;
-    private int    experienceDropped = 1;
-    private int    itemLootCount     = 3;
+    private String  desc;
+    private float   scale             = 1.0f;
+    private int     experienceDropped = 1;
+    private int     itemLootCount     = 3;
+    private boolean showBossBar       = true;
 
     public BossType(final EntityType entityToUse, final ResourceLocation id)
     {
@@ -420,5 +421,15 @@ public class BossType
         final BossType bossType = new BossType(type, id);
         bossType.setVisualScale(compoundNBT.getFloat("scale"));
         return bossType;
+    }
+
+    public void setBossBar(final boolean show)
+    {
+        this.showBossBar = show;
+    }
+
+    public boolean showBossBar()
+    {
+        return showBossBar;
     }
 }

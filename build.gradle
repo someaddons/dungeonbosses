@@ -118,6 +118,7 @@ dependencies {
     implementation fg.deobf("curse.maven:yungapi-421850:3494919")
     implementation fg.deobf("curse.maven:castledungeons-399213:3461154")
     implementation fg.deobf("curse.maven:gecko-388172:3629666")
+    implementation fg.deobf("curse.maven:med-416811:3646576")
     // arbitrary name - project id:fileid
     // implementation fg.deobf("curse.maven:cursed-347445:3181728")
 
