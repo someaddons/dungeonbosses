@@ -54,6 +54,7 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener
     public static final String SCALE            = "visualscale";
     public static final String EXP              = "experience";
     public static final String ITEM_LOOT_COUNT  = "droppeditemamount";
+    public static final String SHOW_BAR         = "showbossbar";
 
     /**
      * Random
@@ -285,6 +286,11 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener
                 }
 
                 bossType.setSpawnTable(spawnMap.build());
+            }
+
+            if (data.has(SHOW_BAR))
+            {
+                bossType.setBossBar(data.get(SHOW_BAR).getAsBoolean());
             }
 
             return bossType;

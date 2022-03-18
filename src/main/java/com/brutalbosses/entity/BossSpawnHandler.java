@@ -1,6 +1,7 @@
 package com.brutalbosses.entity;
 
 import com.brutalbosses.BrutalBosses;
+import com.brutalbosses.compat.Compat;
 import com.brutalbosses.world.PostStructureInfoGetter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -97,7 +98,12 @@ public class BossSpawnHandler
         }
         boss.getCapability(BOSS_CAP).orElse(null).setSpawnPos(pos);
 
-        world.addFreshEntity(boss);
+        Compat.applyAllCompats(world, bossType, pos, boss);
+
+        if (!boss.isRemoved())
+        {
+            world.addFreshEntity(boss);
+        }
     }
 
     public static BlockPos findSpawnPosForBoss(final BlockGetter world, final Entity boss, final BlockPos pos)

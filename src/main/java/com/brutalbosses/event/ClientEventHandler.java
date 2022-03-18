@@ -80,8 +80,7 @@ public class ClientEventHandler
         {
             final Map.Entry<Entity, ClientBossUI> entry = iterator.next();
             entry.getValue().bossInfo.update((LivingEntity) entry.getKey(), entry.getValue().cap);
-            if (!entry.getKey().isAlive() || entry.getValue().timeOut < entry.getKey().level.getGameTime()
-                  || entry.getKey().blockPosition().distManhattan(event.player.blockPosition()) > 50)
+            if (!entry.getKey().isAlive() || entry.getValue().timeOut < entry.getKey().level.getGameTime())
             {
                 Minecraft.getInstance().gui.getBossOverlay().events.remove(entry.getValue().bossInfo.getId());
                 iterator.remove();
@@ -115,7 +114,7 @@ public class ClientEventHandler
         if (target instanceof LivingEntity)
         {
             final BossCapability cap = target.getCapability(BossCapability.BOSS_CAP).orElse(null);
-            if (cap != null && cap.isBoss())
+            if (cap != null && cap.isBoss() && cap.getBossType().showBossBar())
             {
                 if (bossInfoMap.containsKey(target))
                 {

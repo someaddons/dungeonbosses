@@ -1,6 +1,7 @@
 package com.brutalbosses;
 
 import com.brutalbosses.command.CommandSpawnBoss;
+import com.brutalbosses.compat.Compat;
 import com.brutalbosses.config.Configuration;
 import com.brutalbosses.entity.BossTypeManager;
 import com.brutalbosses.event.ClientEventHandler;
@@ -53,6 +54,7 @@ public class BrutalBosses
 
     private void setup(final FMLCommonSetupEvent event)
     {
+        Compat.initCompat();
         LOGGER.info(MODID + " mod initialized");
         Network.instance.registerMessages();
     }

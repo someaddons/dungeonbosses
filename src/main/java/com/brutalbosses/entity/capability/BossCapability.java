@@ -35,6 +35,7 @@ public class BossCapability implements ICapabilitySerializable<Tag>
     private final static String XSPAWN      = "spX";
     private final static String YSPAWN      = "spY";
     private final static String ZSPAWN      = "spZ";
+    private final static String SHOWBOSSBAR = "shb";
 
     public static ResourceLocation ID = new ResourceLocation(BrutalBosses.MODID, "bosscap");
 
@@ -68,24 +69,25 @@ public class BossCapability implements ICapabilitySerializable<Tag>
             return new CompoundTag();
         }
 
-        final CompoundTag CompoundTag = new CompoundTag();
-        CompoundTag.putString(NAMESPACE, bossEntry.getID().getNamespace());
-        CompoundTag.putString(KEY, bossEntry.getID().getPath());
+        final CompoundTag compoundNbt = new CompoundTag();
+        compoundNbt.putString(NAMESPACE, bossEntry.getID().getNamespace());
+        compoundNbt.putString(KEY, bossEntry.getID().getPath());
 
         if (lootTable != null)
         {
-            CompoundTag.putString(LTKEY, lootTable.getNamespace());
-            CompoundTag.putString(LTNAMESPACE, lootTable.getPath());
+            compoundNbt.putString(LTKEY, lootTable.getNamespace());
+            compoundNbt.putString(LTNAMESPACE, lootTable.getPath());
         }
 
         if (spawnPos != BlockPos.ZERO)
         {
-            CompoundTag.putInt(XSPAWN, spawnPos.getX());
-            CompoundTag.putInt(YSPAWN, spawnPos.getY());
-            CompoundTag.putInt(ZSPAWN, spawnPos.getZ());
+            compoundNbt.putInt(XSPAWN, spawnPos.getX());
+            compoundNbt.putInt(YSPAWN, spawnPos.getY());
+            compoundNbt.putInt(ZSPAWN, spawnPos.getZ());
         }
 
-        return CompoundTag;
+        compoundNbt.putBoolean(SHOWBOSSBAR, bossEntry.showBossBar());
+        return compoundNbt;
     }
 
     @Override
@@ -96,26 +98,26 @@ public class BossCapability implements ICapabilitySerializable<Tag>
             return;
         }
 
-        final CompoundTag CompoundTag = (CompoundTag) nbt;
+        final CompoundTag compoundNbt = (CompoundTag) nbt;
 
-        if (!CompoundTag.contains(NAMESPACE) || !CompoundTag.contains(KEY))
+        if (!compoundNbt.contains(NAMESPACE) || !compoundNbt.contains(KEY))
         {
             return;
         }
 
-        final String nameSpace = CompoundTag.getString(NAMESPACE);
-        final String path = CompoundTag.getString(KEY);
+        final String nameSpace = compoundNbt.getString(NAMESPACE);
+        final String path = compoundNbt.getString(KEY);
 
         final ResourceLocation id = new ResourceLocation(nameSpace, path);
 
-        if (CompoundTag.contains(LTKEY) && CompoundTag.contains(LTNAMESPACE))
+        if (compoundNbt.contains(LTKEY) && compoundNbt.contains(LTNAMESPACE))
         {
-            lootTable = new ResourceLocation(CompoundTag.get(LTKEY).getAsString(), CompoundTag.get(LTNAMESPACE).getAsString());
+            lootTable = new ResourceLocation(compoundNbt.get(LTKEY).getAsString(), compoundNbt.get(LTNAMESPACE).getAsString());
         }
 
-        if (CompoundTag.contains(XSPAWN))
+        if (compoundNbt.contains(XSPAWN))
         {
-            spawnPos = new BlockPos(CompoundTag.getInt(XSPAWN), CompoundTag.getInt(YSPAWN), CompoundTag.getInt(ZSPAWN));
+            spawnPos = new BlockPos(compoundNbt.getInt(XSPAWN), compoundNbt.getInt(YSPAWN), compoundNbt.getInt(ZSPAWN));
         }
 
         bossEntry = BossTypeManager.instance.bosses.get(id);
@@ -134,6 +136,8 @@ public class BossCapability implements ICapabilitySerializable<Tag>
                 bossEntry.initForClientEntity((LivingEntity) entity);
             }
         }
+
+        bossEntry.setBossBar(compoundNbt.getBoolean(SHOWBOSSBAR));
     }
 
     public void setBossType(final BossType bossEntry)
