@@ -133,7 +133,14 @@ public class SummonMobsGoal extends Goal
             summoned = (LivingEntity) entityType.create(mob.level);
             if (params.entityNBTData.containsKey(entityType.getRegistryName()))
             {
-                summoned.load(params.entityNBTData.get(entityType.getRegistryName()));
+                if (params.entityNBTData.get(entityType.getRegistryName()).contains("Pos"))
+                {
+                    summoned.load(params.entityNBTData.get(entityType.getRegistryName()));
+                }
+                else
+                {
+                    summoned.readAdditionalSaveData(params.entityNBTData.get(entityType.getRegistryName()));
+                }
                 summoned.setUUID(UUID.randomUUID());
             }
         }
