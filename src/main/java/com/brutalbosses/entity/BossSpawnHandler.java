@@ -60,49 +60,56 @@ public class BossSpawnHandler
      */
     public static void spawnBoss(final ServerLevelAccessor world, final BlockPos pos, final BossType bossType, @Nullable final RandomizableContainerBlockEntity chest)
     {
-        final Mob boss = bossType.createBossEntity(world.getLevel());
-
-        if (boss == null)
+        try
         {
-            return;
-        }
+            final Mob boss = bossType.createBossEntity(world.getLevel());
 
-        if (chest != null)
-        {
-            String structname = "unkown structure";
-            if (world instanceof PostStructureInfoGetter && ((PostStructureInfoGetter) world).getStructure() != null)
+            if (boss == null)
             {
-                structname = ((PostStructureInfoGetter) world).getStructure().getFeatureName();
+                return;
             }
 
-            final ResourceLocation lootTable = chest.lootTable;
-            BrutalBosses.LOGGER.debug(
-              "Spawning " + bossType.getID() + " at " + pos + " at " + chest.getDisplayName().getString() + " with:" + lootTable + " in "
-                + structname);
-        }
+            if (chest != null)
+            {
+                String structname = "unkown structure";
+                if (world instanceof PostStructureInfoGetter && ((PostStructureInfoGetter) world).getStructure() != null)
+                {
+                    structname = ((PostStructureInfoGetter) world).getStructure().getFeatureName();
+                }
 
-        final BlockPos spawnPos = findSpawnPosForBoss(world, boss, pos);
-        if (spawnPos == null)
-        {
-            boss.remove(Entity.RemovalReason.DISCARDED);
-            return;
-        }
-        else
-        {
-            boss.setPos(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
-        }
+                final ResourceLocation lootTable = chest.lootTable;
+                BrutalBosses.LOGGER.debug(
+                  "Spawning " + bossType.getID() + " at " + pos + " at " + chest.getDisplayName().getString() + " with:" + lootTable + " in "
+                    + structname);
+            }
 
-        if (chest != null)
-        {
-            boss.getCapability(BOSS_CAP).orElse(null).setLootTable(chest.lootTable);
+            final BlockPos spawnPos = findSpawnPosForBoss(world, boss, pos);
+            if (spawnPos == null)
+            {
+                boss.remove(Entity.RemovalReason.DISCARDED);
+                return;
+            }
+            else
+            {
+                boss.setPos(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
+            }
+
+            if (chest != null)
+            {
+                boss.getCapability(BOSS_CAP).orElse(null).setLootTable(chest.lootTable);
+            }
+            boss.getCapability(BOSS_CAP).orElse(null).setSpawnPos(pos);
+
+            Compat.applyAllCompats(world, bossType, pos, boss);
+
+            if (!boss.isRemoved())
+            {
+                world.addFreshEntity(boss);
+            }
         }
-        boss.getCapability(BOSS_CAP).orElse(null).setSpawnPos(pos);
-
-        Compat.applyAllCompats(world, bossType, pos, boss);
-
-        if (!boss.isRemoved())
+        catch (Exception spawnException)
         {
-            world.addFreshEntity(boss);
+            BrutalBosses.LOGGER.error("Boss: " + bossType.getID() + " failed to spawn! Error:", spawnException);
         }
     }
 

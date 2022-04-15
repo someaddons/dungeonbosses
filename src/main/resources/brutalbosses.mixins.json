@@ -4,11 +4,12 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "brutalbosses.refmap.json",
   "mixins": [
-    "SpawnerBlockListener",
-    "StructureSpawnBossMixin",
+    "BasePressurePlateBlockMixin",
     "LockableLootTileEntityMixin",
     "MeleeAttackGoalMixin",
-    "ProjectileHitActionMixin"
+    "ProjectileHitActionMixin",
+    "SpawnerBlockListener",
+    "StructureSpawnBossMixin"
   ],
   "client": [
     "EntityRenderDataMixin",
