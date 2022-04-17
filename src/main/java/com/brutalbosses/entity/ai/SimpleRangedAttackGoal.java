@@ -199,7 +199,7 @@ public abstract class SimpleRangedAttackGoal extends Goal
 
                 for (final Player Player : players)
                 {
-                    final Projectile aoe = createProjectile();
+                    final Projectile aoe = createProjectile(1);
                     aoe.setPos(Projectile.getX(), Projectile.getY(), Projectile.getZ());
                     doRangedAttack(aoe, Player);
                     if (Player == target)
@@ -210,7 +210,7 @@ public abstract class SimpleRangedAttackGoal extends Goal
 
                 if (!containedTarget)
                 {
-                    final Projectile aoe = createProjectile();
+                    final Projectile aoe = createProjectile(1);
                     aoe.setPos(Projectile.getX(), Projectile.getY(), Projectile.getZ());
                     doRangedAttack(aoe, target);
                 }

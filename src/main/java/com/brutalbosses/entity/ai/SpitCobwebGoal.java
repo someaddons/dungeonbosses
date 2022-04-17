@@ -85,6 +85,7 @@ public class SpitCobwebGoal extends SimpleRangedAttackGoal
 
         if (projectile instanceof IOnProjectileHit)
         {
+            ((IOnProjectileHit) projectile).setMaxLifeTime(mob.level.getGameTime() + 20 * 20);
             ((IOnProjectileHit) projectile).setOnHitAction(rayTraceResult ->
             {
                 if (rayTraceResult instanceof EntityHitResult)
