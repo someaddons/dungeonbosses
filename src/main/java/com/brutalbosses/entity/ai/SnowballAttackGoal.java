@@ -40,6 +40,7 @@ public class SnowballAttackGoal extends SimpleRangedAttackGoal
     protected ProjectileEntity createProjectile()
     {
         SnowballEntity snowballentity = new SnowballEntity(mob.level, mob);
+        ((IOnProjectileHit) snowballentity).setMaxLifeTime(mob.level.getGameTime() + 20 * 40);
         return snowballentity;
     }
 
@@ -59,6 +60,7 @@ public class SnowballAttackGoal extends SimpleRangedAttackGoal
 
         if (snowballentity instanceof IOnProjectileHit)
         {
+            ((IOnProjectileHit) snowballentity).setMaxLifeTime(mob.level.getGameTime() + 20 * 20);
             ((IOnProjectileHit) snowballentity).setOnHitAction(rayTraceResult ->
             {
                 if (rayTraceResult instanceof EntityRayTraceResult)

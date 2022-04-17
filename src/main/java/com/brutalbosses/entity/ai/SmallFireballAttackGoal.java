@@ -1,5 +1,6 @@
 package com.brutalbosses.entity.ai;
 
+import com.brutalbosses.entity.IOnProjectileHit;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -39,6 +40,7 @@ public class SmallFireballAttackGoal extends SimpleRangedAttackGoal
           zDiff + mob.getRandom().nextGaussian() * (double) distVariance);
         fireballEntity.setPos(mob.getX(), mob.getY() + mob.getEyeHeight() - 0.5, mob.getZ());
         fireballEntity.setOwner(mob);
+        ((IOnProjectileHit) fireballEntity).setMaxLifeTime(mob.level.getGameTime() + 20 * 20);
         mob.level.addFreshEntity(fireballEntity);
     }
 
@@ -50,6 +52,7 @@ public class SmallFireballAttackGoal extends SimpleRangedAttackGoal
           0,
           0,
           0);
+        ((IOnProjectileHit) fireballEntity).setMaxLifeTime(mob.level.getGameTime() + 20 * 40);
         return fireballEntity;
     }
 }
