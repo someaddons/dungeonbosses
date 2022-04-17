@@ -133,8 +133,22 @@ public class SummonMobsGoal extends Goal
             summoned = (LivingEntity) entityType.create(mob.level);
             if (params.entityNBTData.containsKey(entityType.getRegistryName()))
             {
-                summoned.load(params.entityNBTData.get(entityType.getRegistryName()));
+                if (params.entityNBTData.get(entityType.getRegistryName()).contains("Pos"))
+                {
+                    summoned.load(params.entityNBTData.get(entityType.getRegistryName()));
+                }
+                else
+                {
+                    summoned.readAdditionalSaveData(params.entityNBTData.get(entityType.getRegistryName()));
+                }
                 summoned.setUUID(UUID.randomUUID());
+            }
+            else
+            {
+                if (summoned instanceof IRangedAttackMob && summoned.getMainHandItem().isEmpty())
+                {
+                    summoned.setItemInHand(Hand.MAIN_HAND, Items.BOW.getDefaultInstance());
+                }
             }
         }
         catch (Exception e)
@@ -175,14 +189,6 @@ public class SummonMobsGoal extends Goal
             mob.level.getScoreboard().addPlayerToTeam(summoned.getScoreboardName(), team);
 
             ((MobEntity) summoned).setTarget(target);
-            if (summoned instanceof IRangedAttackMob)
-            {
-                summoned.setItemInHand(Hand.MAIN_HAND, Items.BOW.getDefaultInstance());
-            }
-            else
-            {
-                summoned.setItemInHand(Hand.MAIN_HAND, Items.IRON_SWORD.getDefaultInstance());
-            }
         }
 
         summoned.setPos(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
