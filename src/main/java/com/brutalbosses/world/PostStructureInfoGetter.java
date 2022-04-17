@@ -1,10 +1,10 @@
 package com.brutalbosses.world;
 
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 
 public interface PostStructureInfoGetter
 {
-    public StructureFeature<?> getStructure();
+    public ConfiguredStructureFeature<?, ?> getStructure();
 
-    public void setCurrent(final StructureFeature<?> current);
+    public void setCurrent(final ConfiguredStructureFeature<?, ?> current);
 }

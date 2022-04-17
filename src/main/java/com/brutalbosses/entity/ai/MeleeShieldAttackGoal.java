@@ -182,6 +182,6 @@ public class MeleeShieldAttackGoal extends Goal
 
     protected double getAttackReachSqr(LivingEntity entity)
     {
-        return (double) (this.mob.getBbWidth() * 2.0F * this.mob.getBbWidth() * 2.0F + entity.getBbWidth()) * bossType.getVisualScale();
+        return (double) (this.mob.getBbWidth() * 2.0F * this.mob.getBbWidth() * 2.0F) * bossType.getVisualScale();
     }
 }

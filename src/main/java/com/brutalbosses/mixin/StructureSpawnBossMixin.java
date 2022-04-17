@@ -5,7 +5,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureFeatureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import org.spongepowered.asm.mixin.Final;
@@ -25,7 +25,7 @@ public class StructureSpawnBossMixin
 {
     @Shadow
     @Final
-    private StructureFeature feature;
+    private ConfiguredStructureFeature<?, ?> feature;
 
     @Inject(method = "placeInChunk", at = @At("HEAD"))
     public void beforeStructure(

@@ -74,7 +74,7 @@ public class BossSpawnHandler
                 String structname = "unkown structure";
                 if (world instanceof PostStructureInfoGetter && ((PostStructureInfoGetter) world).getStructure() != null)
                 {
-                    structname = ((PostStructureInfoGetter) world).getStructure().getFeatureName();
+                    structname = ((PostStructureInfoGetter) world).getStructure().feature.getRegistryName().toString();
                 }
 
                 final ResourceLocation lootTable = chest.lootTable;

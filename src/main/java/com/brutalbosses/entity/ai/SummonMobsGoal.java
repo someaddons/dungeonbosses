@@ -143,6 +143,13 @@ public class SummonMobsGoal extends Goal
                 }
                 summoned.setUUID(UUID.randomUUID());
             }
+            else
+            {
+                if (summoned instanceof RangedAttackMob)
+                {
+                    summoned.setItemInHand(InteractionHand.MAIN_HAND, Items.BOW.getDefaultInstance());
+                }
+            }
         }
         catch (Exception e)
         {
@@ -182,14 +189,6 @@ public class SummonMobsGoal extends Goal
             mob.level.getScoreboard().addPlayerToTeam(summoned.getScoreboardName(), team);
 
             ((Mob) summoned).setTarget(target);
-            if (summoned instanceof RangedAttackMob)
-            {
-                summoned.setItemInHand(InteractionHand.MAIN_HAND, Items.BOW.getDefaultInstance());
-            }
-            else
-            {
-                summoned.setItemInHand(InteractionHand.MAIN_HAND, Items.IRON_SWORD.getDefaultInstance());
-            }
         }
 
         summoned.setPos(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
