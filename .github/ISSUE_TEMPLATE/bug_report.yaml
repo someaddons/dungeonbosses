@@ -56,8 +56,8 @@ body:
   - type: input
     id: logs
     attributes:
-      label: Logs
-      description: Please upload your log file from logs/latest.log to https://gist.github.com/ and put in the link below. It may contain important information.
+      label: Logs and Datapacks
+      description: Please upload your log file from logs/latest.log and the datapack you're tryng to use to https://gist.github.com/ and put in the link below. It may contain important information.
       placeholder: ex. https://gist.github.com/someaddons/aa5986b9495863c3b5
     validations:
       required: true
