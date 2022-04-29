@@ -24,15 +24,15 @@ import java.util.List;
 /**
  * Simple whirldwind attack, can apply potion MobEffects here!
  */
-public class WhirldwindMelee extends Goal
+public class WhirlWind extends Goal
 {
-    public static ResourceLocation ID = new ResourceLocation("brutalbosses:whirldwind");
+    public static ResourceLocation ID = new ResourceLocation("brutalbosses:whirlwind");
 
     private final Mob              mob;
     private       LivingEntity     target = null;
     private       WhirldWindParams params;
 
-    public WhirldwindMelee(Mob mob, final IAIParams params)
+    public WhirlWind(Mob mob, final IAIParams params)
     {
         this.params = (WhirldWindParams) params;
         this.mob = mob;

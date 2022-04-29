@@ -93,9 +93,13 @@ public class BossTypeManager
           (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new SummonMobsGoal((Mob) entity, params)),
           SummonMobsGoal.SummonParams::new);
 
-        registerAI(WhirldwindMelee.ID,
-          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new WhirldwindMelee((Mob) entity, params)),
-          WhirldwindMelee.WhirldWindParams::new);
+        registerAI(WhirlWind.ID,
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new WhirlWind((Mob) entity, params)),
+          WhirlWind.WhirldWindParams::new);
+
+        registerAI(new ResourceLocation("brutalbosses:whirldwind"),
+          (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new WhirlWind((Mob) entity, params)),
+          WhirlWind.WhirldWindParams::new);
 
         registerAI(MeleeHitGoal.ID,
           (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new MeleeHitGoal((Mob) entity, params)),

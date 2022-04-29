@@ -25,7 +25,7 @@
     "brutalbosses:aftercombatregen": {
       "amount": 1
     },
-    "brutalbosses:whirldwind": {
+    "brutalbosses:whirlwind": {
       "potiononhit": "minecraft:wither",
       "potionduration": 200,
       "knockback": 4,

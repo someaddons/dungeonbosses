@@ -22,7 +22,7 @@
     "brutalbosses:aftercombatregen": {
       "amount": 1
     },
-    "brutalbosses:whirldwind": {
+    "brutalbosses:whirlwind": {
       "potiononhit": "minecraft:blindness",
       "knockback": 8,
       "cooldown": 200
