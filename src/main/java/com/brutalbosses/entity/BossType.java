@@ -34,6 +34,11 @@ public class BossType
     private final EntityType entityToUse;
 
     /**
+     * Additional data for the boss entity on creation
+     */
+    private CompoundTag creationData = null;
+
+    /**
      * ID of this boss set
      */
     private final ResourceLocation id;
@@ -53,6 +58,7 @@ public class BossType
     private int     experienceDropped = 1;
     private int     itemLootCount     = 3;
     private boolean showBossBar       = true;
+    private boolean nameVisible       = true;
 
     public BossType(final EntityType entityToUse, final ResourceLocation id)
     {
@@ -70,6 +76,22 @@ public class BossType
     {
         final Entity entity = entityToUse.create(world);
 
+        if (creationData.contains("Pos"))
+        {
+            entity.load(creationData);
+        }
+        else
+        {
+            if (creationData.contains("ForgeCaps", 10) && entity instanceof IEntityCapReader)
+            {
+                ((IEntityCapReader) entity).readCapsFrom(creationData.getCompound("ForgeCaps"));
+            }
+            if (entity instanceof LivingEntity)
+            {
+                ((LivingEntity) entity).readAdditionalSaveData(creationData);
+            }
+        }
+
         if (!(entity instanceof Mob))
         {
             BrutalBosses.LOGGER.warn("Not supported boss entity:" + entityToUse.getRegistryName());
@@ -78,7 +100,6 @@ public class BossType
 
         entity.getCapability(BOSS_CAP).orElse(null).setBossType(this);
         initForEntity((Mob) entity);
-
         return (Mob) entity;
     }
 
@@ -116,7 +137,10 @@ public class BossType
         }
 
         boss.setCustomName(new TextComponent(desc));
-        boss.setCustomNameVisible(true);
+        if (nameVisible)
+        {
+            boss.setCustomNameVisible(true);
+        }
     }
 
     /**
@@ -427,5 +451,15 @@ public class BossType
     public boolean showBossBar()
     {
         return showBossBar;
+    }
+
+    public void setEntityNBT(final CompoundTag entityNBT)
+    {
+        creationData = entityNBT;
+    }
+
+    public void setNameVisible(final boolean visible)
+    {
+        nameVisible = visible;
     }
 }

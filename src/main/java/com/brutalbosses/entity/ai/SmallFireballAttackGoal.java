@@ -38,6 +38,11 @@ public class SmallFireballAttackGoal extends SimpleRangedAttackGoal
           xDiff + mob.getRandom().nextGaussian() * (double) distVariance,
           yDiff,
           zDiff + mob.getRandom().nextGaussian() * (double) distVariance);
+
+        fireballEntity.xPower *= params.speed;
+        fireballEntity.yPower *= params.speed;
+        fireballEntity.zPower *= params.speed;
+
         fireballEntity.setPos(mob.getX(), mob.getY() + mob.getEyeHeight() - 0.5, mob.getZ());
         fireballEntity.setOwner(mob);
         ((IOnProjectileHit) fireballEntity).setMaxLifeTime(mob.level.getGameTime() + 20 * 20);

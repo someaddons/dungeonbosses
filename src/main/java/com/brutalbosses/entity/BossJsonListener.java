@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -38,6 +39,7 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener
      */
     public static final String ID               = "id";
     public static final String ENTITY           = "entity";
+    public static final String ENTITY_NBT       = "entitynbt";
     public static final String MobEffectS       = "MobEffects";
     public static final String STATS            = "attributes";
     public static final String CUSTOMSTATS      = "customattributes";
@@ -51,6 +53,7 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener
     public static final String AI               = "ai-goals";
     public static final String SPAWNCHESTTABLES = "spawnatchest";
     public static final String Name             = "name";
+    public static final String NAME_VISIBLE     = "namevisible";
     public static final String SCALE            = "visualscale";
     public static final String EXP              = "experience";
     public static final String ITEM_LOOT_COUNT  = "droppeditemamount";
@@ -129,9 +132,26 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener
 
             final BossType bossType = BossTypeManager.instance.bosses.getOrDefault(bossID, new BossType(entityTypeEntry, bossID));
 
+            if (data.has(ENTITY_NBT))
+            {
+                try
+                {
+                    bossType.setEntityNBT(TagParser.parseTag(data.get(ENTITY_NBT).getAsString()));
+                }
+                catch (CommandSyntaxException e)
+                {
+                    throw new RuntimeException(e);
+                }
+            }
+
             if (data.has(Name))
             {
                 bossType.setDesc(data.get(Name).getAsString());
+            }
+
+            if (data.has(NAME_VISIBLE))
+            {
+                bossType.setNameVisible(data.get(Name).getAsBoolean());
             }
 
             if (data.has(SCALE))

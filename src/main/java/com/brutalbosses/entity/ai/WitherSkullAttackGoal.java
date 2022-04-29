@@ -41,6 +41,9 @@ public class WitherSkullAttackGoal extends SimpleRangedAttackGoal
 
 
         final WitherSkull witherskullentity = new WitherSkull(mob.level, mob, xDiff, yDiff, zDiff);
+        witherskullentity.xPower *= params.speed;
+        witherskullentity.yPower *= params.speed;
+        witherskullentity.zPower *= params.speed;
         witherskullentity.setOwner(mob);
         if (((WitherSkullParams) params).dangerous)
         {

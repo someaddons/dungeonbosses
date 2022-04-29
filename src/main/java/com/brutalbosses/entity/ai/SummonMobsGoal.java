@@ -2,6 +2,7 @@ package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.BossSpawnHandler;
+import com.brutalbosses.entity.IEntityCapReader;
 import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -79,6 +80,19 @@ public class SummonMobsGoal extends Goal
 
     public void tick()
     {
+        summonedMobs.removeIf(summoned ->
+        {
+            if (!summoned.isAlive())
+            {
+                if (params.ownerdamage > 0)
+                {
+                    mob.setHealth(Math.min(mob.getMaxHealth() * 0.1f, mob.getHealth() - mob.getMaxHealth() * params.ownerdamage));
+                }
+                return true;
+            }
+            return false;
+        });
+
         if (--ticksToNextUpdate > 0)
         {
             if (ticksToNextUpdate < 30)
@@ -98,19 +112,6 @@ public class SummonMobsGoal extends Goal
         }
 
         ticksToNextUpdate = params.interval;
-
-        summonedMobs.removeIf(summoned ->
-        {
-            if (!summoned.isAlive())
-            {
-                if (params.ownerdamage > 0)
-                {
-                    mob.setHealth(mob.getHealth() - mob.getMaxHealth() * params.ownerdamage);
-                }
-                return true;
-            }
-            return false;
-        });
 
         for (int i = 0; i < params.count; i++)
         {
@@ -133,13 +134,18 @@ public class SummonMobsGoal extends Goal
             summoned = (LivingEntity) entityType.create(mob.level);
             if (params.entityNBTData.containsKey(entityType.getRegistryName()))
             {
-                if (params.entityNBTData.get(entityType.getRegistryName()).contains("Pos"))
+                final CompoundTag nbt = params.entityNBTData.get(entityType.getRegistryName());
+                if (nbt.contains("Pos"))
                 {
-                    summoned.load(params.entityNBTData.get(entityType.getRegistryName()));
+                    summoned.load(nbt);
                 }
                 else
                 {
-                    summoned.readAdditionalSaveData(params.entityNBTData.get(entityType.getRegistryName()));
+                    if (nbt.contains("ForgeCaps", 10) && summoned instanceof IEntityCapReader)
+                    {
+                        ((IEntityCapReader) summoned).readCapsFrom(nbt.getCompound("ForgeCaps"));
+                    }
+                    summoned.readAdditionalSaveData(nbt);
                 }
                 summoned.setUUID(UUID.randomUUID());
             }

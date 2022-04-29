@@ -63,7 +63,7 @@ public class MeleeHitGoal extends Goal
 
         double distSqr = this.mob.distanceToSqr(this.target.getX(), this.target.getY(), this.target.getZ());
 
-        if (distSqr < params.attackDistance * params.attackDistance)
+        if (distSqr < params.attackDistance)
         {
             attackTimer = (int) (params.cooldown * (BrutalBosses.rand.nextFloat() * 0.5 + 0.75f));
 

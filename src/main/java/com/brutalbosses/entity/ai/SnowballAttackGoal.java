@@ -54,7 +54,11 @@ public class SnowballAttackGoal extends SimpleRangedAttackGoal
         final double zVector = target.getZ() - snowballentity.getZ();
         final double distance = Math.sqrt(xVector * xVector + zVector * zVector);
         final double dist3d = Math.sqrt(yVector * yVector + xVector * xVector + zVector * zVector);
-        snowballentity.shoot(xVector, yVector + distance * AIM_SLIGHTLY_HIGHER_MULTIPLIER, zVector, (float) (ARROW_SPEED * 1 + (dist3d / SPEED_FOR_DIST)), (float) 3.0f);
+        snowballentity.shoot(xVector,
+          yVector + distance * AIM_SLIGHTLY_HIGHER_MULTIPLIER,
+          zVector,
+          (float) (ARROW_SPEED * 1 + (dist3d / SPEED_FOR_DIST)) * params.speed,
+          (float) 3.0f);
         mob.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 1.0F, 0.4F / (mob.getRandom().nextFloat() * 0.4F + 0.8F));
 
         if (snowballentity instanceof IOnProjectileHit)

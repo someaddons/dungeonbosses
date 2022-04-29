@@ -73,7 +73,7 @@ public class SpitCobwebGoal extends SimpleRangedAttackGoal
         double yDiff = target.getY(0.3333333333333333D) - projectile.getY();
         double zDiff = target.getZ() - mob.getZ();
         float f = (float) (Math.sqrt(xDiff * xDiff + zDiff * zDiff) * 0.2F);
-        projectile.shoot(xDiff, yDiff + (double) f, zDiff, 0.9F, 10.0F);
+        projectile.shoot(xDiff, yDiff + (double) f, zDiff, 0.9F * params.speed, 10.0F);
         mob.level.playSound((Player) null,
           mob.getX(),
           mob.getY(),
