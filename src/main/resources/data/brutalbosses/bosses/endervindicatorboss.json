@@ -25,7 +25,7 @@
     "brutalbosses:aftercombatregen": {
       "amount": 1
     },
-    "brutalbosses:whirldwind": {
+    "brutalbosses:whirlwind": {
       "knockback": 4,
       "cooldown": 200
     },

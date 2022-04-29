@@ -22,7 +22,7 @@
   "ai-goals": {
     "brutalbosses:charge": {},
     "minecraft:target": {},
-    "brutalbosses:whirldwind": {},
+    "brutalbosses:whirlwind": {},
     "brutalbosses:meleehit": {
       "damage": 10,
       "potiononhit": "minecraft:poison",

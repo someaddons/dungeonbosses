@@ -26,7 +26,7 @@
     "brutalbosses:aftercombatregen": {
       "amount": 2
     },
-    "brutalbosses:whirldwind": {
+    "brutalbosses:whirlwind": {
       "potiononhit": "minecraft:slowness",
       "potionlevel": 3
     }

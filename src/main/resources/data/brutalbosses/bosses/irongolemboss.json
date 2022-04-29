@@ -25,7 +25,7 @@
     "brutalbosses:aftercombatregen": {
       "amount": 2
     },
-    "brutalbosses:whirldwind": {},
+    "brutalbosses:whirlwind": {},
     "brutalbosses:itemshootgoal": {
       "item": "{id: \"minecraft:stone_bricks\", Count: 1b}",
       "projectile_count": 1,
