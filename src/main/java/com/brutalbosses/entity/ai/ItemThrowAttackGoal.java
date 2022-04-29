@@ -54,7 +54,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
 
         final ThrownItemEntity pearlEntity = new ThrownItemEntity(mob.level, mob);
         pearlEntity.setPos(mob.getX(), mob.getY() + mob.getEyeHeight() - 0.5, mob.getZ());
-        pearlEntity.shoot(xDiff, yDiff, zDiff, 0.8F, 3.0F);
+        pearlEntity.shoot(xDiff, yDiff, zDiff, 0.8F * params.speed, 3.0F);
 
         pearlEntity.setItem(((ItemThrowParams) params).item);
         pearlEntity.setNoGravity(true);

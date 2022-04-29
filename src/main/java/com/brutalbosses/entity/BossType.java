@@ -17,7 +17,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -36,6 +36,11 @@ public class BossType
      * The bosses entity used
      */
     private final EntityType entityToUse;
+
+    /**
+     * Additional data for the boss entity on creation
+     */
+    private CompoundNBT creationData = null;
 
     /**
      * ID of this boss set
@@ -57,6 +62,7 @@ public class BossType
     private int     experienceDropped = 1;
     private int     itemLootCount     = 3;
     private boolean showBossBar       = true;
+    private boolean nameVisible       = true;
 
     public BossType(final EntityType entityToUse, final ResourceLocation id)
     {
@@ -73,6 +79,25 @@ public class BossType
     public MobEntity createBossEntity(final World world)
     {
         final Entity entity = entityToUse.create(world);
+
+        if (!(entity instanceof MobEntity))
+        {
+            if (creationData.contains("Pos"))
+            {
+                entity.load(creationData);
+            }
+            else
+            {
+                if (creationData.contains("ForgeCaps", 10) && entity instanceof IEntityCapReader)
+                {
+                    ((IEntityCapReader) entity).readCapsFrom(creationData.getCompound("ForgeCaps"));
+                }
+                if (entity instanceof LivingEntity)
+                {
+                    ((LivingEntity) entity).readAdditionalSaveData(creationData);
+                }
+            }
+        }
 
         if (!(entity instanceof MobEntity))
         {
@@ -119,8 +144,11 @@ public class BossType
             }
         }
 
-        boss.setCustomName(new StringTextComponent(desc));
-        boss.setCustomNameVisible(true);
+        boss.setCustomName(new TranslationTextComponent(desc));
+        if (nameVisible)
+        {
+            boss.setCustomNameVisible(true);
+        }
     }
 
     /**
@@ -431,5 +459,15 @@ public class BossType
     public boolean showBossBar()
     {
         return showBossBar;
+    }
+
+    public void setEntityNBT(final CompoundNBT entityNBT)
+    {
+        creationData = entityNBT;
+    }
+
+    public void setNameVisible(final boolean visible)
+    {
+        nameVisible = visible;
     }
 }

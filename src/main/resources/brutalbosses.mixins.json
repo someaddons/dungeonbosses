@@ -6,6 +6,8 @@
   "mixins": [
     "SpawnerBlockListener",
     "BiomeSpawnBossMixin",
+    "BasePressurePlateBlockMixin",
+    "EntityCapReader",
     "LockableLootTileEntityMixin",
     "MeleeAttackGoalMixin",
     "ProjectileHitActionMixin"

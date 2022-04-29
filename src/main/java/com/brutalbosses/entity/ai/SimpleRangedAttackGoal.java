@@ -308,6 +308,7 @@ public abstract class SimpleRangedAttackGoal extends Goal
         protected int     interval = 50;
         protected int     distance = 15;
         protected boolean aoe      = false;
+        protected float   speed    = 1.0f;
 
         public RangedParams(final JsonObject jsonData)
         {
@@ -319,6 +320,7 @@ public abstract class SimpleRangedAttackGoal extends Goal
         private static final String PROJECTILE_INTERVAL = "projectile_interval";
         private static final String PROJECTILE_DISTANCE = "projectile_distance";
         private static final String PROJECTILE_AOE      = "projectile_aoe";
+        private static final String PROJECTILE_SPEED    = "projectile_speed";
 
         @Override
         public IAIParams parse(final JsonObject jsonElement)
@@ -342,6 +344,10 @@ public abstract class SimpleRangedAttackGoal extends Goal
             if (jsonElement.has(PROJECTILE_AOE))
             {
                 aoe = jsonElement.get(PROJECTILE_AOE).getAsBoolean();
+            }
+            if (jsonElement.has(PROJECTILE_SPEED))
+            {
+                speed = jsonElement.get(PROJECTILE_SPEED).getAsFloat();
             }
 
             return this;
