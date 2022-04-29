@@ -40,7 +40,7 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener
     public static final String ID               = "id";
     public static final String ENTITY           = "entity";
     public static final String ENTITY_NBT       = "entitynbt";
-    public static final String MobEffectS       = "MobEffects";
+    public static final String MobEffectS       = "effects";
     public static final String STATS            = "attributes";
     public static final String CUSTOMSTATS      = "customattributes";
     public static final String GEAR             = "gear";
