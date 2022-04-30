@@ -76,19 +76,22 @@ public class BossType
     {
         final Entity entity = entityToUse.create(world);
 
-        if (creationData.contains("Pos"))
+        if (creationData != null)
         {
-            entity.load(creationData);
-        }
-        else
-        {
-            if (creationData.contains("ForgeCaps", 10) && entity instanceof IEntityCapReader)
+            if (creationData.contains("Pos"))
             {
-                ((IEntityCapReader) entity).readCapsFrom(creationData.getCompound("ForgeCaps"));
+                entity.load(creationData);
             }
-            if (entity instanceof LivingEntity)
+            else
             {
-                ((LivingEntity) entity).readAdditionalSaveData(creationData);
+                if (creationData.contains("ForgeCaps", 10) && entity instanceof IEntityCapReader)
+                {
+                    ((IEntityCapReader) entity).readCapsFrom(creationData.getCompound("ForgeCaps"));
+                }
+                if (entity instanceof LivingEntity)
+                {
+                    ((LivingEntity) entity).readAdditionalSaveData(creationData);
+                }
             }
         }
 
