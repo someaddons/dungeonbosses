@@ -28,8 +28,6 @@
   },
   "spawnatchest": {
     "minecraft:chests/nether_bridge": 3,
-    "minecraft:chests/bastion_bridge": 1,
-    "minecraft:chests/bastion_hoglin_stable": 1,
     "dungeons_arise:chests/foundry/foundry_treasure": 1,
     "illagers_plus:structure/illager_archer_tower": 1,
     "totw_additions:chests/nether_tower/nether_tower_chest": 1,
