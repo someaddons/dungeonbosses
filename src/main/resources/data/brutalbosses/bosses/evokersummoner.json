@@ -3,6 +3,7 @@
   "name": "Vouzhul the Darkmaster",
   "visualscale": 1.1,
   "experience": 300,
+  "protect_treasure": true,
   "effects": {
     "minecraft:resistance": 3
   },
@@ -34,6 +35,7 @@
     "brutalbosses:summonmobs": {
       "interval": 400,
       "maxcount": 10,
+      "ownerdamagepct": 5,
       "count": 2,
       "entities": [
         {

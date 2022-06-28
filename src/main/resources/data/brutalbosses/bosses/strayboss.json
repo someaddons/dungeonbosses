@@ -3,6 +3,7 @@
   "name": "Ewart the Cold",
   "visualscale": 1.2,
   "experience": 400,
+  "protect_treasure": true,
   "effects": {
     "minecraft:slowness": 2,
     "minecraft:resistance": 2,

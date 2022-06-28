@@ -6,6 +6,7 @@ import com.brutalbosses.world.PostStructureInfoGetter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.BlockGetter;
@@ -16,12 +17,15 @@ import net.minecraft.world.level.material.Material;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.BiPredicate;
 
 import static com.brutalbosses.entity.capability.BossCapability.BOSS_CAP;
 
 public class BossSpawnHandler
 {
+    private static ConcurrentLinkedQueue<Tuple<BlockPos, BossType>> spawns = new ConcurrentLinkedQueue<>();
+
     /**
      * Handles boss spawn on chest placements
      *
@@ -38,9 +42,17 @@ public class BossSpawnHandler
                 return;
             }
 
-            final BossType bossType = possibleBosses.get(BrutalBosses.rand.nextInt(possibleBosses.size()));
+            BossType bossType = null;
+            for (int i = 0; i < 10; i++)
+            {
+                bossType = possibleBosses.get(BrutalBosses.rand.nextInt(possibleBosses.size()));
+                if (!spawnedRecentlyClose(bossType, chest.getBlockPos()))
+                {
+                    break;
+                }
+            }
 
-            if (bossType.getID().getPath().equals("dummyboss"))
+            if (bossType == null || bossType.getID().getPath().equals("dummyboss"))
             {
                 return;
             }
@@ -54,6 +66,26 @@ public class BossSpawnHandler
     }
 
     /**
+     * Check if we spawned the same bosstype closeby recently
+     *
+     * @param bossType
+     * @param pos
+     * @return
+     */
+    private static boolean spawnedRecentlyClose(final BossType bossType, final BlockPos pos)
+    {
+        for (final Tuple<BlockPos, BossType> data : spawns)
+        {
+            if (bossType == data.getB() && Math.sqrt(data.getA().distSqr(pos)) < BrutalBosses.config.getCommonConfig().minDistanceBetweenSame.get())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Spawns the boss at the given position
      *
      * @param world
@@ -62,6 +94,12 @@ public class BossSpawnHandler
     {
         try
         {
+            spawns.add(new Tuple<>(pos, bossType));
+            if (spawns.size() > 10)
+            {
+                spawns.poll();
+            }
+
             final Mob boss = bossType.createBossEntity(world.getLevel());
 
             if (boss == null)

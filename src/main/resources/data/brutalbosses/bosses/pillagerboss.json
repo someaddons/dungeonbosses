@@ -3,6 +3,7 @@
   "name": "Pelgrim the Sharpshooter",
   "visualscale": 1.1,
   "experience": 300,
+  "protect_treasure": true,
   "effects": {
   },
   "attributes": {

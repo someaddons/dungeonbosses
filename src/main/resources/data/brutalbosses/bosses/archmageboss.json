@@ -3,6 +3,7 @@
   "name": "Agizahr the Archmage",
   "visualscale": 0.7,
   "experience": 300,
+  "protect_treasure": true,
   "effects": {
     "minecraft:slowness": 2,
     "minecraft:resistance": 3,

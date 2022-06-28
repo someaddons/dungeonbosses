@@ -3,6 +3,7 @@
   "name": "Sargent the Soaked",
   "visualscale": 1.3,
   "experience": 300,
+  "protect_treasure": true,
   "effects": {
     "minecraft:dolphins_grace": 6,
     "minecraft:resistance": 1

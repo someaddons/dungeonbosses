@@ -47,17 +47,18 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener
     public static final String MAINHAND         = "mainhand";
     public static final String OFFHAND          = "offhand";
     public static final String HELMET           = "helmet";
-    public static final String CHESTPLATE       = "chestplate";
-    public static final String LEGGINGS         = "leggings";
-    public static final String FEET             = "feet";
-    public static final String AI               = "ai-goals";
-    public static final String SPAWNCHESTTABLES = "spawnatchest";
-    public static final String Name             = "name";
-    public static final String NAME_VISIBLE     = "namevisible";
-    public static final String SCALE            = "visualscale";
-    public static final String EXP              = "experience";
-    public static final String ITEM_LOOT_COUNT  = "droppeditemamount";
-    public static final String SHOW_BAR         = "showbossbar";
+    public static final  String CHESTPLATE       = "chestplate";
+    public static final  String LEGGINGS         = "leggings";
+    public static final  String FEET             = "feet";
+    public static final  String AI               = "ai-goals";
+    public static final  String SPAWNCHESTTABLES = "spawnatchest";
+    public static final  String Name             = "name";
+    public static final  String NAME_VISIBLE     = "namevisible";
+    public static final  String SCALE            = "visualscale";
+    public static final  String EXP              = "experience";
+    public static final  String ITEM_LOOT_COUNT  = "droppeditemamount";
+    public static final  String SHOW_BAR         = "showbossbar";
+    private static final String PROTECT_TREASURE = "protect_treasure";
 
     /**
      * Random
@@ -65,6 +66,7 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener
     private static final Random rand = new Random();
 
     public static final BossJsonListener instance = new BossJsonListener();
+
 
     private BossJsonListener()
     {
@@ -152,6 +154,11 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener
             if (data.has(NAME_VISIBLE))
             {
                 bossType.setNameVisible(data.get(Name).getAsBoolean());
+            }
+
+            if (data.has(PROTECT_TREASURE))
+            {
+                bossType.setProtectsTreasure(data.get(PROTECT_TREASURE).getAsBoolean());
             }
 
             if (data.has(SCALE))

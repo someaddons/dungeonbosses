@@ -86,7 +86,10 @@ public class SummonMobsGoal extends Goal
             {
                 if (params.ownerdamage > 0)
                 {
-                    mob.setHealth(Math.min(mob.getMaxHealth() * 0.1f, mob.getHealth() - mob.getMaxHealth() * params.ownerdamage));
+                    if (mob.getHealth() > mob.getMaxHealth() * 0.1f)
+                    {
+                        mob.setHealth(Math.max(mob.getMaxHealth() * 0.1f, mob.getHealth() - mob.getMaxHealth() * params.ownerdamage));
+                    }
                 }
                 return true;
             }

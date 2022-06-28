@@ -10,16 +10,15 @@ import com.brutalbosses.network.BossOverlayMessage;
 import com.brutalbosses.network.BossTypeSyncMessage;
 import com.brutalbosses.network.Network;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +38,10 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static com.brutalbosses.entity.CustomAttributes.DROP_GEAR;
 
@@ -63,6 +65,41 @@ public class EventHandler
         }
     }
      */
+
+    public static Map<BlockPos, UUID> protectedBlocks = new HashMap<>();
+
+    @SubscribeEvent
+    public static void onPlayerInteract(final PlayerInteractEvent event)
+    {
+        if (event.getWorld().isClientSide())
+        {
+            return;
+        }
+
+        if (protectedBlocks.containsKey(event.getPos()))
+        {
+            final UUID uuid = protectedBlocks.get(event.getPos());
+
+            final Entity boss = ((ServerLevel) event.getWorld()).getEntity(uuid);
+            if (boss instanceof LivingEntity)
+            {
+                if (boss.isAlive())
+                {
+                    ((LivingEntity) boss).addEffect(new MobEffectInstance(MobEffects.GLOWING, 20 * 60));
+
+                    if (boss instanceof Mob && ((Mob) boss).getTarget() == null)
+                    {
+                        ((Mob) boss).setTarget(event.getPlayer());
+                    }
+
+                    ((ServerPlayer) event.getPlayer()).sendMessage(new TranslatableComponent("boss.chest.lock",
+                      boss.getDisplayName()).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), ChatType.GAME_INFO, event.getPlayer().getUUID());
+                    event.setCancellationResult(InteractionResult.FAIL);
+                    event.setCanceled(true);
+                }
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void applyProjectileDamageBoost(final LivingHurtEvent event)
@@ -168,6 +205,10 @@ public class EventHandler
     public static void attachCapabilities(final AttachCapabilitiesEvent<Entity> evt)
     {
         final Entity entity = evt.getObject();
+        if (entity == null || entity.level == null)
+        {
+            return;
+        }
 
         if (entity.level.isClientSide || BossTypeManager.instance.isValidBossEntity(entity))
         {

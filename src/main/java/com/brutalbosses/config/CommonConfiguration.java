@@ -8,6 +8,7 @@ public class CommonConfiguration
     public final ForgeConfigSpec.ConfigValue<Boolean> printChestLoottable;
     public final ForgeConfigSpec.ConfigValue<Double>  globalDifficultyMultiplier;
     public final ForgeConfigSpec.ConfigValue<Integer> globalBossSpawnChance;
+    public final ForgeConfigSpec.ConfigValue<Integer> minDistanceBetweenSame;
 
     protected CommonConfiguration(final ForgeConfigSpec.Builder builder)
     {
@@ -22,6 +23,9 @@ public class CommonConfiguration
 
         builder.comment("Global boss spawn chance, determines the chance per treasure chest spawn at which a boss can appear in a structure. Chance X in 100, default = 30");
         globalBossSpawnChance = builder.defineInRange("globalBossSpawnChance", 30, 1, 100);
+
+        builder.comment("Minimum distance in blocks, between same bosses spawning, is not 100% guranteed, compares last 10 spawns. default = 50");
+        minDistanceBetweenSame = builder.defineInRange("minDistanceBetweenSame", 50, 0, 1000);
 
         // Escapes the current category level
         builder.pop();

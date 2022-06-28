@@ -3,6 +3,7 @@
   "name": "Fisk of the Sand",
   "visualscale": 1.1,
   "experience": 300,
+  "protect_treasure": true,
   "effects": {
     "minecraft:slowness": 1,
     "minecraft:resistance": 1

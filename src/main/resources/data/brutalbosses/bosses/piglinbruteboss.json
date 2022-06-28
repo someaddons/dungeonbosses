@@ -3,6 +3,7 @@
   "name": "Samuel the Pit Master",
   "visualscale": 1.1,
   "experience": 500,
+  "protect_treasure": true,
   "effects": {
     "minecraft:glowing": 1,
     "minecraft:strength": 2,

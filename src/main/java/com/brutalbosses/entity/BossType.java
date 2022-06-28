@@ -2,6 +2,7 @@ package com.brutalbosses.entity;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.ai.IAIParams;
+import com.brutalbosses.event.EventHandler;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TextComponent;
@@ -59,6 +60,7 @@ public class BossType
     private int     itemLootCount     = 3;
     private boolean showBossBar       = true;
     private boolean nameVisible       = true;
+    private boolean protectsTreasure  = true;
 
     public BossType(final EntityType entityToUse, final ResourceLocation id)
     {
@@ -143,6 +145,11 @@ public class BossType
         if (nameVisible)
         {
             boss.setCustomNameVisible(true);
+        }
+
+        if (protectsTreasure)
+        {
+            EventHandler.protectedBlocks.put(boss.getCapability(BOSS_CAP).orElse(null).getSpawnPos(), boss.getUUID());
         }
     }
 
@@ -464,5 +471,10 @@ public class BossType
     public void setNameVisible(final boolean visible)
     {
         nameVisible = visible;
+    }
+
+    public void setProtectsTreasure(final boolean protectsTreasure)
+    {
+        this.protectsTreasure = protectsTreasure;
     }
 }

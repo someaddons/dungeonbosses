@@ -3,6 +3,7 @@
   "name": "Uzsahe the Endborn",
   "visualscale": 1.1,
   "experience": 300,
+  "protect_treasure": true,
   "effects": {
     "minecraft:resistance": 1,
     "minecraft:slowness": 1

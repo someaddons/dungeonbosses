@@ -3,6 +3,7 @@
   "name": "Chrz the quick",
   "visualscale": 1.5,
   "experience": 400,
+  "protect_treasure": true,
   "effects": {
     "minecraft:resistance": 1,
     "minecraft:fire_resistance": 1

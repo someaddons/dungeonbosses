@@ -3,6 +3,7 @@
   "name": "Rumak the Dark",
   "visualscale": 1.2,
   "experience": 300,
+  "protect_treasure": true,
   "effects": {
     "minecraft:resistance": 1
   },
