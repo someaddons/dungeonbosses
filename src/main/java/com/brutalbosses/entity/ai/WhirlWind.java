@@ -73,14 +73,14 @@ public class WhirlWind extends Goal
         {
             attackTimer = params.cooldown;
             List<LivingEntity> entities = new ArrayList<>(mob.level.getEntitiesOfClass(Player.class, mob.getBoundingBox().inflate(2.0D, 0.5D, 2.0D)));
-            if (!entities.contains(mob.getTarget()))
+            if (!entities.contains(target))
             {
-                entities.add(mob.getTarget());
+                entities.add(target);
             }
 
             for (LivingEntity livingentity : entities)
             {
-                if (livingentity != mob)
+                if (livingentity != mob && livingentity != null)
                 {
                     if (params.knockup)
                     {
