@@ -135,9 +135,9 @@ public class SummonMobsGoal extends Goal
         try
         {
             summoned = (LivingEntity) entityType.create(mob.level);
-            if (params.entityNBTData.containsKey(entityType.getRegistryName()))
+            if (params.entityNBTData.containsKey(ForgeRegistries.ENTITY_TYPES.getKey(entityType)))
             {
-                final CompoundTag nbt = params.entityNBTData.get(entityType.getRegistryName());
+                final CompoundTag nbt = params.entityNBTData.get(ForgeRegistries.ENTITY_TYPES.getKey(entityType));
                 if (nbt.contains("Pos"))
                 {
                     summoned.load(nbt);
@@ -241,7 +241,7 @@ public class SummonMobsGoal extends Goal
                 for (JsonElement entityEntry : jsonElement.get(ENTITIES).getAsJsonArray())
                 {
                     final ResourceLocation entityID = new ResourceLocation(((JsonObject) entityEntry).get(ENTITY_ID).getAsString());
-                    types.add((EntityType<? extends LivingEntity>) ForgeRegistries.ENTITIES.getValue(entityID));
+                    types.add((EntityType<? extends LivingEntity>) ForgeRegistries.ENTITY_TYPES.getValue(entityID));
                     if (((JsonObject) entityEntry).has(SUMM_ENTITY_NBT))
                     {
                         try

@@ -2,7 +2,6 @@ package com.brutalbosses.entity;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.compat.Compat;
-import com.brutalbosses.world.PostStructureInfoGetter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -109,16 +108,9 @@ public class BossSpawnHandler
 
             if (chest != null)
             {
-                String structname = "unkown structure";
-                if (world instanceof PostStructureInfoGetter && ((PostStructureInfoGetter) world).getStructure() != null)
-                {
-                    structname = ((PostStructureInfoGetter) world).getStructure().feature.getRegistryName().toString();
-                }
-
                 final ResourceLocation lootTable = chest.lootTable;
                 BrutalBosses.LOGGER.debug(
-                  "Spawning " + bossType.getID() + " at " + pos + " at " + chest.getDisplayName().getString() + " with:" + lootTable + " in "
-                    + structname);
+                  "Spawning " + bossType.getID() + " at " + pos + " at " + chest.getDisplayName().getString() + " with:" + lootTable);
             }
 
             final BlockPos spawnPos = findSpawnPosForBoss(world, boss, pos);

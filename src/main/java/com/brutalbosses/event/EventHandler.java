@@ -11,7 +11,9 @@ import com.brutalbosses.network.BossTypeSyncMessage;
 import com.brutalbosses.network.Network;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -71,7 +73,7 @@ public class EventHandler
     @SubscribeEvent
     public static void onPlayerInteract(final PlayerInteractEvent event)
     {
-        if (event.getWorld().isClientSide())
+        if (event.getLevel().isClientSide())
         {
             return;
         }
@@ -80,7 +82,7 @@ public class EventHandler
         {
             final UUID uuid = protectedBlocks.get(event.getPos());
 
-            final Entity boss = ((ServerLevel) event.getWorld()).getEntity(uuid);
+            final Entity boss = ((ServerLevel) event.getLevel()).getEntity(uuid);
             if (boss instanceof LivingEntity)
             {
                 if (boss.isAlive())
@@ -89,11 +91,11 @@ public class EventHandler
 
                     if (boss instanceof Mob && ((Mob) boss).getTarget() == null)
                     {
-                        ((Mob) boss).setTarget(event.getPlayer());
+                        ((Mob) boss).setTarget(event.getEntity());
                     }
 
-                    ((ServerPlayer) event.getPlayer()).sendMessage(new TranslatableComponent("boss.chest.lock",
-                      boss.getDisplayName()).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), ChatType.GAME_INFO, event.getPlayer().getUUID());
+                    ((ServerPlayer) event.getEntity()).sendSystemMessage(Component.translatable("boss.chest.lock",
+                      boss.getDisplayName()).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), true);
                     event.setCancellationResult(InteractionResult.FAIL);
                     event.setCanceled(true);
                 }
@@ -128,7 +130,7 @@ public class EventHandler
     @SubscribeEvent
     public static void playerClickBlockEvent(final PlayerInteractEvent.RightClickBlock event)
     {
-        if (!BrutalBosses.config.getCommonConfig().printChestLoottable.get() || event.getWorld().isClientSide())
+        if (!BrutalBosses.config.getCommonConfig().printChestLoottable.get() || event.getLevel().isClientSide())
         {
             return;
         }
@@ -136,11 +138,10 @@ public class EventHandler
         final BlockEntity te = event.getEntity().level.getBlockEntity(event.getPos());
         if (te instanceof RandomizableContainerBlockEntity && ((RandomizableContainerBlockEntity) te).lootTable != null)
         {
-            event.getPlayer()
-              .sendMessage(new TextComponent("[Loottable: " + ((RandomizableContainerBlockEntity) te).lootTable + "]").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)
-                  .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD,
-                    ((RandomizableContainerBlockEntity) te).lootTable.toString()))),
-                event.getPlayer().getUUID());
+            event.getEntity()
+              .sendSystemMessage(Component.literal("[Loottable: " + ((RandomizableContainerBlockEntity) te).lootTable + "]").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)
+                .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD,
+                  ((RandomizableContainerBlockEntity) te).lootTable.toString()))));
         }
     }
 
@@ -170,7 +171,7 @@ public class EventHandler
                 {
                     final ItemEntity itementity =
                       new ItemEntity(event.getEntity().level, event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(),
-                        event.getEntityLiving().getItemBySlot(EquipmentSlot.values()[i]));
+                        event.getEntity().getItemBySlot(EquipmentSlot.values()[i]));
                     event.getEntity().level.addFreshEntity(itementity);
                 }
 
@@ -226,7 +227,7 @@ public class EventHandler
     public static void onTrack(PlayerEvent.StartTracking event)
     {
         final Entity entity = event.getTarget();
-        final Player Player = event.getPlayer();
+        final Player Player = event.getEntity();
 
         if (Player instanceof ServerPlayer)
         {
@@ -243,7 +244,7 @@ public class EventHandler
     {
         DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
         {
-            Network.instance.sendPacket((ServerPlayer) event.getPlayer(), new BossTypeSyncMessage(BossTypeManager.instance.bosses.values()));
+            Network.instance.sendPacket((ServerPlayer) event.getEntity(), new BossTypeSyncMessage(BossTypeManager.instance.bosses.values()));
         });
     }
 }

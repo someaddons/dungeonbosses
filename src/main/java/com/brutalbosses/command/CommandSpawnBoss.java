@@ -9,7 +9,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -21,7 +21,7 @@ public class CommandSpawnBoss implements Opcommand
     public int onExecute(final CommandContext<CommandSourceStack> context)
     {
         final CommandSourceStack source = context.getSource();
-        source.sendFailure(new TextComponent("Enter a valid boss id(name of the json file)"));
+        source.sendFailure(Component.literal("Enter a valid boss id(name of the json file)"));
         return 0;
     }
 
@@ -70,7 +70,7 @@ public class CommandSpawnBoss implements Opcommand
             final BossType bossType = BossTypeManager.instance.bosses.get(bossID);
             if (bossType == null)
             {
-                source.sendFailure(new TextComponent("Enter a valid boss id(name of the json file), no boss found for:" + bossID));
+                source.sendFailure(Component.literal("Enter a valid boss id(name of the json file), no boss found for:" + bossID));
                 return 0;
             }
 

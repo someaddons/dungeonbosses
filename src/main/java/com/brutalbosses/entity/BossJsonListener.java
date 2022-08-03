@@ -119,7 +119,7 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener
                     return null;
                 }
 
-                entityTypeEntry = ForgeRegistries.ENTITIES.getValue(entityType);
+                entityTypeEntry = ForgeRegistries.ENTITY_TYPES.getValue(entityType);
                 if (entityTypeEntry == EntityType.PIG)
                 {
                     BrutalBosses.LOGGER.error("Cannot find entity type for:" + entityType + " id in bossfile:" + entry.getKey());

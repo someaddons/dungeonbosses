@@ -81,7 +81,7 @@ public class VanillaParticleMessage implements IMessage
         buffer.writeDouble(x);
         buffer.writeDouble(y);
         buffer.writeDouble(z);
-        buffer.writeResourceLocation(this.type.getRegistryName());
+        buffer.writeResourceLocation(ForgeRegistries.PARTICLE_TYPES.getKey(this.type));
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.brutalbosses.entity.ai.IAIParams;
 import com.brutalbosses.event.EventHandler;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -99,7 +99,7 @@ public class BossType
 
         if (!(entity instanceof Mob))
         {
-            BrutalBosses.LOGGER.warn("Not supported boss entity:" + entityToUse.getRegistryName());
+            BrutalBosses.LOGGER.warn("Not supported boss entity:" + ForgeRegistries.ENTITY_TYPES.getKey(entityToUse));
             return null;
         }
 
@@ -141,7 +141,7 @@ public class BossType
             }
         }
 
-        boss.setCustomName(new TextComponent(desc));
+        boss.setCustomName(Component.literal(desc));
         if (nameVisible)
         {
             boss.setCustomNameVisible(true);
@@ -178,7 +178,8 @@ public class BossType
             else
             {
                 BrutalBosses.LOGGER.debug(
-                  "Boss:" + id.toString() + " Attribute: " + attributeEntry.getKey().getDescriptionId() + " is not applicable to: " + entityToUse.getRegistryName());
+                  "Boss:" + id.toString() + " Attribute: " + attributeEntry.getKey().getDescriptionId() + " is not applicable to: " + ForgeRegistries.ENTITY_TYPES.getKey(
+                    entityToUse));
             }
         }
 
@@ -425,7 +426,7 @@ public class BossType
     {
         final CompoundTag CompoundTag = new CompoundTag();
         CompoundTag.putString("id", id.toString());
-        CompoundTag.putString("etype", entityToUse.getRegistryName().toString());
+        CompoundTag.putString("etype", ForgeRegistries.ENTITY_TYPES.getKey(entityToUse).toString());
         CompoundTag.putFloat("scale", scale);
 
 
@@ -441,7 +442,7 @@ public class BossType
     {
         final ResourceLocation id = ResourceLocation.tryParse(CompoundTag.getString("id"));
         final ResourceLocation entity = ResourceLocation.tryParse(CompoundTag.getString("etype"));
-        final EntityType type = ForgeRegistries.ENTITIES.getValue(entity);
+        final EntityType type = ForgeRegistries.ENTITY_TYPES.getValue(entity);
 
         if (type == null)
         {

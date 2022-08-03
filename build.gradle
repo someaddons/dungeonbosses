@@ -95,7 +95,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}" //21
 
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
-    implementation fg.deobf("curse.maven:champions-307152:3694134")
+    compileOnly(("curse.maven:champions-307152:3694134"))
 }
 
 jar {

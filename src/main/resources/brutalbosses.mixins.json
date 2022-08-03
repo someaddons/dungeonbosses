@@ -10,8 +10,7 @@
     "MeleeAttackGoalMixin",
     "PlayerInteractDistScaling",
     "ProjectileHitActionMixin",
-    "SpawnerBlockListener",
-    "StructureSpawnBossMixin"
+    "SpawnerBlockListener"
   ],
   "client": [
     "EntityRenderDataMixin",

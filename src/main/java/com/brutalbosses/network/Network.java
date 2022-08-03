@@ -32,28 +32,40 @@ public class Network
               final BossCapMessage msg = new BossCapMessage();
               msg.read(p);
               return msg;
-          }, BossCapMessage::handle);
+          }, (p, c) -> catchErrorsFor(() -> p.handle(c)));
         channel.registerMessage(2, BossOverlayMessage.class,
           BossOverlayMessage::write,
           p -> {
               final BossOverlayMessage msg = new BossOverlayMessage();
               msg.read(p);
               return msg;
-          }, BossOverlayMessage::handle);
+          }, (p, c) -> catchErrorsFor(() -> p.handle(c)));
         channel.registerMessage(3, VanillaParticleMessage.class,
           VanillaParticleMessage::write,
           p -> {
               final VanillaParticleMessage msg = new VanillaParticleMessage();
               msg.read(p);
               return msg;
-          }, VanillaParticleMessage::handle);
+          }, (p, c) -> catchErrorsFor(() -> p.handle(c)));
         channel.registerMessage(4, BossTypeSyncMessage.class,
           BossTypeSyncMessage::write,
           p -> {
               final BossTypeSyncMessage msg = new BossTypeSyncMessage();
               msg.read(p);
               return msg;
-          }, BossTypeSyncMessage::handle);
+          }, (p, c) -> catchErrorsFor(() -> p.handle(c)));
+    }
+
+    private void catchErrorsFor(final Runnable runnable)
+    {
+        try
+        {
+            runnable.run();
+        }
+        catch (Exception e)
+        {
+            BrutalBosses.LOGGER.warn("error during packet:", e);
+        }
     }
 
     public void sendPacket(final ServerPlayer Player, final IMessage msg)

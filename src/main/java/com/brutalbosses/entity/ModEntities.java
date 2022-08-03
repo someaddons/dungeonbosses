@@ -18,8 +18,6 @@ public class ModEntities
 
     private static <T extends Entity> EntityType<T> build(final ResourceLocation id, final EntityType.Builder<T> builder)
     {
-        final EntityType<T> entityType = builder.build(id.toString());
-        entityType.setRegistryName(id);
-        return entityType;
+        return builder.build(id.toString());
     }
 }

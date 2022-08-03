@@ -1,26 +1,35 @@
 package com.brutalbosses.mixin;
 
 import com.brutalbosses.entity.capability.BossCapability;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.common.extensions.IForgePlayer;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(ServerGamePacketListenerImpl.class)
-public class PlayerInteractDistScaling
+@Mixin(IForgePlayer.class)
+public interface PlayerInteractDistScaling
 {
-    @Redirect(method = "handleInteract", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;distanceToSqr(Lnet/minecraft/world/entity/Entity;)D"))
-    public double getAdjustedDistance(final ServerPlayer player, final Entity entity)
+    @Shadow(remap = false)
+    public abstract boolean isCloseEnough(final Entity entity, final double dist);
+
+    @Shadow(remap = false)
+    public abstract double getAttackRange();
+
+    /**
+     * @param entity
+     * @param padding
+     * @return
+     */
+    @Overwrite(remap = false)
+    default boolean canHit(Entity entity, double padding)
     {
         final BossCapability cap = entity.getCapability(BossCapability.BOSS_CAP).orElse(null);
 
         if (cap != null)
         {
-            return player.distanceToSqr(entity) / Math.max(0.1, cap.getBossType().getVisualScale());
+            return isCloseEnough(entity, getAttackRange() * cap.getBossType().getVisualScale() + padding);
         }
-
-        return player.distanceToSqr(entity);
+        return isCloseEnough(entity, getAttackRange() + padding);
     }
 }

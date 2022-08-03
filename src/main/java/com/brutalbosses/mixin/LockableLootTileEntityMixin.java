@@ -66,7 +66,7 @@ public class LockableLootTileEntityMixin implements RegionAwareTE
      * @param pos
      * @return
      */
-    @Redirect(method = "setLootTable(Lnet/minecraft/world/level/BlockGetter;Ljava/util/Random;Lnet/minecraft/core/BlockPos;Lnet/minecraft/resources/ResourceLocation;)V", at = @At(value = "INVOKE"
+    @Redirect(method = "setLootTable(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos;Lnet/minecraft/resources/ResourceLocation;)V", at = @At(value = "INVOKE"
       , target = "Lnet/minecraft/world/level/BlockGetter;getBlockEntity(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/entity/BlockEntity;"))
     private static BlockEntity setLootTable(
       final BlockGetter reader, final BlockPos pos)

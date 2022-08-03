@@ -20,6 +20,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -167,8 +168,8 @@ public class BossTypeManager
 
         for (final BossType bossType : bosses.values())
         {
-            entityTypes.add(bossType.getEntityType().getRegistryName());
-            BrutalBosses.LOGGER.info("Loaded boss variant for: " + bossType.getEntityType().getRegistryName());
+            entityTypes.add(ForgeRegistries.ENTITY_TYPES.getKey(bossType.getEntityType()));
+            BrutalBosses.LOGGER.info("Loaded boss variant for: " + ForgeRegistries.ENTITY_TYPES.getKey(bossType.getEntityType()));
 
             for (final Map.Entry<ResourceLocation, Integer> spawnEntry : bossType.getSpawnTables().entrySet())
             {
@@ -209,7 +210,7 @@ public class BossTypeManager
      */
     public boolean isValidBossEntity(final Entity entity)
     {
-        return entityTypes.contains(entity.getType().getRegistryName());
+        return entityTypes.contains(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()));
     }
 
     /**

@@ -1,21 +1,17 @@
 package com.brutalbosses.event;
 
-import com.brutalbosses.entity.ModEntities;
 import com.brutalbosses.entity.capability.BossCapability;
-import com.brutalbosses.entity.thrownentity.CSpriteRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientEventHandler
 {
@@ -54,7 +50,7 @@ public class ClientEventHandler
         //Minecraft.getInstance().gui.getBossOverlay().events = new ConcurrentHashMap<>();
     }
     @SubscribeEvent
-    public static void onWorldUnload(WorldEvent.Unload event)
+    public static void onWorldUnload(LevelEvent.Unload event)
     {
         // Clear any boss infos to avoid storing entities/Levels
         bossInfoMap.clear();

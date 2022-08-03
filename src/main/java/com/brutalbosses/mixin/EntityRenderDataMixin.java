@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 public class EntityRenderDataMixin implements CustomEntityRenderData
 {
     @Shadow
-    private EntityDimensions dimensions;
+    public  EntityDimensions dimensions;
     private float            visualScale = 1.0f;
 
     @Override

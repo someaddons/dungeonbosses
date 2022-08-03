@@ -16,7 +16,7 @@ public abstract class LivingRendererMixin<T extends LivingEntity>
     @Shadow
     protected abstract void scale(final T p_115314_, final PoseStack p_115315_, final float p_115316_);
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;scale(Lnet/minecraft/world/entity/LivingEntity;Lcom/mojang/blaze3d/vertex/PoseStack;F)V"))
+    @Redirect(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;scale(Lnet/minecraft/world/entity/LivingEntity;Lcom/mojang/blaze3d/vertex/PoseStack;F)V"))
     private void on(final LivingEntityRenderer livingRenderer, final T entity, final PoseStack stack, final float value)
     {
         if (entity instanceof CustomEntityRenderData)
