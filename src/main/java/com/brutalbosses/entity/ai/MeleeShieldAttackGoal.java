@@ -116,6 +116,11 @@ public class MeleeShieldAttackGoal extends Goal
     public void tick()
     {
         LivingEntity livingentity = this.mob.getTarget();
+        if (livingentity == null)
+        {
+            return;
+        }
+
         this.mob.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
         double d0 = this.mob.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
         this.ticksUntilNextPathRecalculation = Math.max(this.ticksUntilNextPathRecalculation - 1, 0);
