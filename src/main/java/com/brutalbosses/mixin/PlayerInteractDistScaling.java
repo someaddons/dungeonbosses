@@ -16,7 +16,7 @@ public class PlayerInteractDistScaling
     {
         final BossCapability cap = entity.getCapability(BossCapability.BOSS_CAP).orElse(null);
 
-        if (cap != null)
+        if (cap != null && cap.isBoss())
         {
             return player.distanceToSqr(entity) / Math.max(0.1, cap.getBossType().getVisualScale());
         }

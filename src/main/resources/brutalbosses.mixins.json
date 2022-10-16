@@ -8,7 +8,6 @@
     "EntityCapReader",
     "LockableLootTileEntityMixin",
     "MeleeAttackGoalMixin",
-    "PlayerInteractDistScaling",
     "ProjectileHitActionMixin",
     "SpawnerBlockListener",
     "StructureSpawnBossMixin"
