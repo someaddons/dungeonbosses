@@ -26,7 +26,7 @@ public interface PlayerInteractDistScaling
     {
         final BossCapability cap = entity.getCapability(BossCapability.BOSS_CAP).orElse(null);
 
-        if (cap != null)
+        if (cap != null && cap.isBoss())
         {
             return isCloseEnough(entity, getAttackRange() * cap.getBossType().getVisualScale() + padding);
         }
