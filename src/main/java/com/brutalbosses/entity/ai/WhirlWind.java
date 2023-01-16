@@ -80,7 +80,7 @@ public class WhirlWind extends Goal
 
             for (LivingEntity livingentity : entities)
             {
-                if (livingentity != mob && livingentity != null)
+                if (livingentity != mob && livingentity != null && livingentity.isAlive())
                 {
                     if (params.knockup)
                     {
