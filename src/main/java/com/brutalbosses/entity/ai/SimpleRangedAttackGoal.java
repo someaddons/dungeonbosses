@@ -5,7 +5,6 @@ import com.brutalbosses.entity.IOnProjectileHit;
 import com.brutalbosses.entity.PosUtil;
 import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonObject;
-import com.mojang.math.Vector3d;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -18,6 +17,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.SpellcasterIllager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -291,15 +291,15 @@ public abstract class SimpleRangedAttackGoal extends Goal
 
         final Direction dir = PosUtil.getFacing(mob.position(), target.position()).getClockWise();
 
-        Vector3d center = new Vector3d(mob.getX(), mob.getY() - 0.5 + mob.getEyeHeight() * cap.getBossType().getVisualScale(), mob.getZ());
+        Vec3 center = new Vec3(mob.getX(), mob.getY() - 0.5 + mob.getEyeHeight() * cap.getBossType().getVisualScale(), mob.getZ());
 
         double y = 0.75d * Math.cos(Math.toRadians((360d / (params.count + 1)) * (number)));
         double xzRatio = 0.75d * Math.sin(Math.toRadians((360d / (params.count + 1)) * (number)));
 
-        Vector3d offSet = new Vector3d(xzRatio * dir.getStepX(), -y, xzRatio * dir.getStepZ());
+        Vec3 offSet = new Vec3(xzRatio * dir.getStepX(), -y, xzRatio * dir.getStepZ());
 
         center.add(offSet);
-        center.add(new Vector3d(dir.getCounterClockWise().getStepX() * 0.5, 0, dir.getCounterClockWise().getStepZ() * 0.5));
+        center.add(new Vec3(dir.getCounterClockWise().getStepX() * 0.5, 0, dir.getCounterClockWise().getStepZ() * 0.5));
         Projectile.setPos(center.x, center.y, center.z);
     }
 
