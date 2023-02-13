@@ -64,6 +64,7 @@
     "totw_additions:chests/end_tower/end_tower_chest": 1,
     "dungeoncrawl:chests/stage_5": 1,
     "dungeons_arise:chests/mines_treasure_big": 1,
-    "dungeons_arise:chests/plague_asylum/plague_asylum_treasure": 1
+    "dungeons_arise:chests/plague_asylum/plague_asylum_treasure": 1,
+    "awesomedungeonend:chests/awesome_dungeon": 3
   }
 }

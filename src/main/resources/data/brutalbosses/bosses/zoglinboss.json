@@ -32,6 +32,14 @@
     "minecraft:chests/bastion_hoglin_stable": 5,
     "dungeons_enhanced:stables": 1,
     "graveyard:chests/large_loot": 1,
+    "bygonenether:chests/citadel": 2,
+    "bygonenether:chests/fortress": 2,
+    "bygonenether:chests/catacomb/treasure_rib": 1,
+    "awesomedungeonnether:chests/awesome_dungeon": 2,
+    "philipsruins:chests/nether_ruins_low": 2,
+    "infernalexp:chests/basalt_delta_ruin": 2,
+    "infernalexp:chests/desolate_bastion_outpost": 2,
+    "infernalexp:chests/glowstone_canyon_ruin": 2,
     "valhelsia_structures:chests/spawner_dungeon": 1,
     "dungeons_enhanced:chests/monster_maze/treasure": 1
   }

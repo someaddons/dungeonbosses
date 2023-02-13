@@ -34,6 +34,14 @@
     "totw_additions:chests/nether_tower/nether_tower_chest": 1,
     "infernalexp:chests/desolate_bastion_outpost_chest": 1,
     "infernalexp:chests/glowstone_canyon_ruin_chest": 1,
+    "bygonenether:chests/citadel": 2,
+    "bygonenether:chests/fortress": 2,
+    "bygonenether:chests/catacomb/treasure_rib": 1,
+    "awesomedungeonnether:chests/awesome_dungeon": 2,
+    "philipsruins:chests/nether_ruins_low": 2,
+    "infernalexp:chests/basalt_delta_ruin": 2,
+    "infernalexp:chests/desolate_bastion_outpost": 2,
+    "infernalexp:chests/glowstone_canyon_ruin": 2,
     "dungeons_arise:chests/scorched_mines/scorched_mines_treasure": 1
   }
 }

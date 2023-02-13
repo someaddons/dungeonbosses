@@ -38,6 +38,7 @@
     "minecraft:chests/simple_dungeon": 1,
     "minecraft:chests/ruined_portal": 1,
     "dungeoncrawl:chests/stage_3": 1,
+    "philipsruins:chests/desert_pyramid_loot": 1,
     "dungeons_enhanced:chests/monster_maze/treasure": 1
   }
 }

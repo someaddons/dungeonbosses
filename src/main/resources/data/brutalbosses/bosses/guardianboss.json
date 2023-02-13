@@ -33,6 +33,7 @@
     "minecraft:chests/shipwreck_map": 2,
     "minecraft:chests/shipwreck_supply": 2,
     "minecraft:chests/shipwreck_treasure": 2,
+    "philipsruins:chests/ocean_ruins_loot": 1,
     "minecraft:chests/buried_treasure": 1
   }
 }
