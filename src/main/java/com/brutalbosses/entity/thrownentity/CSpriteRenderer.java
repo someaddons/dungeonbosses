@@ -1,7 +1,7 @@
 package com.brutalbosses.entity.thrownentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -47,7 +47,7 @@ public class CSpriteRenderer<T extends ThrownItemEntity & ItemSupplier> extends 
             p_116088_.pushPose();
             p_116088_.scale(entity.getScale(), entity.getScale(), entity.getScale());
             p_116088_.mulPose(this.entityRenderDispatcher.cameraOrientation());
-            p_116088_.mulPose(Axis.YP.rotationDegrees(180.0F));
+            p_116088_.mulPose(Vector3f.YP.rotationDegrees(180.0F));
             this.itemRenderer.renderStatic(entity.getItem(), ItemTransforms.TransformType.GROUND, p_116090_, OverlayTexture.NO_OVERLAY, p_116088_, p_116089_, entity.getId());
             p_116088_.popPose();
             super.render(entity, p_116086_, p_116087_, p_116088_, p_116089_, p_116090_);

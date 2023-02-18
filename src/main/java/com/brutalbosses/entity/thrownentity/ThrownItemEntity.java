@@ -3,7 +3,6 @@ package com.brutalbosses.entity.thrownentity;
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.ModEntities;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -63,7 +62,7 @@ public class ThrownItemEntity extends ThrowableItemProjectile
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
