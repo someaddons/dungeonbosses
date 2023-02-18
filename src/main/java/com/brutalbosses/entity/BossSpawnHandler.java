@@ -75,7 +75,7 @@ public class BossSpawnHandler
     {
         for (final Tuple<BlockPos, BossType> data : spawns)
         {
-            if (bossType == data.getB() && Math.sqrt(data.getA().distSqr(pos)) < BrutalBosses.config.getCommonConfig().minDistanceBetweenSame.get())
+            if (Math.sqrt(data.getA().distSqr(pos)) < BrutalBosses.config.getCommonConfig().minDistance.get())
             {
                 return true;
             }
@@ -94,7 +94,7 @@ public class BossSpawnHandler
         try
         {
             spawns.add(new Tuple<>(pos, bossType));
-            if (spawns.size() > 10)
+            if (spawns.size() > 20)
             {
                 spawns.poll();
             }
