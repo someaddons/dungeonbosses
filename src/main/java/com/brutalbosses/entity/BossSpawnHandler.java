@@ -41,15 +41,12 @@ public class BossSpawnHandler
                 return;
             }
 
-            BossType bossType = null;
-            for (int i = 0; i < 10; i++)
+            if (spawnedRecentlyClose(chest.getBlockPos()))
             {
-                bossType = possibleBosses.get(BrutalBosses.rand.nextInt(possibleBosses.size()));
-                if (!spawnedRecentlyClose(bossType, chest.getBlockPos()))
-                {
-                    break;
-                }
+                return;
             }
+
+            BossType bossType = possibleBosses.get(BrutalBosses.rand.nextInt(possibleBosses.size()));
 
             if (bossType == null || bossType.getID().getPath().equals("dummyboss"))
             {
@@ -67,11 +64,10 @@ public class BossSpawnHandler
     /**
      * Check if we spawned the same bosstype closeby recently
      *
-     * @param bossType
      * @param pos
      * @return
      */
-    private static boolean spawnedRecentlyClose(final BossType bossType, final BlockPos pos)
+    private static boolean spawnedRecentlyClose(final BlockPos pos)
     {
         for (final Tuple<BlockPos, BossType> data : spawns)
         {
