@@ -71,7 +71,7 @@ public class BossSpawnHandler
     {
         for (final Tuple<BlockPos, BossType> data : spawns)
         {
-            if (Math.sqrt(data.getA().distSqr(pos)) < BrutalBosses.config.getCommonConfig().minDistance.get() * BrutalBosses.config.getCommonConfig().minDistance.get())
+            if (Math.sqrt(data.getA().distSqr(pos)) < BrutalBosses.config.getCommonConfig().minDistance.get())
             {
                 return true;
             }
