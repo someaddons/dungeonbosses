@@ -20,7 +20,6 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -93,7 +92,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                               hitEntity.getZ(),
                               (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier.get()) * pearlEntity.getScale(),
                               false,
-                              Level.ExplosionInteraction.MOB);
+                              Explosion.BlockInteraction.BREAK);
                         }
 
                         if (((ItemThrowParams) params).teleport)
@@ -141,7 +140,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                           hitPos.getZ(),
                           (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier.get()),
                           false,
-                          Level.ExplosionInteraction.MOB);
+                          Explosion.BlockInteraction.NONE);
                     }
 
                     if (((ItemThrowParams) params).teleport)
