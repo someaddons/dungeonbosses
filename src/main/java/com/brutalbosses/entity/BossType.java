@@ -14,7 +14,9 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.monster.SpellcasterIllager;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -77,6 +79,12 @@ public class BossType
     public Mob createBossEntity(final Level world)
     {
         final Entity entity = entityToUse.create(world);
+
+        if (entity instanceof AbstractVillager)
+        {
+            // Init empty offers to avoid offers creating maps during worldgen
+            ((AbstractVillager) entity).offers = new MerchantOffers();
+        }
 
         if (creationData != null)
         {
