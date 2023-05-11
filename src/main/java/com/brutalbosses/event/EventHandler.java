@@ -31,6 +31,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.living.LivingConversionEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -231,19 +232,26 @@ public class EventHandler
         if (Player instanceof ServerPlayer)
         {
             final BossCapability bossCapability = entity.getCapability(BossCapability.BOSS_CAP).orElse(null);
-            if (bossCapability != null)
-            {
+            if (bossCapability != null && bossCapability.isBoss()) {
                 Network.instance.sendPacket((ServerPlayer) Player, new BossCapMessage(bossCapability));
             }
         }
     }
 
     @SubscribeEvent
-    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event)
-    {
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
         {
             Network.instance.sendPacket((ServerPlayer) event.getPlayer(), new BossTypeSyncMessage(BossTypeManager.instance.bosses.values()));
         });
+    }
+
+    @SubscribeEvent
+    public static void onEntityConversion(LivingConversionEvent.Pre event) {
+        final BossCapability bossCapability = event.getEntity().getCapability(BossCapability.BOSS_CAP).orElse(null);
+        if (bossCapability != null && bossCapability.isBoss()) {
+            event.setCanceled(true);
+            event.setConversionTimer(20);
+        }
     }
 }

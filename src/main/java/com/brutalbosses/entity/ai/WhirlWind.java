@@ -80,17 +80,13 @@ public class WhirlWind extends Goal
 
             for (LivingEntity livingentity : entities)
             {
-                if (livingentity != mob && livingentity != null)
-                {
-                    if (params.knockup)
-                    {
+                if (livingentity != mob && livingentity != null && livingentity.isAlive()) {
+                    if (params.knockup) {
                         livingentity.setDeltaMovement(livingentity.getDeltaMovement().add(0.0D, params.knockback / 5f, 0.0D));
-                    }
-                    else
-                    {
+                    } else {
                         livingentity.knockback(
-                          params.knockback,
-                          Mth.sin(livingentity.getYRot() * ((float) Math.PI)),
+                                params.knockback,
+                                Mth.sin(livingentity.getYRot() * ((float) Math.PI)),
                           (-Mth.cos(livingentity.getYRot() * ((float) Math.PI))));
                     }
 
