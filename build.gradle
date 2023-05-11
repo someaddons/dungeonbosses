@@ -96,6 +96,8 @@ dependencies {
 
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
     compileOnly(("curse.maven:champions-307152:3694134"))
+    implementation fg.deobf(("curse.maven:connectivity-470193:3911351"))
+    implementation fg.deobf(("curse.maven:cyclic-239286:4075141"))
 }
 
 jar {
