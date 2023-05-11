@@ -135,9 +135,9 @@ public class BossCapability implements ICapabilitySerializable<Tag>
             {
                 bossEntry.initForClientEntity((LivingEntity) entity);
             }
-        }
 
-        bossEntry.setBossBar(compoundNbt.getBoolean(SHOWBOSSBAR));
+            bossEntry.setBossBar(compoundNbt.getBoolean(SHOWBOSSBAR));
+        }
     }
 
     public void setBossType(final BossType bossEntry)
