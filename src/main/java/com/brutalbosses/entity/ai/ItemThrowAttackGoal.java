@@ -13,13 +13,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.BlockHitResult;
@@ -72,7 +70,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                     {
                         if (((ItemThrowParams) params).damage > 0)
                         {
-                            hitEntity.hurt(DamageSource.indirectMagic(hitEntity, mob), ((ItemThrowParams) params).damage);
+                            hitEntity.hurt(mob.damageSources().indirectMagic(hitEntity, mob), ((ItemThrowParams) params).damage);
                         }
 
                         if (((ItemThrowParams) params).lighting)
@@ -86,7 +84,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                         if (((ItemThrowParams) params).explode)
                         {
                             hitEntity.level.explode(null,
-                              DamageSource.indirectMobAttack((LivingEntity) hitEntity, mob),
+                              mob.damageSources().indirectMagic((LivingEntity) hitEntity, mob),
                               null,
                               hitEntity.getX(),
                               hitEntity.getY(),
@@ -134,7 +132,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                     if (((ItemThrowParams) params).explode)
                     {
                         mob.level.explode(null,
-                          DamageSource.indirectMobAttack(mob, mob),
+                          mob.damageSources().indirectMagic(mob, mob),
                           null,
                           hitPos.getX(),
                           hitPos.getY(),

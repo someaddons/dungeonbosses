@@ -100,7 +100,7 @@ public class WhirlWind extends Goal
                     {
                         damage += mob.getAttributeValue(Attributes.ATTACK_DAMAGE);
                     }
-                    livingentity.hurt(DamageSource.mobAttack(mob), damage);
+                    livingentity.hurt(mob.damageSources().mobAttack(mob), damage);
 
                     if (params.onHitMobEffect != null)
                     {

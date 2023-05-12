@@ -17,12 +17,13 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
@@ -117,7 +118,7 @@ public class EventHandler
             return;
         }
 
-        if (event.getSource() instanceof IndirectEntityDamageSource && event.getSource().getEntity() != null)
+        if (event.getSource().is(DamageTypes.THROWN) && event.getSource().getEntity() != null)
         {
             final BossCapability cap = event.getSource().getEntity().getCapability(BossCapability.BOSS_CAP).orElse(null);
             if (cap != null && cap.isBoss())

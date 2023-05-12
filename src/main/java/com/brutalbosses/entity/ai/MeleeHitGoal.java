@@ -76,7 +76,7 @@ public class MeleeHitGoal extends Goal
             }
             damage += EnchantmentHelper.getDamageBonus(mob.getMainHandItem(), target.getMobType());
 
-            if (target.hurt(DamageSource.mobAttack(mob), damage))
+            if (target.hurt(mob.damageSources().mobAttack(mob), damage))
             {
                 int fireAspect = EnchantmentHelper.getFireAspect(mob);
                 if (fireAspect > 0)

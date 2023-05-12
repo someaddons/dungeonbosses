@@ -71,7 +71,7 @@ public class SnowballAttackGoal extends SimpleRangedAttackGoal
                     final Entity hitEntity = ((EntityHitResult) rayTraceResult).getEntity();
                     if (hitEntity instanceof LivingEntity)
                     {
-                        hitEntity.hurt(DamageSource.thrown(snowballentity, mob), 1);
+                        hitEntity.hurt(mob.damageSources().thrown(snowballentity, mob), 1);
                         ((LivingEntity) hitEntity).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 4));
                     }
                 }

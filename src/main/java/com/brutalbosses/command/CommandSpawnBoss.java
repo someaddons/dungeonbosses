@@ -53,7 +53,7 @@ public class CommandSpawnBoss implements Opcommand
 
             if (bossName.equals("random"))
             {
-                BossSpawnHandler.spawnRandomBoss(source.getLevel(), new BlockPos(source.getPosition()));
+                BossSpawnHandler.spawnRandomBoss(source.getLevel(), BlockPos.containing(source.getPosition()));
                 return 0;
             }
 
@@ -61,7 +61,7 @@ public class CommandSpawnBoss implements Opcommand
             {
                 for (final BossType type : BossTypeManager.instance.bosses.values())
                 {
-                    BossSpawnHandler.spawnBoss(source.getLevel(), new BlockPos(source.getPosition()), type, null);
+                    BossSpawnHandler.spawnBoss(source.getLevel(), BlockPos.containing(source.getPosition()), type, null);
                 }
                 return 0;
             }
@@ -74,7 +74,7 @@ public class CommandSpawnBoss implements Opcommand
                 return 0;
             }
 
-            BossSpawnHandler.spawnBoss(source.getLevel(), new BlockPos(source.getPosition()), bossType, null);
+            BossSpawnHandler.spawnBoss(source.getLevel(), BlockPos.containing(source.getPosition()), bossType, null);
         }
         catch (Error e)
         {
