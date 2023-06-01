@@ -74,7 +74,10 @@ public class ChargeGoal extends Goal
                 isCharging = true;
                 ticksToNextUpdate = (int) params.duration;
 
-                mob.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(speedMod);
+                if (!mob.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(speedMod))
+                {
+                    mob.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(speedMod);
+                }
                 mob.setSpeed((float) mob.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
                 // Start dust particles
 
