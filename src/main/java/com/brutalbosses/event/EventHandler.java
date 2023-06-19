@@ -23,11 +23,10 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -179,13 +178,13 @@ public class EventHandler
 
                 if (cap.getLootTable() != null)
                 {
-                    final LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel) event.getEntity().level))
+                    final LootParams params = new LootParams.Builder((ServerLevel) event.getEntity().level)
                       .withParameter(LootContextParams.ORIGIN, event.getEntity().position())
                       .withParameter(LootContextParams.THIS_ENTITY, event.getSource().getEntity())
-                      .withLuck(((ServerPlayer) event.getSource().getEntity()).getLuck());
+                      .withLuck(((ServerPlayer) event.getSource().getEntity()).getLuck()).create(LootContextParamSets.CHEST);
 
-                    final LootTable loottable = event.getEntity().level.getServer().getLootTables().get(cap.getLootTable());
-                    final List<ItemStack> list = loottable.getRandomItems(lootcontext$builder.create(LootContextParamSets.CHEST));
+                    final LootTable loottable = event.getEntity().level.getServer().getLootData().getLootTable(cap.getLootTable());
+                    final List<ItemStack> list = loottable.getRandomItems(params);
 
                     if (list.isEmpty())
                     {

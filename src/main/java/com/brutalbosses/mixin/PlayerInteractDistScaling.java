@@ -14,7 +14,7 @@ public interface PlayerInteractDistScaling
     public abstract boolean isCloseEnough(final Entity entity, final double dist);
 
     @Shadow(remap = false)
-    public abstract double getAttackRange();
+    public abstract double getEntityReach();
 
     /**
      * @param entity
@@ -22,14 +22,14 @@ public interface PlayerInteractDistScaling
      * @return
      */
     @Overwrite(remap = false)
-    default boolean canHit(Entity entity, double padding)
+    default boolean canReach(Entity entity, double padding)
     {
         final BossCapability cap = entity.getCapability(BossCapability.BOSS_CAP).orElse(null);
 
         if (cap != null && cap.isBoss())
         {
-            return isCloseEnough(entity, getAttackRange() * cap.getBossType().getVisualScale() + padding);
+            return isCloseEnough(entity, getEntityReach() * cap.getBossType().getVisualScale() + padding);
         }
-        return isCloseEnough(entity, getAttackRange() + padding);
+        return isCloseEnough(entity, getEntityReach() + padding);
     }
 }

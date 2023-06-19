@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.LlamaSpit;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 
@@ -107,7 +106,7 @@ public class SpitCobwebGoal extends SimpleRangedAttackGoal
 
     private void trySpawnCobweb(final BlockPos blockPosition)
     {
-        if (mob.level.getBlockState(blockPosition).getMaterial() == Material.AIR)
+        if (mob.level.getBlockState(blockPosition).isAir())
         {
             mob.level.setBlock(blockPosition, Blocks.COBWEB.defaultBlockState(), 3);
         }
