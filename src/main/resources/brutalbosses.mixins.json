@@ -1,0 +1,28 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.brutalbosses.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "BasePressurePlateBlockMixin",
+    "BossCapMixin",
+    "LivingDeathMixin",
+    "LivingEntityDamageMixin",
+    "LockableLootTileEntityMixin",
+    "MeleeAttackGoalMixin",
+    "PlayerListMixin",
+    "ProjectileHitActionMixin",
+    "ServerPlayerGameModeMixin",
+    "SpawnerBlockListener"
+  ],
+  "client": [
+    "EntityNameRenderMixin",
+    "EntityRenderDataMixin",
+    "LivingRendererMixin",
+    "MinecraftMixin",
+    "PlayerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

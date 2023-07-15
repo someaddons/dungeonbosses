@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "brutalbosses",
+  "version": "${version}",
+
+  "name": "brutalbosses Mod",
+  "description": "",
+  "authors": [
+    ""
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+  "license": "ARR",
+  "icon": "assets/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.brutalbosses.BrutalBosses"
+    ],
+    "client": [
+      "com.brutalbosses.BrutalBossesClient"
+    ]
+  },
+  "mixins": [
+    "brutalbosses.mixins.json"
+  ],
+  "accessWidener": "brutalbosses.accessWidener",
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "minecraft": "1.19.x",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
