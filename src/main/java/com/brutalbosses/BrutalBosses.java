@@ -25,6 +25,7 @@ public class BrutalBosses implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        LOGGER.info("Brutal bosses initialized");
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new BossJsonListener());
         CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, commandSelection) ->
         {
