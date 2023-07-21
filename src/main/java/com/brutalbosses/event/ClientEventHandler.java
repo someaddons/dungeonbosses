@@ -60,7 +60,7 @@ public class ClientEventHandler
     @SubscribeEvent()
     public static void onPlayerTick(TickEvent.PlayerTickEvent event)
     {
-        if (!event.player.level.isClientSide() || event.player.level.getGameTime() % 5 != 0)
+        if (!event.player.level().isClientSide() || event.player.level().getGameTime() % 5 != 0)
         {
             return;
         }
@@ -76,7 +76,7 @@ public class ClientEventHandler
         {
             final Map.Entry<Entity, ClientBossUI> entry = iterator.next();
             entry.getValue().bossInfo.update((LivingEntity) entry.getKey(), entry.getValue().cap);
-            if (!entry.getKey().isAlive() || entry.getValue().timeOut < entry.getKey().level.getGameTime())
+            if (!entry.getKey().isAlive() || entry.getValue().timeOut < entry.getKey().level().getGameTime())
             {
                 Minecraft.getInstance().gui.getBossOverlay().events.remove(entry.getValue().bossInfo.getId());
                 iterator.remove();
@@ -85,7 +85,7 @@ public class ClientEventHandler
             {
                 if (event.player.hasLineOfSight(entry.getKey()))
                 {
-                    entry.getValue().timeOut = event.player.level.getGameTime() + 20 * 30;
+                    entry.getValue().timeOut = event.player.level().getGameTime() + 20 * 30;
                 }
             }
         }
@@ -115,7 +115,7 @@ public class ClientEventHandler
                 if (bossInfoMap.containsKey(target))
                 {
                     ClientBossUI ui = bossInfoMap.get(target);
-                    ui.timeOut = target.level.getGameTime() + 20 * 30;
+                    ui.timeOut = target.level().getGameTime() + 20 * 30;
                 }
                 else
                 {
@@ -135,7 +135,7 @@ public class ClientEventHandler
         private ClientBossUI(final ClientBossEvent bossEVent, final Entity boss, final BossCapability cap)
         {
             this.bossInfo = bossEVent;
-            this.timeOut = boss.level.getGameTime() + 20 * 30;
+            this.timeOut = boss.level().getGameTime() + 20 * 30;
             this.boss = boss;
             this.cap = cap;
         }

@@ -2,15 +2,15 @@ package com.brutalbosses;
 
 import com.brutalbosses.command.CommandSpawnBoss;
 import com.brutalbosses.compat.Compat;
-import com.brutalbosses.config.Configuration;
+import com.brutalbosses.config.CommonConfiguration;
 import com.brutalbosses.entity.BossTypeManager;
 import com.brutalbosses.event.ClientEventHandler;
 import com.brutalbosses.event.ClientRendererRegister;
 import com.brutalbosses.event.EventHandler;
 import com.brutalbosses.event.ModEventHandler;
 import com.brutalbosses.network.Network;
+import com.cupboard.config.CupboardConfig;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
@@ -20,8 +20,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -35,15 +33,14 @@ import static com.brutalbosses.BrutalBosses.MODID;
 @Mod(MODID)
 public class BrutalBosses
 {
-    public static final String        MODID  = "brutalbosses";
-    public static final Logger        LOGGER = LogManager.getLogger();
-    public static       Configuration config = new Configuration();
-    public static       Random        rand   = new Random();
+    public static final String                              MODID  = "brutalbosses";
+    public static final Logger                              LOGGER = LogManager.getLogger();
+    public static       CupboardConfig<CommonConfiguration> config = new CupboardConfig<>(MODID, new CommonConfiguration());
+    public static       Random                              rand   = new Random();
 
     public BrutalBosses()
     {
         ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> "", (c, b) -> true));
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, config.getCommonConfig().ForgeConfigSpecBuilder);
         Mod.EventBusSubscriber.Bus.MOD.bus().get().register(ModEventHandler.class);
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(EventHandler.class);
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().addListener(this::onCommandsRegister);

@@ -43,12 +43,12 @@ public class SummonMobsGoal extends Goal
     {
         this.mob = mob;
         this.params = (SummonParams) params;
-        PlayerTeam team = mob.level.getScoreboard().getPlayerTeam("bb:bossteam");
+        PlayerTeam team = mob.level().getScoreboard().getPlayerTeam("bb:bossteam");
         if (team == null)
         {
-            team = mob.level.getScoreboard().addPlayerTeam("bb:bossteam");
+            team = mob.level().getScoreboard().addPlayerTeam("bb:bossteam");
         }
-        mob.level.getScoreboard().addPlayerToTeam(mob.getScoreboardName(), team);
+        mob.level().getScoreboard().addPlayerToTeam(mob.getScoreboardName(), team);
     }
 
     public boolean canUse()
@@ -134,7 +134,7 @@ public class SummonMobsGoal extends Goal
 
         try
         {
-            summoned = (LivingEntity) entityType.create(mob.level);
+            summoned = (LivingEntity) entityType.create(mob.level());
             if (params.entityNBTData.containsKey(ForgeRegistries.ENTITY_TYPES.getKey(entityType)))
             {
                 final CompoundTag nbt = params.entityNBTData.get(ForgeRegistries.ENTITY_TYPES.getKey(entityType));
@@ -172,13 +172,13 @@ public class SummonMobsGoal extends Goal
             return;
         }
 
-        final BlockPos spawnPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) mob.level, summoned, mob.blockPosition());
+        final BlockPos spawnPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) mob.level(), summoned, mob.blockPosition());
 
         if (spawnPos == null)
         {
             return;
         }
-        ((ServerLevel) mob.level).sendParticles(ParticleTypes.CLOUD,
+        ((ServerLevel) mob.level()).sendParticles(ParticleTypes.CLOUD,
           spawnPos.getX(),
           spawnPos.getY() + 1,
           spawnPos.getZ(),
@@ -190,18 +190,18 @@ public class SummonMobsGoal extends Goal
 
         if (summoned instanceof Mob)
         {
-            PlayerTeam team = mob.level.getScoreboard().getPlayerTeam("bb:bossteam");
+            PlayerTeam team = mob.level().getScoreboard().getPlayerTeam("bb:bossteam");
             if (team == null)
             {
-                team = mob.level.getScoreboard().addPlayerTeam("bb:bossteam");
+                team = mob.level().getScoreboard().addPlayerTeam("bb:bossteam");
             }
-            mob.level.getScoreboard().addPlayerToTeam(summoned.getScoreboardName(), team);
+            mob.level().getScoreboard().addPlayerToTeam(summoned.getScoreboardName(), team);
 
             ((Mob) summoned).setTarget(target);
         }
 
         summoned.setPos(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
-        mob.level.addFreshEntity(summoned);
+        mob.level().addFreshEntity(summoned);
         summonedMobs.add(summoned);
     }
 

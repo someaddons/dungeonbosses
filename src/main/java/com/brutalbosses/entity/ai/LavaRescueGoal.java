@@ -48,13 +48,13 @@ public class LavaRescueGoal extends Goal
                 }
                 else
                 {
-                    tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) entity.level, entity, entity.blockPosition());
+                    tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) entity.level(), entity, entity.blockPosition());
                     if (tpPos == null)
                     {
                         final BossCapability cap = entity.getCapability(BossCapability.BOSS_CAP).orElse(null);
                         if (cap != null)
                         {
-                            tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) entity.level, entity, cap.getSpawnPos());
+                            tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) entity.level(), entity, cap.getSpawnPos());
                         }
                     }
                 }

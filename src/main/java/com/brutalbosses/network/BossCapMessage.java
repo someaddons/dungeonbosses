@@ -54,7 +54,7 @@ public class BossCapMessage implements IMessage
         {
             Minecraft.getInstance().execute(() ->
             {
-                final Entity entity = Minecraft.getInstance().player.level.getEntity(entityID);
+                final Entity entity = Minecraft.getInstance().player.level().getEntity(entityID);
                 if (entity != null)
                 {
                     entity.getCapability(BossCapability.BOSS_CAP).orElse(null).deserializeNBT(nbt);

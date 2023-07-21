@@ -26,7 +26,7 @@ public class WitherSkullAttackGoal extends SimpleRangedAttackGoal
     @Override
     protected Projectile createProjectile()
     {
-        WitherSkull witherskullentity = new WitherSkull(mob.level, mob, 0, 0, 0);
+        WitherSkull witherskullentity = new WitherSkull(mob.level(), mob, 0, 0, 0);
         return witherskullentity;
     }
 
@@ -40,7 +40,7 @@ public class WitherSkullAttackGoal extends SimpleRangedAttackGoal
         double zDiff = target.getZ() - Projectile.getZ();
 
 
-        final WitherSkull witherskullentity = new WitherSkull(mob.level, mob, xDiff, yDiff, zDiff);
+        final WitherSkull witherskullentity = new WitherSkull(mob.level(), mob, xDiff, yDiff, zDiff);
         witherskullentity.xPower *= params.speed;
         witherskullentity.yPower *= params.speed;
         witherskullentity.zPower *= params.speed;
@@ -50,7 +50,7 @@ public class WitherSkullAttackGoal extends SimpleRangedAttackGoal
             witherskullentity.setDangerous(true);
         }
         witherskullentity.setPos(Projectile.getX(), Projectile.getY(), Projectile.getZ());
-        mob.level.addFreshEntity(witherskullentity);
+        mob.level().addFreshEntity(witherskullentity);
     }
 
     public static class WitherSkullParams extends RangedParams

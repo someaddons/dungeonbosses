@@ -49,7 +49,7 @@ public class SpitCobwebGoal extends SimpleRangedAttackGoal
     @Override
     protected Projectile createProjectile()
     {
-        final LlamaSpit spitEntity = EntityType.LLAMA_SPIT.create(mob.level);
+        final LlamaSpit spitEntity = EntityType.LLAMA_SPIT.create(mob.level());
         return spitEntity;
     }
 
@@ -66,14 +66,14 @@ public class SpitCobwebGoal extends SimpleRangedAttackGoal
         projectile = createProjectile();
         projectile.setNoGravity(true);
         positionProjectile(projectile, 1);
-        mob.level.addFreshEntity(projectile);
+        mob.level().addFreshEntity(projectile);
 
         double xDiff = target.getX() - mob.getX();
         double yDiff = target.getY(0.3333333333333333D) - projectile.getY();
         double zDiff = target.getZ() - mob.getZ();
         float f = (float) (Math.sqrt(xDiff * xDiff + zDiff * zDiff) * 0.2F);
         projectile.shoot(xDiff, yDiff + (double) f, zDiff, 0.9F * params.speed, 10.0F);
-        mob.level.playSound((Player) null,
+        mob.level().playSound((Player) null,
           mob.getX(),
           mob.getY(),
           mob.getZ(),
@@ -84,7 +84,7 @@ public class SpitCobwebGoal extends SimpleRangedAttackGoal
 
         if (projectile instanceof IOnProjectileHit)
         {
-            ((IOnProjectileHit) projectile).setMaxLifeTime(mob.level.getGameTime() + 20 * 20);
+            ((IOnProjectileHit) projectile).setMaxLifeTime(mob.level().getGameTime() + 20 * 20);
             ((IOnProjectileHit) projectile).setOnHitAction(rayTraceResult ->
             {
                 if (rayTraceResult instanceof EntityHitResult)
@@ -106,9 +106,9 @@ public class SpitCobwebGoal extends SimpleRangedAttackGoal
 
     private void trySpawnCobweb(final BlockPos blockPosition)
     {
-        if (mob.level.getBlockState(blockPosition).isAir())
+        if (mob.level().getBlockState(blockPosition).isAir())
         {
-            mob.level.setBlock(blockPosition, Blocks.COBWEB.defaultBlockState(), 3);
+            mob.level().setBlock(blockPosition, Blocks.COBWEB.defaultBlockState(), 3);
         }
     }
 }

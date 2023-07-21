@@ -33,7 +33,7 @@ public class SmallFireballAttackGoal extends SimpleRangedAttackGoal
 
         float distVariance = (float) (Math.sqrt(Math.sqrt(this.mob.distanceToSqr(this.target.getX(), this.target.getY(), this.target.getZ()))) * 0.5F);
 
-        final SmallFireball fireballEntity = new SmallFireball(mob.level,
+        final SmallFireball fireballEntity = new SmallFireball(mob.level(),
           mob,
           xDiff + mob.getRandom().nextGaussian() * (double) distVariance,
           yDiff,
@@ -45,19 +45,19 @@ public class SmallFireballAttackGoal extends SimpleRangedAttackGoal
 
         fireballEntity.setPos(mob.getX(), mob.getY() + mob.getEyeHeight() - 0.5, mob.getZ());
         fireballEntity.setOwner(mob);
-        ((IOnProjectileHit) fireballEntity).setMaxLifeTime(mob.level.getGameTime() + 20 * 20);
-        mob.level.addFreshEntity(fireballEntity);
+        ((IOnProjectileHit) fireballEntity).setMaxLifeTime(mob.level().getGameTime() + 20 * 20);
+        mob.level().addFreshEntity(fireballEntity);
     }
 
     @Override
     protected Projectile createProjectile()
     {
-        final SmallFireball fireballEntity = new SmallFireball(mob.level,
+        final SmallFireball fireballEntity = new SmallFireball(mob.level(),
           mob,
           0,
           0,
           0);
-        ((IOnProjectileHit) fireballEntity).setMaxLifeTime(mob.level.getGameTime() + 20 * 40);
+        ((IOnProjectileHit) fireballEntity).setMaxLifeTime(mob.level().getGameTime() + 20 * 40);
         return fireballEntity;
     }
 }

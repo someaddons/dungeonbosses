@@ -148,7 +148,7 @@ public abstract class SimpleRangedAttackGoal extends Goal
 
                 if (params.count > 1)
                 {
-                    mob.level.playSound(null,
+                    mob.level().playSound(null,
                       mob.getX(),
                       mob.getY(),
                       mob.getZ(),
@@ -181,7 +181,7 @@ public abstract class SimpleRangedAttackGoal extends Goal
 
             if (params.count > 1 && projectileEntities.size() % 2 == 0)
             {
-                final Player closest = mob.level.getNearestPlayer(mob, params.distance);
+                final Player closest = mob.level().getNearestPlayer(mob, params.distance);
                 if (closest != null)
                 {
                     target = closest;
@@ -194,7 +194,7 @@ public abstract class SimpleRangedAttackGoal extends Goal
             {
                 Projectile.remove(Entity.RemovalReason.DISCARDED);
                 List<Player> players =
-                  mob.level.getNearbyEntities(Player.class, playerAoeFinder, mob, mob.getBoundingBox().inflate(params.distance, 15, params.distance));
+                  mob.level().getNearbyEntities(Player.class, playerAoeFinder, mob, mob.getBoundingBox().inflate(params.distance, 15, params.distance));
                 boolean containedTarget = false;
 
                 for (final Player Player : players)
@@ -265,10 +265,10 @@ public abstract class SimpleRangedAttackGoal extends Goal
         Projectile.setOwner(mob);
         if (Projectile instanceof IOnProjectileHit)
         {
-            ((IOnProjectileHit) Projectile).setMaxLifeTime(mob.level.getGameTime() + 20 * 60);
+            ((IOnProjectileHit) Projectile).setMaxLifeTime(mob.level().getGameTime() + 20 * 60);
         }
 
-        mob.level.addFreshEntity(Projectile);
+        mob.level().addFreshEntity(Projectile);
         return Projectile;
     }
 

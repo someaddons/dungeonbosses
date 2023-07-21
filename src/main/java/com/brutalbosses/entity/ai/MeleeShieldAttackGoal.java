@@ -47,7 +47,7 @@ public class MeleeShieldAttackGoal extends Goal
 
     public boolean canUse()
     {
-        long timeDiff = this.mob.level.getGameTime();
+        long timeDiff = this.mob.level().getGameTime();
         if (timeDiff - this.lastCanUseCheck < 20L)
         {
             return false;

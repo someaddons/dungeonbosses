@@ -123,7 +123,7 @@ public class EventHandler
             if (cap != null && cap.isBoss())
             {
                 event.setAmount((float) ((event.getAmount() + cap.getBossType().getCustomAttributeValueOrDefault(CustomAttributes.PROJECTILE_DAMAGE, 0))
-                                           * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier.get()));
+                                           * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier));
             }
         }
     }
@@ -131,12 +131,12 @@ public class EventHandler
     @SubscribeEvent
     public static void playerClickBlockEvent(final PlayerInteractEvent.RightClickBlock event)
     {
-        if (!BrutalBosses.config.getCommonConfig().printChestLoottable.get() || event.getLevel().isClientSide())
+        if (!BrutalBosses.config.getCommonConfig().printChestLoottable || event.getLevel().isClientSide())
         {
             return;
         }
 
-        final BlockEntity te = event.getEntity().level.getBlockEntity(event.getPos());
+        final BlockEntity te = event.getEntity().level().getBlockEntity(event.getPos());
         if (te instanceof RandomizableContainerBlockEntity && ((RandomizableContainerBlockEntity) te).lootTable != null)
         {
             event.getEntity()
@@ -149,7 +149,7 @@ public class EventHandler
     @SubscribeEvent
     public static void onBossDeath(final LivingDeathEvent event)
     {
-        if (!event.getEntity().level.isClientSide() && event.getSource().getEntity() instanceof ServerPlayer)
+        if (!event.getEntity().level().isClientSide() && event.getSource().getEntity() instanceof ServerPlayer)
         {
             final BossCapability cap = event.getEntity().getCapability(BossCapability.BOSS_CAP).orElse(null);
             if (cap != null && cap.isBoss())
@@ -159,7 +159,7 @@ public class EventHandler
                 {
                     int orbValue = ExperienceOrb.getExperienceValue(exp);
                     exp -= orbValue;
-                    event.getEntity().level.addFreshEntity(new ExperienceOrb(event.getEntity().level,
+                    event.getEntity().level().addFreshEntity(new ExperienceOrb(event.getEntity().level(),
                       event.getEntity().getX(),
                       event.getEntity().getY(),
                       event.getEntity().getZ(),
@@ -171,19 +171,19 @@ public class EventHandler
                 for (int i = 0; i < gearDropCount; i++)
                 {
                     final ItemEntity itementity =
-                      new ItemEntity(event.getEntity().level, event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(),
+                      new ItemEntity(event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(),
                         event.getEntity().getItemBySlot(EquipmentSlot.values()[i]));
-                    event.getEntity().level.addFreshEntity(itementity);
+                    event.getEntity().level().addFreshEntity(itementity);
                 }
 
                 if (cap.getLootTable() != null)
                 {
-                    final LootParams params = new LootParams.Builder((ServerLevel) event.getEntity().level)
+                    final LootParams params = new LootParams.Builder((ServerLevel) event.getEntity().level())
                       .withParameter(LootContextParams.ORIGIN, event.getEntity().position())
                       .withParameter(LootContextParams.THIS_ENTITY, event.getSource().getEntity())
                       .withLuck(((ServerPlayer) event.getSource().getEntity()).getLuck()).create(LootContextParamSets.CHEST);
 
-                    final LootTable loottable = event.getEntity().level.getServer().getLootData().getLootTable(cap.getLootTable());
+                    final LootTable loottable = event.getEntity().level().getServer().getLootData().getLootTable(cap.getLootTable());
                     final List<ItemStack> list = loottable.getRandomItems(params);
 
                     if (list.isEmpty())
@@ -194,9 +194,9 @@ public class EventHandler
                     for (int i = 0; i < cap.getBossType().getItemLootCount(); i++)
                     {
                         final ItemEntity itementity =
-                          new ItemEntity(event.getEntity().level, event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), list.get(
+                          new ItemEntity(event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), list.get(
                             BrutalBosses.rand.nextInt(list.size())));
-                        event.getEntity().level.addFreshEntity(itementity);
+                        event.getEntity().level().addFreshEntity(itementity);
                     }
                 }
             }
@@ -207,12 +207,12 @@ public class EventHandler
     public static void attachCapabilities(final AttachCapabilitiesEvent<Entity> evt)
     {
         final Entity entity = evt.getObject();
-        if (entity == null || entity.level == null)
+        if (entity == null || entity.level() == null)
         {
             return;
         }
 
-        if (entity.level.isClientSide || BossTypeManager.instance.isValidBossEntity(entity))
+        if (entity.level().isClientSide || BossTypeManager.instance.isValidBossEntity(entity))
         {
             evt.addCapability(BossCapability.ID, new BossCapability(entity));
         }

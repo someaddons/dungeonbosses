@@ -127,7 +127,7 @@ public class BossCapability implements ICapabilitySerializable<Tag>
         }
         else
         {
-            if (!entity.level.isClientSide())
+            if (!entity.level().isClientSide())
             {
                 bossEntry.initForEntity((LivingEntity) entity);
             }

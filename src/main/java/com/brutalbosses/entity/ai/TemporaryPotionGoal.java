@@ -88,16 +88,16 @@ public class TemporaryPotionGoal extends Goal
 
         if (params.item != null)
         {
-            final ThrownItemEntity item = ModEntities.THROWN_ITEMC.create(mob.level);
+            final ThrownItemEntity item = ModEntities.THROWN_ITEMC.create(mob.level());
             item.setPos(mob.getX(), mob.getY(), mob.getZ());
-            mob.level.addFreshEntity(item);
+            mob.level().addFreshEntity(item);
             item.startRiding(mob, true);
-            ((IOnProjectileHit) item).setMaxLifeTime(mob.level.getGameTime() + params.duration);
+            ((IOnProjectileHit) item).setMaxLifeTime(mob.level().getGameTime() + params.duration);
             item.setItem(params.item);
             item.setScale(params.visibleitemsize);
         }
 
-        mob.level.playSound(null,
+        mob.level().playSound(null,
           mob.getX(),
           mob.getY(),
           mob.getZ(),
@@ -108,9 +108,9 @@ public class TemporaryPotionGoal extends Goal
 
         double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
         double d1 = (double) Mth.cos(mob.getYRot() * ((float) Math.PI / 180));
-        if (mob.level instanceof ServerLevel)
+        if (mob.level() instanceof ServerLevel)
         {
-            ((ServerLevel) mob.level).sendParticles(ParticleTypes.CLOUD,
+            ((ServerLevel) mob.level()).sendParticles(ParticleTypes.CLOUD,
               mob.getX() + d0,
               mob.getY(0.5D),
               mob.getZ() + d1,

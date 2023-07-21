@@ -47,7 +47,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
         double yDiff = target.getY(0.5D) - (mob.getY() + mob.getEyeHeight() - 0.5);
         double zDiff = target.getZ() - mob.getZ();
 
-        final ThrownItemEntity pearlEntity = new ThrownItemEntity(mob.level, mob);
+        final ThrownItemEntity pearlEntity = new ThrownItemEntity(mob.level(), mob);
         pearlEntity.setPos(mob.getX(), mob.getY() + mob.getEyeHeight() - 0.5, mob.getZ());
         pearlEntity.shoot(xDiff, yDiff, zDiff, 0.8F * params.speed, 3.0F);
 
@@ -55,7 +55,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
         pearlEntity.setNoGravity(true);
         if (pearlEntity instanceof IOnProjectileHit)
         {
-            ((IOnProjectileHit) pearlEntity).setMaxLifeTime(mob.level.getGameTime() + 20 * 20);
+            ((IOnProjectileHit) pearlEntity).setMaxLifeTime(mob.level().getGameTime() + 20 * 20);
             ((IOnProjectileHit) pearlEntity).setOnHitAction(rayTraceResult ->
             {
                 if (!mob.isAlive())
@@ -75,21 +75,21 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
 
                         if (((ItemThrowParams) params).lighting)
                         {
-                            LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(hitEntity.level);
+                            LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(hitEntity.level());
                             lightningboltentity.moveTo(hitEntity.getX(), hitEntity.getY(), hitEntity.getZ());
                             lightningboltentity.setVisualOnly(false);
-                            mob.level.addFreshEntity(lightningboltentity);
+                            mob.level().addFreshEntity(lightningboltentity);
                         }
 
                         if (((ItemThrowParams) params).explode)
                         {
-                            hitEntity.level.explode(null,
+                            hitEntity.level().explode(null,
                               mob.damageSources().indirectMagic((LivingEntity) hitEntity, mob),
                               null,
                               hitEntity.getX(),
                               hitEntity.getY(),
                               hitEntity.getZ(),
-                              (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier.get()) * pearlEntity.getScale(),
+                              (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier) * pearlEntity.getScale(),
                               false,
                               Level.ExplosionInteraction.MOB);
                         }
@@ -98,9 +98,9 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                         {
                             double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
                             double d1 = (double) Mth.cos(mob.getYRot() * ((float) Math.PI / 180));
-                            if (mob.level instanceof ServerLevel)
+                            if (mob.level() instanceof ServerLevel)
                             {
-                                ((ServerLevel) mob.level).sendParticles(ParticleTypes.PORTAL,
+                                ((ServerLevel) mob.level()).sendParticles(ParticleTypes.PORTAL,
                                   mob.getX() + d0,
                                   mob.getY(0.5D),
                                   mob.getZ() + d1,
@@ -111,7 +111,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                                   0.0D);
                             }
 
-                            mob.level.playSound((Player) null, mob.xo, mob.yo, mob.zo, SoundEvents.ENDERMAN_TELEPORT, mob.getSoundSource(), 1.0F, 1.0F);
+                            mob.level().playSound((Player) null, mob.xo, mob.yo, mob.zo, SoundEvents.ENDERMAN_TELEPORT, mob.getSoundSource(), 1.0F, 1.0F);
                             mob.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
 
                             mob.teleportTo(pearlEntity.getX(), hitEntity.getY(), pearlEntity.getZ());
@@ -123,35 +123,35 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                     final BlockPos hitPos = ((BlockHitResult) rayTraceResult).getBlockPos();
                     if (((ItemThrowParams) params).lighting)
                     {
-                        LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(mob.level);
+                        LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(mob.level());
                         lightningboltentity.moveTo(hitPos.getX(), hitPos.getY(), hitPos.getZ());
                         lightningboltentity.setVisualOnly(false);
-                        mob.level.addFreshEntity(lightningboltentity);
+                        mob.level().addFreshEntity(lightningboltentity);
                     }
 
                     if (((ItemThrowParams) params).explode)
                     {
-                        mob.level.explode(null,
+                        mob.level().explode(null,
                           mob.damageSources().indirectMagic(mob, mob),
                           null,
                           hitPos.getX(),
                           hitPos.getY(),
                           hitPos.getZ(),
-                          (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier.get()),
+                          (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier),
                           false,
                           Level.ExplosionInteraction.MOB);
                     }
 
                     if (((ItemThrowParams) params).teleport)
                     {
-                        final BlockPos tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevelAccessor) mob.level, mob, hitPos);
+                        final BlockPos tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevelAccessor) mob.level(), mob, hitPos);
                         if (tpPos != null)
                         {
                             double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
                             double d1 = (double) Mth.cos(mob.getYRot() * ((float) Math.PI / 180));
-                            if (mob.level instanceof ServerLevel)
+                            if (mob.level() instanceof ServerLevel)
                             {
-                                ((ServerLevel) mob.level).sendParticles(ParticleTypes.PORTAL,
+                                ((ServerLevel) mob.level()).sendParticles(ParticleTypes.PORTAL,
                                   mob.getX() + d0,
                                   mob.getY(0.5D),
                                   mob.getZ() + d1,
@@ -162,7 +162,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                                   0.0D);
                             }
 
-                            mob.level.playSound((Player) null, mob.xo, mob.yo, mob.zo, SoundEvents.ENDERMAN_TELEPORT, mob.getSoundSource(), 1.0F, 1.0F);
+                            mob.level().playSound((Player) null, mob.xo, mob.yo, mob.zo, SoundEvents.ENDERMAN_TELEPORT, mob.getSoundSource(), 1.0F, 1.0F);
                             mob.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
 
                             mob.teleportTo(tpPos.getX(), tpPos.getY(), tpPos.getZ());
@@ -172,13 +172,13 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
             });
         }
 
-        mob.level.addFreshEntity(pearlEntity);
+        mob.level().addFreshEntity(pearlEntity);
     }
 
     @Override
     protected Projectile createProjectile()
     {
-        final ThrownItemEntity pearlEntity = new ThrownItemEntity(mob.level, mob);
+        final ThrownItemEntity pearlEntity = new ThrownItemEntity(mob.level(), mob);
         pearlEntity.setItem(((ItemThrowParams) params).item);
         pearlEntity.setScale(((ItemThrowParams) params).projectilesize);
         return pearlEntity;

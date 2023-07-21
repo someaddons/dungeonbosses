@@ -3,7 +3,6 @@ package com.brutalbosses.entity.ai;
 import com.brutalbosses.entity.IOnProjectileHit;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -38,8 +37,8 @@ public class SnowballAttackGoal extends SimpleRangedAttackGoal
     @Override
     protected Projectile createProjectile()
     {
-        Snowball snowballentity = new Snowball(mob.level, mob);
-        ((IOnProjectileHit) snowballentity).setMaxLifeTime(mob.level.getGameTime() + 20 * 40);
+        Snowball snowballentity = new Snowball(mob.level(), mob);
+        ((IOnProjectileHit) snowballentity).setMaxLifeTime(mob.level().getGameTime() + 20 * 40);
         return snowballentity;
     }
 
@@ -63,7 +62,7 @@ public class SnowballAttackGoal extends SimpleRangedAttackGoal
 
         if (snowballentity instanceof IOnProjectileHit)
         {
-            ((IOnProjectileHit) snowballentity).setMaxLifeTime(mob.level.getGameTime() + 20 * 20);
+            ((IOnProjectileHit) snowballentity).setMaxLifeTime(mob.level().getGameTime() + 20 * 20);
             ((IOnProjectileHit) snowballentity).setOnHitAction(rayTraceResult ->
             {
                 if (rayTraceResult instanceof EntityHitResult)
