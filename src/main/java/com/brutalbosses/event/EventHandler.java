@@ -123,7 +123,7 @@ public class EventHandler
             if (cap != null && cap.isBoss())
             {
                 event.setAmount((float) ((event.getAmount() + cap.getBossType().getCustomAttributeValueOrDefault(CustomAttributes.PROJECTILE_DAMAGE, 0))
-                                           * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier.get()));
+                                           * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier));
             }
         }
     }
@@ -131,7 +131,7 @@ public class EventHandler
     @SubscribeEvent
     public static void playerClickBlockEvent(final PlayerInteractEvent.RightClickBlock event)
     {
-        if (!BrutalBosses.config.getCommonConfig().printChestLoottable.get() || event.getLevel().isClientSide())
+        if (!BrutalBosses.config.getCommonConfig().printChestLoottable || event.getLevel().isClientSide())
         {
             return;
         }
