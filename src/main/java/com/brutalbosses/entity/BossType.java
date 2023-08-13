@@ -161,7 +161,7 @@ public class BossType {
         for (Map.Entry<Attribute, Float> attributeEntry : attributes.entrySet()) {
             if (boss.getAttributes().hasAttribute(attributeEntry.getKey())) {
                 if (attributeEntry.getKey() == Attributes.MAX_HEALTH || attributeEntry.getKey() == Attributes.ATTACK_DAMAGE) {
-                    boss.getAttribute(attributeEntry.getKey()).setBaseValue(attributeEntry.getValue() * BrutalBosses.getConfig().getCommonConfig().globalDifficultyMultiplier);
+                    boss.getAttribute(attributeEntry.getKey()).setBaseValue(attributeEntry.getValue() * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier);
                 } else {
                     boss.getAttribute(attributeEntry.getKey()).setBaseValue(attributeEntry.getValue());
                 }

@@ -1,23 +1,27 @@
 package com.brutalbosses.config;
 
 import com.brutalbosses.BrutalBosses;
+import com.cupboard.config.ICommonConfig;
 import com.google.gson.JsonObject;
 
-public class CommonConfiguration {
+public class CommonConfiguration implements ICommonConfig
+{
+    public boolean printChestLoottable        = false;
+    public double  globalDifficultyMultiplier = 1.0;
+    public int     globalBossSpawnChance      = 30;
+    public int     minDistance                = 100;
 
-    public boolean printChestLoottable = false;
-    public double globalDifficultyMultiplier = 1.0;
-    public int globalBossSpawnChance = 30;
-    public int minDistance = 100;
-
-    protected CommonConfiguration() {
+    public CommonConfiguration()
+    {
     }
 
-    public JsonObject serialize() {
+    public JsonObject serialize()
+    {
         final JsonObject root = new JsonObject();
 
         final JsonObject entry = new JsonObject();
-        entry.addProperty("desc:", "Prints the chest loottable on opening and on spawn and logs the Loottables which do not have a boss assigned of structures to the latest.log. Useful to find the table used by a dungeon chest, only works if the chest is not opened yet: default:false");
+        entry.addProperty("desc:",
+          "Prints the chest loottable on opening and on spawn and logs the Loottables which do not have a boss assigned of structures to the latest.log. Useful to find the table used by a dungeon chest, only works if the chest is not opened yet: default:false");
         entry.addProperty("printChestLoottable", printChestLoottable);
         root.add("printChestLoottable", entry);
 
@@ -27,7 +31,8 @@ public class CommonConfiguration {
         root.add("globalDifficultyMultiplier", entry2);
 
         final JsonObject entry3 = new JsonObject();
-        entry3.addProperty("desc:", "Global boss spawn chance, determines the chance per treasure chest spawn at which a boss can appear in a structure. Chance X in 100, default = 30");
+        entry3.addProperty("desc:",
+          "Global boss spawn chance, determines the chance per treasure chest spawn at which a boss can appear in a structure. Chance X in 100, default = 30");
         entry3.addProperty("globalBossSpawnChance", globalBossSpawnChance);
         root.add("globalBossSpawnChance", entry3);
 
@@ -39,8 +44,10 @@ public class CommonConfiguration {
         return root;
     }
 
-    public void deserialize(JsonObject data) {
-        if (data == null) {
+    public void deserialize(JsonObject data)
+    {
+        if (data == null)
+        {
             BrutalBosses.LOGGER.error("Config file was empty!");
             return;
         }

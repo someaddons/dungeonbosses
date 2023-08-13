@@ -16,7 +16,6 @@
     "SpawnerBlockListener"
   ],
   "client": [
-    "EntityNameRenderMixin",
     "EntityRenderDataMixin",
     "LivingRendererMixin",
     "MinecraftMixin",

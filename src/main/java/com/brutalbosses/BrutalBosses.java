@@ -1,9 +1,10 @@
 package com.brutalbosses;
 
 import com.brutalbosses.command.CommandSpawnBoss;
-import com.brutalbosses.config.Configuration;
+import com.brutalbosses.config.CommonConfiguration;
 import com.brutalbosses.entity.BossJsonListener;
 import com.brutalbosses.entity.ModEntities;
+import com.cupboard.config.CupboardConfig;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -16,15 +17,17 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Random;
 
-public class BrutalBosses implements ModInitializer {
+public class BrutalBosses implements ModInitializer
+{
 
-    public static final String MOD_ID = "brutalbosses";
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    private static Configuration config = null;
-    public static Random rand = new Random();
+    public static final String                              MOD_ID = "brutalbosses";
+    public static final Logger                              LOGGER = LogManager.getLogger(MOD_ID);
+    public static       CupboardConfig<CommonConfiguration> config = new CupboardConfig<>(MOD_ID, new CommonConfiguration());
+    public static       Random                              rand   = new Random();
 
     @Override
-    public void onInitialize() {
+    public void onInitialize()
+    {
         LOGGER.info("Brutal bosses initialized");
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new BossJsonListener());
         CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, commandSelection) ->
@@ -36,16 +39,8 @@ public class BrutalBosses implements ModInitializer {
         ModEntities.init();
     }
 
-    public static Configuration getConfig() {
-        if (config == null) {
-            config = new Configuration();
-            config.load();
-        }
-
-        return config;
-    }
-
-    public static ResourceLocation id(String name) {
+    public static ResourceLocation id(String name)
+    {
         return new ResourceLocation(MOD_ID, name);
     }
 }

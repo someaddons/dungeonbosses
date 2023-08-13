@@ -76,7 +76,7 @@ public class EventHandler {
             }
         }
 
-        if (!BrutalBosses.getConfig().getCommonConfig().printChestLoottable || player.getLevel().isClientSide()) {
+        if (!BrutalBosses.config.getCommonConfig().printChestLoottable || player.getLevel().isClientSide()) {
             return;
         }
 
@@ -108,7 +108,7 @@ public class EventHandler {
             final BossCapability cap = ((BossCapEntity) damageSource.getEntity()).getBossCap();
             if (cap != null && cap.isBoss()) {
                 return (float) (f + (cap.getBossType().getCustomAttributeValueOrDefault(CustomAttributes.PROJECTILE_DAMAGE, 0)
-                        * BrutalBosses.getConfig().getCommonConfig().globalDifficultyMultiplier));
+                        * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier));
             }
         }
 

@@ -33,7 +33,7 @@ public class BossSpawnHandler
         List<BossType> possibleBosses = BossTypeManager.instance.lootTableSpawnEntries.get(chest.lootTable);
         if (possibleBosses != null && !possibleBosses.isEmpty())
         {
-            if (BrutalBosses.rand.nextInt(100) > BrutalBosses.getConfig().getCommonConfig().globalBossSpawnChance)
+            if (BrutalBosses.rand.nextInt(100) > BrutalBosses.config.getCommonConfig().globalBossSpawnChance)
             {
                 return;
             }
@@ -52,7 +52,7 @@ public class BossSpawnHandler
 
             spawnBoss(world, chest.getBlockPos(), bossType, chest);
         }
-        else if (BrutalBosses.getConfig().getCommonConfig().printChestLoottable)
+        else if (BrutalBosses.config.getCommonConfig().printChestLoottable)
         {
             BrutalBosses.LOGGER.info("Chest with Loottable: " + chest.lootTable + " not associated with any boss spawn");
         }
@@ -68,7 +68,7 @@ public class BossSpawnHandler
     {
         for (final Tuple<BlockPos, BossType> data : spawns)
         {
-            if (Math.sqrt(data.getA().distSqr(pos)) < BrutalBosses.getConfig().getCommonConfig().minDistance)
+            if (Math.sqrt(data.getA().distSqr(pos)) < BrutalBosses.config.getCommonConfig().minDistance)
             {
                 return true;
             }

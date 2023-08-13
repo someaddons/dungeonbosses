@@ -94,7 +94,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                               hitEntity.getX(),
                               hitEntity.getY(),
                               hitEntity.getZ(),
-                              (float) (1 * BrutalBosses.getConfig().getCommonConfig().globalDifficultyMultiplier) * pearlEntity.getScale(),
+                              (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier) * pearlEntity.getScale(),
                               false,
                               Explosion.BlockInteraction.BREAK);
                         }
@@ -142,7 +142,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
                           hitPos.getX(),
                           hitPos.getY(),
                           hitPos.getZ(),
-                          (float) (1 * BrutalBosses.getConfig().getCommonConfig().globalDifficultyMultiplier),
+                          (float) (1 * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier),
                           false,
                           Explosion.BlockInteraction.NONE);
                     }
