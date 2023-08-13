@@ -2,15 +2,14 @@ package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.BossSpawnHandler;
-import com.brutalbosses.entity.IEntityCapReader;
 import com.brutalbosses.entity.capability.BossCapEntity;
 import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
@@ -25,11 +24,7 @@ import net.minecraft.world.entity.monster.SpellcasterIllager;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.scores.PlayerTeam;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Simply chases the target at the required distance
@@ -48,12 +43,12 @@ public class SummonMobsGoal extends Goal
     {
         this.mob = mob;
         this.params = (SummonParams) params;
-        PlayerTeam team = mob.level.getScoreboard().getPlayerTeam("bb:bossteam");
+        PlayerTeam team = mob.level().getScoreboard().getPlayerTeam("bb:bossteam");
         if (team == null)
         {
-            team = mob.level.getScoreboard().addPlayerTeam("bb:bossteam");
+            team = mob.level().getScoreboard().addPlayerTeam("bb:bossteam");
         }
-        mob.level.getScoreboard().addPlayerToTeam(mob.getScoreboardName(), team);
+        mob.level().getScoreboard().addPlayerToTeam(mob.getScoreboardName(), team);
     }
 
     public boolean canUse()
@@ -139,20 +134,16 @@ public class SummonMobsGoal extends Goal
 
         try
         {
-            summoned = (LivingEntity) entityType.create(mob.level);
-            if (params.entityNBTData.containsKey(Registry.ENTITY_TYPE.getKey(entityType)))
+            summoned = (LivingEntity) entityType.create(mob.level());
+            if (params.entityNBTData.containsKey(BuiltInRegistries.ENTITY_TYPE.getKey(entityType)))
             {
-                final CompoundTag nbt = params.entityNBTData.get(Registry.ENTITY_TYPE.getKey(entityType));
+                final CompoundTag nbt = params.entityNBTData.get(BuiltInRegistries.ENTITY_TYPE.getKey(entityType));
                 if (nbt.contains("Pos"))
                 {
                     summoned.load(nbt);
                 }
                 else
                 {
-                    if (nbt.contains("ForgeCaps", 10) && summoned instanceof IEntityCapReader)
-                    {
-                        ((IEntityCapReader) summoned).readCapsFrom(nbt.getCompound("ForgeCaps"));
-                    }
                     summoned.readAdditionalSaveData(nbt);
                 }
                 summoned.setUUID(UUID.randomUUID());
@@ -173,17 +164,17 @@ public class SummonMobsGoal extends Goal
                 BrutalBosses.LOGGER.warn("Failed summoning add for boss:" + bossCapability.getBossType().getID(), e);
                 return;
             }
-            BrutalBosses.LOGGER.warn("Failed summoning addfor boss:", e);
+            BrutalBosses.LOGGER.warn("Failed summoning add for boss:", e);
             return;
         }
 
-        final BlockPos spawnPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) mob.level, summoned, mob.blockPosition());
+        final BlockPos spawnPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) mob.level(), summoned, mob.blockPosition());
 
         if (spawnPos == null)
         {
             return;
         }
-        ((ServerLevel) mob.level).sendParticles(ParticleTypes.CLOUD,
+        ((ServerLevel) mob.level()).sendParticles(ParticleTypes.CLOUD,
           spawnPos.getX(),
           spawnPos.getY() + 1,
           spawnPos.getZ(),
@@ -195,18 +186,18 @@ public class SummonMobsGoal extends Goal
 
         if (summoned instanceof Mob)
         {
-            PlayerTeam team = mob.level.getScoreboard().getPlayerTeam("bb:bossteam");
+            PlayerTeam team = mob.level().getScoreboard().getPlayerTeam("bb:bossteam");
             if (team == null)
             {
-                team = mob.level.getScoreboard().addPlayerTeam("bb:bossteam");
+                team = mob.level().getScoreboard().addPlayerTeam("bb:bossteam");
             }
-            mob.level.getScoreboard().addPlayerToTeam(summoned.getScoreboardName(), team);
+            mob.level().getScoreboard().addPlayerToTeam(summoned.getScoreboardName(), team);
 
             ((Mob) summoned).setTarget(target);
         }
 
         summoned.setPos(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
-        mob.level.addFreshEntity(summoned);
+        mob.level().addFreshEntity(summoned);
         summonedMobs.add(summoned);
     }
 
@@ -246,7 +237,7 @@ public class SummonMobsGoal extends Goal
                 for (JsonElement entityEntry : jsonElement.get(ENTITIES).getAsJsonArray())
                 {
                     final ResourceLocation entityID = new ResourceLocation(((JsonObject) entityEntry).get(ENTITY_ID).getAsString());
-                    types.add((EntityType<? extends LivingEntity>) Registry.ENTITY_TYPE.get(entityID));
+                    types.add((EntityType<? extends LivingEntity>) BuiltInRegistries.ENTITY_TYPE.get(entityID));
                     if (((JsonObject) entityEntry).has(SUMM_ENTITY_NBT))
                     {
                         try

@@ -11,7 +11,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.level.material.Material;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,8 +138,7 @@ public class BossSpawnHandler
         final BlockPos spawnPos = findAround(world, pos, 15, 10,
           (w, p) ->
           {
-              final Material materialBelow = w.getBlockState(p.below()).getMaterial();
-              if (!(materialBelow.isSolid() || materialBelow == Material.WATER))
+              if (w.getBlockState(p.below()).isAir())
               {
                   return false;
               }
@@ -151,8 +149,7 @@ public class BossSpawnHandler
                   {
                       for (int y = 0; y <= Mth.ceil(boss.getBbHeight()); y++)
                       {
-                          final Material material = w.getBlockState(p.offset(x, y, z)).getMaterial();
-                          if (!(material == Material.AIR || material == Material.WATER || material == Material.WATER_PLANT))
+                          if (!(w.getBlockState(p.offset(x, y, z)).isAir()))
                           {
                               return false;
                           }

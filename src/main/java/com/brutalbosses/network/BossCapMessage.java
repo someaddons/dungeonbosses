@@ -42,7 +42,7 @@ public class BossCapMessage implements IMessage {
 
     @Override
     public void handle(final ClientPacketListener handler, final Minecraft client) {
-        final Entity entity = client.player.level.getEntity(entityID);
+        final Entity entity = client.player.level().getEntity(entityID);
         if (entity instanceof BossCapEntity) {
             ((BossCapEntity) entity).setBossCap(new BossCapability(entity));
             ((BossCapEntity) entity).getBossCap().deserializeNBT(nbt);

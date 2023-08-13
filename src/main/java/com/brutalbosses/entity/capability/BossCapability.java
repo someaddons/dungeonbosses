@@ -87,9 +87,12 @@ public class BossCapability {
         if (bossEntry == null) {
             BrutalBosses.LOGGER.warn("Could not find boss for id:" + id);
         } else {
-            if (!entity.level.isClientSide()) {
+            if (!entity.level().isClientSide())
+            {
                 bossEntry.initForEntity((LivingEntity) entity);
-            } else {
+            }
+            else
+            {
                 bossEntry.initForClientEntity((LivingEntity) entity);
             }
 

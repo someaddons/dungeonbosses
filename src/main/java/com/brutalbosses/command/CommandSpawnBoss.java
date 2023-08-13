@@ -12,8 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Locale;
-
 /**
  * Print out total network stats
  */
@@ -55,7 +53,7 @@ public class CommandSpawnBoss implements Opcommand
 
             if (bossName.equals("random"))
             {
-                BossSpawnHandler.spawnRandomBoss(source.getLevel(), new BlockPos(source.getPosition()));
+                BossSpawnHandler.spawnRandomBoss(source.getLevel(), BlockPos.containing(source.getPosition()));
                 return 0;
             }
 
@@ -63,12 +61,12 @@ public class CommandSpawnBoss implements Opcommand
             {
                 for (final BossType type : BossTypeManager.instance.bosses.values())
                 {
-                    BossSpawnHandler.spawnBoss(source.getLevel(), new BlockPos(source.getPosition()), type, null);
+                    BossSpawnHandler.spawnBoss(source.getLevel(), BlockPos.containing(source.getPosition()), type, null);
                 }
                 return 0;
             }
 
-            final ResourceLocation bossID = new ResourceLocation("brutalbosses", bossName.toLowerCase(Locale.ROOT));
+            final ResourceLocation bossID = new ResourceLocation("brutalbosses", bossName);
             final BossType bossType = BossTypeManager.instance.bosses.get(bossID);
             if (bossType == null)
             {
@@ -76,7 +74,7 @@ public class CommandSpawnBoss implements Opcommand
                 return 0;
             }
 
-            BossSpawnHandler.spawnBoss(source.getLevel(), new BlockPos(source.getPosition()), bossType, null);
+            BossSpawnHandler.spawnBoss(source.getLevel(), BlockPos.containing(source.getPosition()), bossType, null);
         }
         catch (Error e)
         {

@@ -41,7 +41,7 @@ public abstract class ProjectileHitActionMixin extends Entity implements IOnProj
     @Inject(method = "tick", at = @At("HEAD"))
     public void onTick(final CallbackInfo ci)
     {
-        if (maxLifeTime != 0 && level.getGameTime() > maxLifeTime)
+        if (maxLifeTime != 0 && level().getGameTime() > maxLifeTime)
         {
             remove(RemovalReason.DISCARDED);
         }

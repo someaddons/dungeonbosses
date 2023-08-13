@@ -2,14 +2,13 @@ package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
 import com.google.gson.JsonObject;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -72,7 +71,7 @@ public class WhirlWind extends Goal
         if (distSqr < params.attackDistance * params.attackDistance && BrutalBosses.rand.nextInt(40) == 0)
         {
             attackTimer = params.cooldown;
-            List<LivingEntity> entities = new ArrayList<>(mob.level.getEntitiesOfClass(Player.class, mob.getBoundingBox().inflate(2.0D, 0.5D, 2.0D)));
+            List<LivingEntity> entities = new ArrayList<>(mob.level().getEntitiesOfClass(Player.class, mob.getBoundingBox().inflate(2.0D, 0.5D, 2.0D)));
             if (!entities.contains(target))
             {
                 entities.add(target);
@@ -100,7 +99,7 @@ public class WhirlWind extends Goal
                     {
                         damage += mob.getAttributeValue(Attributes.ATTACK_DAMAGE);
                     }
-                    livingentity.hurt(DamageSource.mobAttack(mob), damage);
+                    livingentity.hurt(mob.damageSources().mobAttack(mob), damage);
 
                     if (params.onHitMobEffect != null)
                     {
@@ -109,7 +108,7 @@ public class WhirlWind extends Goal
                 }
             }
 
-            mob.level.playSound(null,
+            mob.level().playSound(null,
               mob.getX(),
               mob.getY(),
               mob.getZ(),
@@ -120,9 +119,9 @@ public class WhirlWind extends Goal
 
             double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
             double d1 = (double) Mth.cos(mob.getYRot() * ((float) Math.PI / 180));
-            if (mob.level instanceof ServerLevel)
+            if (mob.level() instanceof ServerLevel)
             {
-                ((ServerLevel) mob.level).sendParticles(ParticleTypes.SWEEP_ATTACK,
+                ((ServerLevel) mob.level()).sendParticles(ParticleTypes.SWEEP_ATTACK,
                   mob.getX() + d0,
                   mob.getY(0.5D),
                   mob.getZ() + d1,
@@ -204,7 +203,7 @@ public class WhirlWind extends Goal
             if (jsonElement.has(POTION))
             {
                 final ResourceLocation MobEffectID = new ResourceLocation(jsonElement.get(POTION).getAsString());
-                onHitMobEffect = Registry.MOB_EFFECT.get(MobEffectID);
+                onHitMobEffect = BuiltInRegistries.MOB_EFFECT.get(MobEffectID);
             }
 
             return this;

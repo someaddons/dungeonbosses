@@ -55,7 +55,8 @@ public class ClientEventHandler {
     }
 
     public static void onPlayerTick(LocalPlayer player) {
-        if (!player.level.isClientSide() || player.level.getGameTime() % 5 != 0) {
+        if (!player.level().isClientSide() || player.level().getGameTime() % 5 != 0)
+        {
             return;
         }
 
@@ -69,12 +70,16 @@ public class ClientEventHandler {
         for (final Iterator<Map.Entry<Entity, ClientBossUI>> iterator = bossInfoMap.entrySet().iterator(); iterator.hasNext(); ) {
             final Map.Entry<Entity, ClientBossUI> entry = iterator.next();
             entry.getValue().bossInfo.update((LivingEntity) entry.getKey(), entry.getValue().cap);
-            if (!entry.getKey().isAlive() || entry.getValue().timeOut < entry.getKey().level.getGameTime()) {
+            if (!entry.getKey().isAlive() || entry.getValue().timeOut < entry.getKey().level().getGameTime())
+            {
                 Minecraft.getInstance().gui.getBossOverlay().events.remove(entry.getValue().bossInfo.getId());
                 iterator.remove();
-            } else {
-                if (player.hasLineOfSight(entry.getKey())) {
-                    entry.getValue().timeOut = player.level.getGameTime() + 20 * 30;
+            }
+            else
+            {
+                if (player.hasLineOfSight(entry.getKey()))
+                {
+                    entry.getValue().timeOut = player.level().getGameTime() + 20 * 30;
                 }
             }
         }
@@ -99,7 +104,7 @@ public class ClientEventHandler {
             if (cap != null && cap.isBoss() && cap.getBossType().showBossBar()) {
                 if (bossInfoMap.containsKey(target)) {
                     ClientBossUI ui = bossInfoMap.get(target);
-                    ui.timeOut = target.level.getGameTime() + 20 * 30;
+                    ui.timeOut = target.level().getGameTime() + 20 * 30;
                 } else {
                     bossInfoMap.put(target, createBossGUI((LivingEntity) target, cap));
                 }
@@ -116,7 +121,7 @@ public class ClientEventHandler {
 
         private ClientBossUI(final ClientBossEvent bossEVent, final Entity boss, final BossCapability cap) {
             this.bossInfo = bossEVent;
-            this.timeOut = boss.level.getGameTime() + 20 * 30;
+            this.timeOut = boss.level().getGameTime() + 20 * 30;
             this.boss = boss;
             this.cap = cap;
         }

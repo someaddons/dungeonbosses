@@ -81,7 +81,7 @@ public class ChargeGoal extends Goal
                 mob.setSpeed((float) mob.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
                 // Start dust particles
 
-                mob.level.playSound(null,
+                mob.level().playSound(null,
                   mob.getX(),
                   mob.getY(),
                   mob.getZ(),
@@ -92,9 +92,9 @@ public class ChargeGoal extends Goal
 
                 double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
                 double d1 = (double) Mth.cos(mob.getYRot() * ((float) Math.PI / 180));
-                if (mob.level instanceof ServerLevel)
+                if (mob.level() instanceof ServerLevel)
                 {
-                    ((ServerLevel) mob.level).sendParticles(ParticleTypes.CLOUD,
+                    ((ServerLevel) mob.level()).sendParticles(ParticleTypes.CLOUD,
                       mob.getX() + d0,
                       mob.getY(0.5D),
                       mob.getZ() + d1,
@@ -116,7 +116,7 @@ public class ChargeGoal extends Goal
             mob.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(speedMod);
             mob.setSpeed((float) mob.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
             // stop dust particles
-            mob.level.playSound(null,
+            mob.level().playSound(null,
               mob.getX(),
               mob.getY(),
               mob.getZ(),
@@ -127,9 +127,9 @@ public class ChargeGoal extends Goal
 
             double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
             double d1 = (double) Mth.cos(mob.getYRot() * ((float) Math.PI / 180));
-            if (mob.level instanceof ServerLevel)
+            if (mob.level() instanceof ServerLevel)
             {
-                ((ServerLevel) mob.level).sendParticles(ParticleTypes.CLOUD,
+                ((ServerLevel) mob.level()).sendParticles(ParticleTypes.CLOUD,
                   mob.getX() + d0,
                   mob.getY(0.5D),
                   mob.getZ() + d1,

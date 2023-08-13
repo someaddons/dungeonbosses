@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -111,7 +111,7 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener implement
                     return null;
                 }
 
-                entityTypeEntry = Registry.ENTITY_TYPE.get(entityType);
+                entityTypeEntry = BuiltInRegistries.ENTITY_TYPE.get(entityType);
                 if (entityTypeEntry == EntityType.PIG) {
                     BrutalBosses.LOGGER.error("Cannot find entity type for:" + entityType + " id in bossfile:" + entry.getKey());
                     return null;
@@ -161,7 +161,7 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener implement
 
                 for (final Map.Entry<String, JsonElement> MobEffectEntry : MobEffectData.getAsJsonObject().entrySet()) {
                     final ResourceLocation MobEffectID = new ResourceLocation(MobEffectEntry.getKey());
-                    final MobEffect MobEffect = Registry.MOB_EFFECT.get(MobEffectID);
+                    final MobEffect MobEffect = BuiltInRegistries.MOB_EFFECT.get(MobEffectID);
                     if (MobEffect == null) {
                         BrutalBosses.LOGGER.error("Bad MobEffect id:" + MobEffectID + " in:" + entry.getKey());
                         return null;
@@ -177,7 +177,7 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener implement
                 final JsonElement MobEffectData = data.get(STATS);
 
                 for (final Map.Entry<String, JsonElement> statsEntry : MobEffectData.getAsJsonObject().entrySet()) {
-                    final Attribute attribute = Registry.ATTRIBUTE.get(new ResourceLocation(statsEntry.getKey()));
+                    final Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(new ResourceLocation(statsEntry.getKey()));
                     if (attribute == null) {
                         BrutalBosses.LOGGER.error("Bad attribute id:" + new ResourceLocation(statsEntry.getKey()) + " in:" + entry.getKey());
                         continue;

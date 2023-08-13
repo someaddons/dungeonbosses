@@ -37,7 +37,7 @@ public class BossOverlayMessage implements IMessage {
 
     @Override
     public void handle(ClientPacketListener handler, Minecraft client) {
-        final Entity entity = client.player.level.getEntity(entityID);
+        final Entity entity = client.player.level().getEntity(entityID);
         if (entity != null) {
             ClientEventHandler.checkEntity(entity);
         }

@@ -2,11 +2,10 @@ package com.brutalbosses.entity.ai;
 
 import com.brutalbosses.BrutalBosses;
 import com.google.gson.JsonObject;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -76,7 +75,7 @@ public class MeleeHitGoal extends Goal
             }
             damage += EnchantmentHelper.getDamageBonus(mob.getMainHandItem(), target.getMobType());
 
-            if (target.hurt(DamageSource.mobAttack(mob), damage))
+            if (target.hurt(mob.damageSources().mobAttack(mob), damage))
             {
                 int fireAspect = EnchantmentHelper.getFireAspect(mob);
                 if (fireAspect > 0)
@@ -167,7 +166,7 @@ public class MeleeHitGoal extends Goal
             if (jsonElement.has(POTION))
             {
                 final ResourceLocation MobEffectID = new ResourceLocation(jsonElement.get(POTION).getAsString());
-                onHitMobEffect = Registry.MOB_EFFECT.get(MobEffectID);
+                onHitMobEffect = BuiltInRegistries.MOB_EFFECT.get(MobEffectID);
             }
             return this;
         }

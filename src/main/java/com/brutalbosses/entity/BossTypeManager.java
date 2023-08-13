@@ -2,12 +2,11 @@ package com.brutalbosses.entity;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.ai.*;
-import com.brutalbosses.entity.capability.BossCapability;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonObject;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
@@ -20,11 +19,8 @@ import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -169,8 +165,8 @@ public class BossTypeManager
 
         for (final BossType bossType : bosses.values())
         {
-            entityTypes.add(Registry.ENTITY_TYPE.getKey(bossType.getEntityType()));
-            BrutalBosses.LOGGER.info("Loaded boss variant for: " + Registry.ENTITY_TYPE.getKey(bossType.getEntityType()));
+            entityTypes.add(BuiltInRegistries.ENTITY_TYPE.getKey(bossType.getEntityType()));
+            BrutalBosses.LOGGER.info("Loaded boss variant for: " + BuiltInRegistries.ENTITY_TYPE.getKey(bossType.getEntityType()));
 
             for (final Map.Entry<ResourceLocation, Integer> spawnEntry : bossType.getSpawnTables().entrySet())
             {
@@ -203,7 +199,7 @@ public class BossTypeManager
      */
     public boolean isValidBossEntity(final Entity entity)
     {
-        return entityTypes.contains(Registry.ENTITY_TYPE.getKey(entity.getType()));
+        return entityTypes.contains(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()));
     }
 
     /**
