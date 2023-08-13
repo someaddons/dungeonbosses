@@ -143,7 +143,7 @@ public class BossSpawnHandler
         final BlockPos spawnPos = findAround(world, pos, 15, 10,
           (w, p) ->
           {
-              if (!w.getBlockState(p.below()).isSolid())
+              if (w.getBlockState(p.below()).isAir())
               {
                   return false;
               }
@@ -154,7 +154,7 @@ public class BossSpawnHandler
                   {
                       for (int y = 0; y <= Mth.ceil(boss.getBbHeight()); y++)
                       {
-                          if (!(w.getBlockState(p.offset(x, y, z)).isSolid()))
+                          if (!(w.getBlockState(p.offset(x, y, z)).isAir()))
                           {
                               return false;
                           }
