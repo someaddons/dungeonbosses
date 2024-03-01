@@ -14,17 +14,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 
@@ -149,7 +144,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
 
                     if (((ItemThrowParams) params).teleport)
                     {
-                        final BlockPos tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevelAccessor) mob.level, mob, hitPos);
+                        final BlockPos tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) mob.level, mob, hitPos);
                         if (tpPos != null)
                         {
                             double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));

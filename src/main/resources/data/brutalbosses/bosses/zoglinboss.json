@@ -30,7 +30,7 @@
   "spawnatchest": {
     "minecraft:chests/nether_bridge": 1,
     "minecraft:chests/bastion_hoglin_stable": 5,
-    "dungeons_enhanced:stables": 1,
+    "dungeons_enhanced:chests/stables": 1,
     "graveyard:chests/large_loot": 1,
     "bygonenether:chests/citadel": 2,
     "bygonenether:chests/fortress": 2,

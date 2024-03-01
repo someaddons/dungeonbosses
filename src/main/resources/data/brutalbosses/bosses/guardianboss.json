@@ -34,6 +34,8 @@
     "minecraft:chests/shipwreck_supply": 2,
     "minecraft:chests/shipwreck_treasure": 2,
     "philipsruins:chests/ocean_ruins_loot": 1,
+    "dungeons_enhanced:chests/elders_temple/elder_room": 1,
+    "dungeons_enhanced:chests/sunken_shrine": 1,
     "minecraft:chests/buried_treasure": 1
   }
 }
