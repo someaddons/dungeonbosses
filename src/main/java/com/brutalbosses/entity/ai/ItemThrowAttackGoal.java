@@ -19,7 +19,6 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 
@@ -144,7 +143,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
 
                     if (((ItemThrowParams) params).teleport)
                     {
-                        final BlockPos tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevelAccessor) mob.level(), mob, hitPos);
+                        final BlockPos tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) mob.level(), mob, hitPos);
                         if (tpPos != null)
                         {
                             double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
