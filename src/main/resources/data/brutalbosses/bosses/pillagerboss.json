@@ -31,7 +31,7 @@
     "minecraft:chests/pillager_outpost": 5,
     "minecraft:chests/simple_dungeon": 1,
     "goblinsanddungeons:chests/camp_loot_table": 1,
-    "dungeons_enhanced:pillager_camp_general": 1,
+    "dungeons_enhanced:chests/pillager_camp/general": 1,
     "dungeons_arise:chests/bandit_towers/bandit_towers_normal": 1,
     "dungeons_arise:chests/illager_campsite/illager_campsite_map": 1,
     "dungeons_arise:chests/illager_fort/illager_fort_normal": 1,
@@ -61,7 +61,7 @@
     "unstructured:chests/pillager_base": 5,
     "unstructured:chests/pillager_base_broken": 3,
     "wythers:chests/outpost/badlands_plateau_bandit_camp": 5,
-    "dungeons_enhanced:large_dungeon_treasury": 1,
+    "dungeons_enhanced:chests/large_dungeon": 1,
     "dungeons_plus:chests/vanilla_dungeon": 1,
     "dungeons_arise:chests/mines_treasure_big": 1,
     "illagers_plus:structure/illager_mine": 1

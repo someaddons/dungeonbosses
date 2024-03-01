@@ -34,7 +34,7 @@
     "minecraft:chests/woodland_mansion": 5,
     "minecraft:chests/pillager_outpost": 5,
     "minecraft:chests/jungle_temple": 5,
-    "dungeons_enhanced:castle_thron": 1,
+    "dungeons_enhanced:chests/castle/throne": 1,
     "dungeons_arise:chests/illager_fort/illager_fort_treasure": 1,
     "dungeons_arise:chests/jungle_tree_house/jungle_tree_house_treasure": 1,
     "dungeons_arise:chests/shiraz_palace/shiraz_palace_library": 1,
@@ -48,7 +48,7 @@
     "tlc:chests/throne": 1,
     "tlc:chests/treasure": 1,
     "unstructured:chests/evoker_tower": 1,
-    "dungeons_enhanced:large_dungeon_treasury": 1,
+    "dungeons_enhanced:chests/large_dungeon": 1,
     "dungeons_arise:chests/mines_treasure_big": 1,
     "dungeons_arise:chests/plague_asylum/plague_asylum_treasure": 1,
     "illagers_plus:structure/illager_mine": 1
