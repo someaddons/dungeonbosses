@@ -145,7 +145,7 @@ public class ItemThrowAttackGoal extends SimpleRangedAttackGoal
 
                     if (((ItemThrowParams) params).teleport)
                     {
-                        final BlockPos tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevelAccessor) mob.level, mob, hitPos);
+                        final BlockPos tpPos = BossSpawnHandler.findSpawnPosForBoss((ServerLevel) mob.level, mob, hitPos);
                         if (tpPos != null)
                         {
                             double d0 = (double) (-Mth.sin(mob.getYRot() * ((float) Math.PI / 180)));
