@@ -2,8 +2,10 @@ package com.brutalbosses.entity;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.compat.Compat;
+import com.cupboard.util.BlockSearch;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
@@ -30,7 +32,7 @@ public class BossSpawnHandler
      * @param world
      * @param chest
      */
-    public static void onChestPlaced(final ServerLevelAccessor world, final RandomizableContainerBlockEntity chest)
+    public static void onChestPlaced(final ServerLevel world, final RandomizableContainerBlockEntity chest)
     {
         List<BossType> possibleBosses = BossTypeManager.instance.lootTableSpawnEntries.get(chest.lootTable);
         if (possibleBosses != null && !possibleBosses.isEmpty())
@@ -84,7 +86,7 @@ public class BossSpawnHandler
      *
      * @param world
      */
-    public static void spawnBoss(final ServerLevelAccessor world, final BlockPos pos, final BossType bossType, @Nullable final RandomizableContainerBlockEntity chest)
+    public static void spawnBoss(final ServerLevel world, final BlockPos pos, final BossType bossType, @Nullable final RandomizableContainerBlockEntity chest)
     {
         try
         {
@@ -138,9 +140,9 @@ public class BossSpawnHandler
         }
     }
 
-    public static BlockPos findSpawnPosForBoss(final BlockGetter world, final Entity boss, final BlockPos pos)
+    public static BlockPos findSpawnPosForBoss(final ServerLevel world, final Entity boss, final BlockPos pos)
     {
-        final BlockPos spawnPos = findAround(world, pos, 15, 10,
+        final BlockPos spawnPos = BlockSearch.findAround(world, pos, 15, 10, 1,
           (w, p) ->
           {
               if (w.getBlockState(p.below()).isAir())
@@ -174,95 +176,10 @@ public class BossSpawnHandler
      * @param world
      * @param pos
      */
-    public static void spawnRandomBoss(final ServerLevelAccessor world, final BlockPos pos)
+    public static void spawnRandomBoss(final ServerLevel world, final BlockPos pos)
     {
         final List<BossType> list = new ArrayList<>(BossTypeManager.instance.bosses.values());
         final BossType bossType = list.get(BrutalBosses.rand.nextInt(list.size()));
         spawnBoss(world, pos, bossType, null);
-    }
-
-    /**
-     * Returns the first air position near the given start. Advances vertically first then horizontally
-     *
-     * @param start     start position
-     * @param vRange    vertical search range
-     * @param hRange    horizontal search range
-     * @param predicate check predicate for the right block
-     * @return position or null
-     */
-    public static BlockPos findAround(final BlockGetter world, final BlockPos start, final int vRange, final int hRange, final BiPredicate<BlockGetter, BlockPos> predicate)
-    {
-        if (vRange < 1 && hRange < 1)
-        {
-            return null;
-        }
-
-        BlockPos temp;
-        int y = 0;
-        int y_offset = 1;
-
-        for (int i = 0; i < hRange + 2; i++)
-        {
-            for (int steps = 1; steps <= vRange; steps++)
-            {
-                // Start topleft of middle point
-                temp = start.offset(-steps, y, -steps);
-
-                // X ->
-                for (int x = 0; x <= steps; x++)
-                {
-                    temp = temp.offset(1, 0, 0);
-                    if (predicate.test(world, temp))
-                    {
-                        return temp;
-                    }
-                }
-
-                // X
-                // |
-                // v
-                for (int z = 0; z <= steps; z++)
-                {
-                    temp = temp.offset(0, 0, 1);
-                    if (predicate.test(world, temp))
-                    {
-                        return temp;
-                    }
-                }
-
-                // < - X
-                for (int x = 0; x <= steps; x++)
-                {
-                    temp = temp.offset(-1, 0, 0);
-                    if (predicate.test(world, temp))
-                    {
-                        return temp;
-                    }
-                }
-
-                // ^
-                // |
-                // X
-                for (int z = 0; z <= steps; z++)
-                {
-                    temp = temp.offset(0, 0, -1);
-                    if (predicate.test(world, temp))
-                    {
-                        return temp;
-                    }
-                }
-            }
-
-            y += y_offset;
-            y_offset = y_offset > 0 ? y_offset + 1 : y_offset - 1;
-            y_offset *= -1;
-
-            if (world.getHeight() <= start.getY() + y)
-            {
-                return null;
-            }
-        }
-
-        return null;
     }
 }
