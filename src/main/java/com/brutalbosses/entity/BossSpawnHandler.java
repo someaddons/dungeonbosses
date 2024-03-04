@@ -10,6 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.material.Material;
 
@@ -27,7 +28,7 @@ public class BossSpawnHandler
      * @param world
      * @param chest
      */
-    public static void onChestPlaced(final ServerLevel world, final RandomizableContainerBlockEntity chest)
+    public static void onChestPlaced(final ServerLevelAccessor world, final RandomizableContainerBlockEntity chest)
     {
         List<BossType> possibleBosses = BossTypeManager.instance.lootTableSpawnEntries.get(chest.lootTable);
         if (possibleBosses != null && !possibleBosses.isEmpty())
@@ -81,7 +82,7 @@ public class BossSpawnHandler
      *
      * @param world
      */
-    public static void spawnBoss(final ServerLevel world, final BlockPos pos, final BossType bossType, final RandomizableContainerBlockEntity chest)
+    public static void spawnBoss(final ServerLevelAccessor world, final BlockPos pos, final BossType bossType, final RandomizableContainerBlockEntity chest)
     {
         try
         {
@@ -133,7 +134,7 @@ public class BossSpawnHandler
         }
     }
 
-    public static BlockPos findSpawnPosForBoss(final ServerLevel world, final Entity boss, final BlockPos pos)
+    public static BlockPos findSpawnPosForBoss(final ServerLevelAccessor world, final Entity boss, final BlockPos pos)
     {
         final BlockPos spawnPos = BlockSearch.findAround(world, pos, 15, 10, 1,
           (w, p) ->
