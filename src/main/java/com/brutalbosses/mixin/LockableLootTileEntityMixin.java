@@ -31,7 +31,7 @@ public class LockableLootTileEntityMixin implements RegionAwareTE
         if (world != null && !spawnedBoss)
         {
             spawnedBoss = true;
-            BossSpawnHandler.onChestPlaced(world.getLevel(), (RandomizableContainerBlockEntity) (Object) this);
+            BossSpawnHandler.onChestPlaced(world, (RandomizableContainerBlockEntity) (Object) this);
         }
 
         region.clear();
@@ -46,7 +46,7 @@ public class LockableLootTileEntityMixin implements RegionAwareTE
             if (world != null && !spawnedBoss)
             {
                 spawnedBoss = true;
-                BossSpawnHandler.onChestPlaced(world.getLevel(), (RandomizableContainerBlockEntity) (Object) this);
+                BossSpawnHandler.onChestPlaced(world, (RandomizableContainerBlockEntity) (Object) this);
             }
 
             region.clear();

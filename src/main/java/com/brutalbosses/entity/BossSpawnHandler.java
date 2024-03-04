@@ -10,7 +10,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 
@@ -18,7 +17,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.BiPredicate;
 
 import static com.brutalbosses.entity.capability.BossCapability.BOSS_CAP;
 
@@ -32,7 +30,7 @@ public class BossSpawnHandler
      * @param world
      * @param chest
      */
-    public static void onChestPlaced(final ServerLevel world, final RandomizableContainerBlockEntity chest)
+    public static void onChestPlaced(final ServerLevelAccessor world, final RandomizableContainerBlockEntity chest)
     {
         List<BossType> possibleBosses = BossTypeManager.instance.lootTableSpawnEntries.get(chest.lootTable);
         if (possibleBosses != null && !possibleBosses.isEmpty())
@@ -86,7 +84,7 @@ public class BossSpawnHandler
      *
      * @param world
      */
-    public static void spawnBoss(final ServerLevel world, final BlockPos pos, final BossType bossType, @Nullable final RandomizableContainerBlockEntity chest)
+    public static void spawnBoss(final ServerLevelAccessor world, final BlockPos pos, final BossType bossType, @Nullable final RandomizableContainerBlockEntity chest)
     {
         try
         {
@@ -140,7 +138,7 @@ public class BossSpawnHandler
         }
     }
 
-    public static BlockPos findSpawnPosForBoss(final ServerLevel world, final Entity boss, final BlockPos pos)
+    public static BlockPos findSpawnPosForBoss(final ServerLevelAccessor world, final Entity boss, final BlockPos pos)
     {
         final BlockPos spawnPos = BlockSearch.findAround(world, pos, 15, 10, 1,
           (w, p) ->
