@@ -56,3 +56,9 @@ brutalbosses mod
     versionRange="[1.19,1.20)"
     ordering="NONE"
     side="BOTH"
+[[dependencies.brutalbosses]]
+    modId="cupboard"
+    mandatory=true
+    versionRange="[1.19.2-2.4,)"
+    ordering="NONE"
+    side="BOTH"
