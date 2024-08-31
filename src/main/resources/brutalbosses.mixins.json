@@ -1,17 +1,18 @@
 {
   "required": false,
   "package": "com.brutalbosses.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_21",
   "refmap": "brutalbosses.refmap.json",
   "mixins": [
     "BasePressurePlateBlockMixin",
     "BossCapMixin",
-    "PiglinMixin",
     "LockableLootTileEntityMixin",
     "MeleeAttackGoalMixin",
+    "PiglinMixin",
     "PlayerInteractDistScaling",
     "ProjectileHitActionMixin",
-    "SpawnerBlockListener"
+    "SpawnerBlockListener",
+    "ZombieMixin"
   ],
   "client": [
     "EntityRenderDataMixin",
