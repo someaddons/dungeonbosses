@@ -1,22 +1,19 @@
 package com.brutalbosses.network;
 
 import com.brutalbosses.BrutalBosses;
-import com.brutalbosses.entity.capability.BossCapEntity;
 import com.brutalbosses.entity.capability.BossCapability;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 
 public class BossCapMessage implements IMessage, CustomPacketPayload
 {
     public static final CustomPacketPayload.Type<BossCapMessage> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(BrutalBosses.MOD_ID, "bosscap"));
     BossCapability cap = null;
 
-    private int         entityID = -1;
-    private CompoundTag nbt      = null;
+    public int         entityID = -1;
+    public CompoundTag nbt      = null;
 
     public BossCapMessage(final BossCapability cap)
     {
@@ -41,17 +38,6 @@ public class BossCapMessage implements IMessage, CustomPacketPayload
         entityID = buffer.readInt();
         nbt = buffer.readNbt();
         return this;
-    }
-
-    @Override
-    public void handle(final Minecraft client)
-    {
-        final Entity entity = client.player.level().getEntity(entityID);
-        if (entity instanceof BossCapEntity)
-        {
-            ((BossCapEntity) entity).setBossCap(new BossCapability(entity));
-            ((BossCapEntity) entity).getBossCap().deserializeNBT(nbt);
-        }
     }
 
     @Override
