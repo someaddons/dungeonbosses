@@ -16,11 +16,11 @@
     "projectile_damage_bonus": 4
   },
   "gear": {
-    "mainhand": "{id: \"minecraft:crossbow\", Count: 1b, tag: {ChargedProjectiles: [], RepairCost: 7, Damage: 0, Charged: 0b, Enchantments: [{lvl: 4s, id: \"minecraft:piercing\"}, {lvl: 3s, id: \"minecraft:quick_charge\"}, {lvl: 5s, id: \"minecraft:power\"}]}}",
-    "offhand": "{id: \"minecraft:tipped_arrow\", Count: 64b, tag: {Potion: \"minecraft:strong_poison\"}}",
-    "helmet": "{id: \"minecraft:netherite_helmet\", Count: 1b, tag: {Damage: 0}}",
-    "chestplate": "{id: \"minecraft:netherite_chestplate\", Count: 1b, tag: {Damage: 0}}",
-    "feet": "{id: \"minecraft:netherite_boots\", Count: 1b, tag: {Damage: 0}}"
+    "mainhand": "{id: \"minecraft:crossbow\", Count: 1b, components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:piercing\": 4, \"minecraft:quick_charge\": 3}}}}",
+    "offhand": "{id: \"minecraft:tipped_arrow\", Count: 64b, components: {\"minecraft:potion_contents\": {potion: \"minecraft:poison\"}}}",
+    "helmet": "{id: \"minecraft:netherite_helmet\", Count: 1b}",
+    "chestplate": "{id: \"minecraft:netherite_chestplate\", Count: 1b}",
+    "feet": "{id: \"minecraft:netherite_boots\", Count: 1b}"
   },
   "ai-goals": {
     "minecraft:crossbow": {}

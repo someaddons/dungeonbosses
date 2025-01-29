@@ -16,9 +16,9 @@
   },
   "gear": {
     "mainhand": "{id: \"minecraft:crimson_fungus\", Count: 32b}",
-    "chestplate": "{id: \"minecraft:leather_chestplate\", Count: 1b, tag: {Damage: 0}}",
-    "helmet": "{id: \"minecraft:turtle_helmet\", Count: 1b, tag: {Damage: 0}}",
-    "feet": "{id: \"minecraft:leather_boots\", Count: 1b, tag: {Damage: 0}}"
+    "chestplate": "{id: \"minecraft:leather_chestplate\", Count: 1b}",
+    "helmet": "{id: \"minecraft:turtle_helmet\", Count: 1b}",
+    "feet": "{id: \"minecraft:leather_boots\", Count: 1b}"
   },
   "ai-goals": {
     "brutalbosses:aftercombatregen": {

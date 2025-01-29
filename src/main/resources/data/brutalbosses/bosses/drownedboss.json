@@ -19,9 +19,9 @@
     "dropgear": 6
   },
   "gear": {
-    "mainhand": "{id: \"minecraft:trident\", Count: 1b, tag: {RepairCost: 1, Damage: 0, Enchantments: [{lvl: 3s, id: \"minecraft:riptide\"}]}}",
-    "chestplate": "{id: \"minecraft:leather_chestplate\", Count: 1b, tag: {Damage: 0}}",
-    "helmet": "{id: \"minecraft:turtle_helmet\", Count: 1b, tag: {RepairCost: 3, Damage: 0, Enchantments: [{lvl: 3s, id: \"minecraft:unbreaking\"}, {lvl: 3s, id: \"minecraft:respiration\"}]}}"
+    "mainhand": "{id: \"minecraft:trident\", Count: 1b, components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:riptide\": 3}}}}",
+    "chestplate": "{id: \"minecraft:leather_chestplate\", Count: 1b}",
+    "helmet": "{id: \"minecraft:turtle_helmet\", Count: 1b, components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:unbreaking\": 3, \"minecraft:respiration\": 3}}}}"
   },
   "ai-goals": {
     "brutalbosses:aftercombatregen": {

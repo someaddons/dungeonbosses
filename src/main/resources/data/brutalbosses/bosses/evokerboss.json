@@ -16,8 +16,8 @@
     "dropgear": 6
   },
   "gear": {
-    "mainhand": "{id: \"minecraft:enchanted_book\", Count: 1b, tag: {StoredEnchantments: [{lvl: 1s, id: \"minecraft:silk_touch\"}]}}",
-    "offhand": "{id: \"minecraft:enchanted_book\", Count: 1b, tag: {StoredEnchantments: [{lvl: 3s, id: \"minecraft:fortune\"}]}}"
+    "mainhand": "{id: \"minecraft:enchanted_book\", Count: 1b, components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:silk_touch\": 1}}}}",
+    "offhand": "{id: \"minecraft:enchanted_book\", Count: 1b, components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:fortune\": 3}}}}"
   },
   "ai-goals": {
     "brutalbosses:aftercombatregen": {

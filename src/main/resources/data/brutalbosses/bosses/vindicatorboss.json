@@ -15,7 +15,7 @@
   "customattributes": {
   },
   "gear": {
-    "mainhand": "{id: \"minecraft:netherite_sword\", Count: 1b, tag: {Damage: 0}}"
+    "mainhand": "{id: \"minecraft:netherite_sword\", Count: 1b}"
   },
   "ai-goals": {
     "minecraft:target": {},

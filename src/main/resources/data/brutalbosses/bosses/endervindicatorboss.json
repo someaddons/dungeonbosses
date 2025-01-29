@@ -18,7 +18,7 @@
     "dropgear": 6
   },
   "gear": {
-    "mainhand": "{id: \"minecraft:golden_axe\", Count: 1b, tag: {Damage: 0}}",
+    "mainhand": "{id: \"minecraft:golden_axe\", Count: 1b}",
     "offhand": "{id: \"minecraft:ender_pearl\", Count: 8b}"
   },
   "ai-goals": {

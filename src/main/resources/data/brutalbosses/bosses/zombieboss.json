@@ -15,11 +15,11 @@
     "dropgear": 1
   },
   "gear": {
-    "mainhand": "{id: \"minecraft:netherite_hoe\", Count: 1b, tag: {Damage: 0}}",
-    "chestplate": "{id: \"minecraft:netherite_chestplate\", Count: 1b, tag: {Damage: 0}}",
-    "helmet": "{id: \"minecraft:netherite_helmet\", Count: 1b, tag: {Damage: 0}}",
-    "leggings": "{id: \"minecraft:netherite_leggings\", Count: 1b, tag: {Damage: 0}}",
-    "feet": "{id: \"minecraft:netherite_boots\", Count: 1b, tag: {Damage: 0}}"
+    "mainhand": "{id: \"minecraft:netherite_hoe\", Count: 1b}",
+    "chestplate": "{id: \"minecraft:netherite_chestplate\", Count: 1b}",
+    "helmet": "{id: \"minecraft:netherite_helmet\", Count: 1b}",
+    "leggings": "{id: \"minecraft:netherite_leggings\", Count: 1b}",
+    "feet": "{id: \"minecraft:netherite_boots\", Count: 1b}"
   },
   "ai-goals": {
     "brutalbosses:aftercombatregen": {
