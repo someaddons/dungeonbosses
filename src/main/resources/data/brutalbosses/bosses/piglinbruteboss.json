@@ -22,9 +22,9 @@
     "attack_speed": 0.75
   },
   "gear": {
-    "mainhand": "{id:\"minecraft:golden_sword\",Count:1b,tag:{Damage:0, Enchantments:[{lvl:2s,id:\"minecraft:fire_aspect\"}]}}",
-    "helmet": "{id:\"minecraft:netherite_helmet\",Count:1b,tag:{Damage:0}}",
-    "feet": "{id:\"minecraft:netherite_boots\",Count:1b,tag:{Damage:0}}"
+    "mainhand": "{id:\"minecraft:golden_sword\",Count:1b,components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:fire_aspect\": 2}}}}",
+    "helmet": "{id:\"minecraft:netherite_helmet\",Count:1b}",
+    "feet": "{id:\"minecraft:netherite_boots\",Count:1b}"
   },
   "ai-goals": {
     "minecraft:target": {},

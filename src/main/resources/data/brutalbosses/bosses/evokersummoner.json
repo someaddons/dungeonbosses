@@ -17,8 +17,8 @@
     "removespellcastinggoals": 1
   },
   "gear": {
-    "mainhand": "{id: \"minecraft:enchanted_book\", Count: 1b, tag: {StoredEnchantments: [{lvl: 1s, id: \"minecraft:mending\"}]}}",
-    "offhand": "{id: \"minecraft:enchanted_book\", Count: 1b, tag: {StoredEnchantments: [{lvl: 1s, id: \"minecraft:fortune\"}]}}"
+    "mainhand": "{id: \"minecraft:enchanted_book\", Count: 1b, components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:mending\": 1}}}}",
+    "offhand": "{id: \"minecraft:enchanted_book\", Count: 1b, components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:fortune\": 2}}}}"
   },
   "ai-goals": {
     "brutalbosses:aftercombatregen": {

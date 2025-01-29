@@ -17,8 +17,8 @@
     "attack_speed": 0.2
   },
   "gear": {
-    "mainhand": "{id:\"minecraft:iron_sword\",Count:1b,tag:{Damage:0, Enchantments:[{lvl:1s,id:\"minecraft:knockback\"}]}}",
-    "offhand": "{id:\"minecraft:shield\",Count:1b,tag:{Damage:0}}"
+    "mainhand": "{id:\"minecraft:iron_sword\",Count:1b, components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:knockback\": 1}}}}",
+    "offhand": "{id:\"minecraft:shield\",Count:1b}"
   },
   "ai-goals": {
     "brutalbosses:shieldmelee": {},

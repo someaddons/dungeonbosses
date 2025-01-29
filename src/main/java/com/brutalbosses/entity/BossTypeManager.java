@@ -162,7 +162,7 @@ public class BossTypeManager
         for (final BossType bossType : bosses.values())
         {
             entityTypes.add(BuiltInRegistries.ENTITY_TYPE.getKey(bossType.getEntityType()));
-            BrutalBosses.LOGGER.info("Loaded boss variant for: " + BuiltInRegistries.ENTITY_TYPE.getKey(bossType.getEntityType()));
+            BrutalBosses.LOGGER.info("Loaded boss: " + bossType.getID() + " for: " + BuiltInRegistries.ENTITY_TYPE.getKey(bossType.getEntityType()));
 
             for (final Map.Entry<ResourceLocation, Integer> spawnEntry : bossType.getSpawnTables().entrySet())
             {

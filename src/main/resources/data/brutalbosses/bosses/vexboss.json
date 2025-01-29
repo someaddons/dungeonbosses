@@ -15,7 +15,7 @@
   "customattributes": {
   },
   "gear": {
-    "mainhand": "{id:\"minecraft:iron_sword\",Count:1b,tag:{Damage:0, Enchantments:[{lvl:1s,id:\"minecraft:knockback\"}]}}"
+    "mainhand": "{id:\"minecraft:iron_sword\",Count:1b, components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:knockback\": 1}}}}"
   },
   "ai-goals": {
     "minecraft:target": {},

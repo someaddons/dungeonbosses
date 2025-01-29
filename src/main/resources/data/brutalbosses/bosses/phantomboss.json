@@ -18,7 +18,7 @@
     "dropgear": 6
   },
   "gear": {
-    "mainhand": "{id: \"minecraft:enchanted_book\", Count: 1b, tag: {StoredEnchantments: [{lvl: 1s, id: \"minecraft:slow_fall\"}]}}"
+    "mainhand": "{id: \"minecraft:enchanted_book\", Count: 1b, components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:feather_falling\": 1}}}}"
   },
   "ai-goals": {
     "brutalbosses:shootfireballs": {

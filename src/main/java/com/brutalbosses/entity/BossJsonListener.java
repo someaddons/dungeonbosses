@@ -10,8 +10,11 @@ import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.TagParser;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -109,6 +112,8 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener
             final JsonObject data = (JsonObject) entry.getValue();
 
             final ResourceLocation bossID = entry.getKey();
+
+            final RegistryOps<Tag> nbtOpsWithContext = this.getRegistryLookup().createSerializationContext(NbtOps.INSTANCE);
 
             EntityType entityTypeEntry = null;
             if (data.has(ENTITY))
@@ -242,32 +247,32 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener
                     final JsonObject gearData = jsonEntry.getAsJsonObject();
                     if (gearData.has(MAINHAND))
                     {
-                        gearList.put(EquipmentSlot.MAINHAND, ItemStack.CODEC.parse(NbtOps.INSTANCE, (TagParser.parseTag(gearData.get(MAINHAND).getAsString()))).getOrThrow());
+                        gearList.put(EquipmentSlot.MAINHAND, ItemStack.CODEC.parse(nbtOpsWithContext, (TagParser.parseTag(gearData.get(MAINHAND).getAsString()))).getOrThrow());
                     }
 
                     if (gearData.has(OFFHAND))
                     {
-                        gearList.put(EquipmentSlot.OFFHAND, ItemStack.CODEC.parse(NbtOps.INSTANCE, (TagParser.parseTag(gearData.get(OFFHAND).getAsString()))).getOrThrow());
+                        gearList.put(EquipmentSlot.OFFHAND, ItemStack.CODEC.parse(nbtOpsWithContext, (TagParser.parseTag(gearData.get(OFFHAND).getAsString()))).getOrThrow());
                     }
 
                     if (gearData.has(HELMET))
                     {
-                        gearList.put(EquipmentSlot.HEAD, ItemStack.CODEC.parse(NbtOps.INSTANCE, (TagParser.parseTag(gearData.get(HELMET).getAsString()))).getOrThrow());
+                        gearList.put(EquipmentSlot.HEAD, ItemStack.CODEC.parse(nbtOpsWithContext, (TagParser.parseTag(gearData.get(HELMET).getAsString()))).getOrThrow());
                     }
 
                     if (gearData.has(CHESTPLATE))
                     {
-                        gearList.put(EquipmentSlot.CHEST, ItemStack.CODEC.parse(NbtOps.INSTANCE, TagParser.parseTag(gearData.get(CHESTPLATE).getAsString())).getOrThrow());
+                        gearList.put(EquipmentSlot.CHEST, ItemStack.CODEC.parse(nbtOpsWithContext, TagParser.parseTag(gearData.get(CHESTPLATE).getAsString())).getOrThrow());
                     }
 
                     if (gearData.has(LEGGINGS))
                     {
-                        gearList.put(EquipmentSlot.LEGS, ItemStack.CODEC.parse(NbtOps.INSTANCE, (TagParser.parseTag(gearData.get(LEGGINGS).getAsString()))).getOrThrow());
+                        gearList.put(EquipmentSlot.LEGS, ItemStack.CODEC.parse(nbtOpsWithContext, (TagParser.parseTag(gearData.get(LEGGINGS).getAsString()))).getOrThrow());
                     }
 
                     if (gearData.has(FEET))
                     {
-                        gearList.put(EquipmentSlot.FEET, ItemStack.CODEC.parse(NbtOps.INSTANCE, (TagParser.parseTag(gearData.get(FEET).getAsString()))).getOrThrow());
+                        gearList.put(EquipmentSlot.FEET, ItemStack.CODEC.parse(nbtOpsWithContext, (TagParser.parseTag(gearData.get(FEET).getAsString()))).getOrThrow());
                     }
                 }
 
