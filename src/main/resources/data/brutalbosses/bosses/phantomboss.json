@@ -40,6 +40,13 @@
     "graveyard:chests/totem_loot": 1,
     "valhelsia_structures:chests/castle_ruin": 2,
     "infernalexp:chests/basalt_delta_ruin_chest": 1,
-    "dungeons_arise:chests/aviary/aviary_barrels": 1
+    "imst:balloon": 1,
+    "imst:airship": 1,
+    "mss:rare": 3,
+    "mss:arena": 1,
+    "mss:pillager": 1,
+    "structory_towers:top/desert_top": 2,
+    "dungeons_arise:chests/aviary/aviary_treasure": 8,
+    "dungeons_arise:chests/mechanical_nest/mechanical_nest_equipment": 2
   }
 }

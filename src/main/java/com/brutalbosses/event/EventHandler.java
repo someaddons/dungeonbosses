@@ -1,9 +1,7 @@
 package com.brutalbosses.event;
 
 import com.brutalbosses.BrutalBosses;
-import com.brutalbosses.entity.BossJsonListener;
-import com.brutalbosses.entity.BossTypeManager;
-import com.brutalbosses.entity.CustomAttributes;
+import com.brutalbosses.entity.*;
 import com.brutalbosses.entity.capability.BossCapability;
 import com.brutalbosses.network.BossCapMessage;
 import com.brutalbosses.network.BossOverlayMessage;
@@ -36,17 +34,16 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingConversionEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static com.brutalbosses.entity.CustomAttributes.DROP_GEAR;
+import static com.brutalbosses.entity.capability.BossCapability.BOSS_CAP;
 
 /**
  * Forge event bus handler, ingame events are fired here
@@ -69,6 +66,7 @@ public class EventHandler
     }
      */
 
+    public static Map<EntityType, Set<BossType>> randomSpawns = new HashMap<>();
     public static Map<BlockPos, UUID> protectedBlocks = new HashMap<>();
 
     @SubscribeEvent
@@ -257,6 +255,28 @@ public class EventHandler
         {
             event.setCanceled(true);
             event.setConversionTimer(20);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntitySpawn(final MobSpawnEvent.FinalizeSpawn event)
+    {
+        if (randomSpawns.containsKey(event.getEntity().getType()))
+        {
+            Set<BossType> list = randomSpawns.get(event.getEntity().getType());
+            for (final BossType type : list)
+            {
+                if (type.rollRandomSpawn())
+                {
+                    event.getEntity().getCapability(BOSS_CAP).orElse(null).setBossType(type);
+                    type.initForEntity(event.getEntity());
+                    if (event.getEntity() instanceof Mob)
+                    {
+                        ((Mob) event.getEntity()).persistenceRequired = false;
+                    }
+                    break;
+                }
+            }
         }
     }
 }

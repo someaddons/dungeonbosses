@@ -45,6 +45,25 @@
     "dungeons_arise:chests/illager_galley/illager_galley_treasure": 1,
     "dungeons_arise:chests/typhon/typhon_treasure": 1,
     "philipsruins:chests/ocean_ruins_loot": 1,
-    "minecraft:chests/buried_treasure": 3
+    "minecraft:chests/buried_treasure": 3,
+    "awesomedungeonocean:chests/awesome_dungeon": 1,
+    "betterarcheology:archeology/chest_underwater": 1,
+    "nova_structures:chests/trident_trial_monument/ttm_boss_vault_heart": 1,
+    "nova_structures:chests/conduit_ruin/conduit_ruin_big": 3,
+    "nova_structures:chests/conduit_ruin/conduit_ruin_main": 2,
+    "formationsoverworld:raft": 1,
+    "hopo:chests/prismarine": 1,
+    "hopo:chests/small_ruin_cold": 1,
+    "hopo:chests/small_ruin_warm": 1,
+    "idas:chests/ruins_of_the_deep/ruins_ocean": 3,
+    "medieval_buildings:chests/ship_chests_superiors": 2,
+    "philipsruins:chest/ocean_ruins_loot": 2,
+    "philipsruins:chest/ocean_ruin_fortress": 2,
+    "repurposed_structures:chests/ancient_cities/ocean": 2,
+    "repurposed_structures:chests/dungeons/ocean": 2,
+    "repurposed_structures:chests/mineshafts/ocean": 2,
+    "repurposed_structures:chests/outposts/ocean": 2,
+    "repurposed_structures:chests/temples/ocean": 2,
+    "structory_towers:basic/ocean_pillar_top": 2
   }
 }

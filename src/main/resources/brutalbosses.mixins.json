@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "brutalbosses.refmap.json",
   "mixins": [
+    "AreaEffectCloudMixin",
     "BasePressurePlateBlockMixin",
     "EntityCapReader",
     "LockableLootTileEntityMixin",
@@ -18,7 +19,7 @@
     "LivingRendererMixin"
   ],
   "injectors": {
-    "defaultRequire": 1
+    "defaultRequire": 0
   },
   "minVersion": "0.8"
 }

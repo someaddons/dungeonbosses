@@ -121,6 +121,18 @@ public class BossTypeManager
         registerAI(TemporaryPotionGoal.ID,
           (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new TemporaryPotionGoal((Mob) entity, params)),
           TemporaryPotionGoal.TempPotionParams::new);
+
+        registerAI(ChangeGearGoal.ID,
+            (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new ChangeGearGoal((Mob) entity, params)),
+            ChangeGearGoal.ChangeGearParams::new);
+
+        registerAI(JumpAttackGoal.ID,
+            (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new JumpAttackGoal((Mob) entity, params)),
+            JumpAttackGoal.JumpAttackParams::new);
+
+        registerAI(CommandRunGoal.ID,
+            (entity, params) -> ((Mob) entity).goalSelector.addGoal(-2000, new CommandRunGoal((Mob) entity, params)),
+            CommandRunGoal.CommandParams::new);
     }
 
     /**

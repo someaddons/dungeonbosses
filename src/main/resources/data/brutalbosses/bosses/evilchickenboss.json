@@ -45,6 +45,18 @@
     "dungeons_arise:chests/heavenly_rider/heavenly_rider_treasure": 1,
     "dungeons_arise:chests/infested_temple/infested_temple_top_treasure": 1,
     "graveyard:chests/totem_loot": 1,
-    "dungeons_enhanced:chests/jungle_monument/treasure": 1
+    "dungeons_enhanced:chests/jungle_monument/treasure": 1,
+    "ctov:chests/village/village_farm": 1,
+    "medievalend:end_house_2chests": 1,
+    "medieval_buildings:chests/town_inside": 1,
+    "medieval_buildings:chests/medium_shack_house": 1,
+    "mostructures:villager_tower": 1,
+    "philipsruins:chest/lost_soul_city_loot": 1,
+    "repurposed_structures:chests/cities/overworld": 1,
+    "repurposed_structures:chests/villages/crimson_tannery": 2,
+    "repurposed_structures:chests/villages/warped_tannery": 2,
+    "structory_towers:top/farm_top": 1,
+    "structory_towers:top/forager_top": 1,
+    "dungeons_arise:chests/lighthouse/lighthouse_top": 1
   }
 }

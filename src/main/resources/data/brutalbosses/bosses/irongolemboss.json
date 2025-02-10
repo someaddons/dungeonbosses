@@ -55,6 +55,23 @@
     "philipsruins:chests/sculk_dungeon_loot": 1,
     "dungeoncrawl:chests/stage_5": 1,
     "dungeons_enhanced:chests/ice_pit/hall": 1,
-    "dungeons_enhanced:chests/monster_maze/treasure": 1
+    "dungeons_enhanced:chests/monster_maze/treasure": 1,
+    "awesomedungeon:chests/awesome_dungeon": 1,
+    "dungeoncrawl:chests/forge": 1,
+    "hopo:chests/chests/mineshaft/base/tools": 3,
+    "idas:chests/tinkers_citadel/tinkers_citadel_vault": 4,
+    "medievalend:end_house_2chests": 1,
+    "mvs:rare": 1,
+    "philipsruins:chest/lost_soul_city_loot": 1,
+    "repurposed_structures:chests/cities/overworld": 1,
+    "repurposed_structures:chests/mineshafts/stone": 1,
+    "structory_towers:basic/lighthouse_top": 2,
+    "valhelsia_structures:chests/castle": 1,
+    "valhelsia_structures:chests/forge": 2,
+    "dungeons_arise:chests/mechanical_nest/mechanical_nest_equipment": 2,
+    "dungeons_arise:chests/kisegi_sanctuary/kisegi_sanctuary_vault_normal_treasure": 1,
+    "underground_bunker:chests/underground_bunker/underground_bunker_treasure": 1,
+    "dungeons_arise:chests/monastery/monastery_bridges": 1,
+    "aether_villages:chests/olympic_citadel/olympic_citadel_treasure": 2
   }
 }

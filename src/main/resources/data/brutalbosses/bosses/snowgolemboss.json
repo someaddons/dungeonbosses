@@ -33,6 +33,22 @@
     "minecraft:chests/village/village_snowy_house": 1,
     "minecraft:chests/igloo_chest": 2,
     "dungeons_plus:chests/snowy_temple/common": 1,
-    "dungeons_enhanced:chests/ice_pit/hall": 1
+    "dungeons_enhanced:chests/ice_pit/hall": 1,
+    "nova_structures:chests/lone_citadel/c_vault_boss": 1,
+    "dungeons_plus:chests/reanimated_ruins/frozen": 2,
+    "dungeons_plus:chests/reanimated_ruins/frozen_map": 2,
+    "idas:chests/frozen_crypt/frozen_crypt": 1,
+    "idas:chests/winter_wagon/winter_wagon_tools": 2,
+    "repurposed_structures:chests/dungeons/icy": 2,
+    "repurposed_structures:chests/dungeons/snow": 4,
+    "repurposed_structures:chests/igloos/grassy": 1,
+    "repurposed_structures:chests/igloos/mangrove": 2,
+    "repurposed_structures:chests/mansion/snowy": 2,
+    "repurposed_structures:chests/mineshafts/icy": 2,
+    "repurposed_structures:chests/mineshafts/taiga": 1,
+    "repurposed_structures:chests/monuments/icy": 1,
+    "repurposed_structures:chests/pyramids/icy": 1,
+    "repurposed_structures:chests/temples/taiga": 1,
+    "structory_towers:top/strange_top": 1
   }
 }
