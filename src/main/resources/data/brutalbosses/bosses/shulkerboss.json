@@ -30,6 +30,14 @@
     "minecraft:chests/stronghold_library": 1,
     "minecraft:chests/simple_dungeon": 1,
     "totw_additions:chests/end_tower/end_tower_chest": 1,
-    "awesomedungeonend:chests/awesome_dungeon": 3
+    "awesomedungeonend:chests/awesome_dungeon": 3,
+    "nova_structures:chests/end_castle/greater_loot": 2,
+    "medievalend:end_pyramid_chests": 2,
+    "mes:cathedral_rare": 2,
+    "philipsruins:chest/end_ruins_loot": 3,
+    "repurposed_structures:chests/mineshafts/end": 3,
+    "repurposed_structures:chests/pyramids/end": 2,
+    "repurposed_structures:chests/shipwrecks/end/treasure": 2,
+    "structory_towers:end_tower": 2
   }
 }

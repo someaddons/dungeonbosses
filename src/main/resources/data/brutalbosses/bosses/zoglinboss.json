@@ -41,6 +41,16 @@
     "infernalexp:chests/desolate_bastion_outpost": 2,
     "infernalexp:chests/glowstone_canyon_ruin": 2,
     "valhelsia_structures:chests/spawner_dungeon": 1,
-    "dungeons_enhanced:chests/monster_maze/treasure": 1
+    "dungeons_enhanced:chests/monster_maze/treasure": 1,
+    "nova_structures:chests/piglin_camp/chest": 2,
+    "nova_structures:chests/piglin_outstation/outstation_treasure": 2,
+    "mns:treasure": 1,
+    "philipsruins:chest/nether_ruins_low": 1,
+    "repurposed_structures:chests/dungeons/nether": 1,
+    "repurposed_structures:chests/mineshafts/basalt": 1,
+    "repurposed_structures:chests/mineshafts/warped": 2,
+    "repurposed_structures:chests/temples/crimson": 2,
+    "repurposed_structures:chests/temples/soul": 1,
+    "structory_towers:sword_portal": 1
   }
 }

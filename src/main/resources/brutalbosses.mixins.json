@@ -1,9 +1,9 @@
 {
   "required": false,
-  "minVersion": "0.8",
   "package": "com.brutalbosses.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AreaEffectCloudMixin",
     "BasePressurePlateBlockMixin",
     "BossCapMixin",
     "LivingDeathMixin",
@@ -23,6 +23,7 @@
     "PlayerMixin"
   ],
   "injectors": {
-    "defaultRequire": 1
-  }
+    "defaultRequire": 0
+  },
+  "minVersion": "0.8"
 }

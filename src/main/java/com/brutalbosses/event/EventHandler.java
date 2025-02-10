@@ -1,6 +1,7 @@
 package com.brutalbosses.event;
 
 import com.brutalbosses.BrutalBosses;
+import com.brutalbosses.entity.BossType;
 import com.brutalbosses.entity.BossTypeManager;
 import com.brutalbosses.entity.CustomAttributes;
 import com.brutalbosses.entity.capability.BossCapEntity;
@@ -34,10 +35,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static com.brutalbosses.entity.CustomAttributes.DROP_GEAR;
 
@@ -47,7 +45,8 @@ import static com.brutalbosses.entity.CustomAttributes.DROP_GEAR;
 public class EventHandler
 {
 
-    public static Map<BlockPos, UUID> protectedBlocks = new HashMap<>();
+    public static Map<EntityType, Set<BossType>> randomSpawns    = new HashMap<>();
+    public static Map<BlockPos, UUID>            protectedBlocks = new HashMap<>();
 
     public static void onPlayerInteract(final Player player, final BlockPos pos, final CallbackInfoReturnable<InteractionResult> cir)
     {
@@ -194,6 +193,27 @@ public class EventHandler
         if (player.getServer() instanceof DedicatedServer)
         {
             Network.instance.sendPacket(player, new BossTypeSyncMessage(BossTypeManager.instance.bosses.values()));
+        }
+    }
+
+    public static void onEntitySpawn(final Mob mob, final MobSpawnType mobSpawnType)
+    {
+        if (randomSpawns.containsKey(mob.getType()))
+        {
+            Set<BossType> list = randomSpawns.get(mob.getType());
+            for (final BossType type : list)
+            {
+                if (type.rollRandomSpawn())
+                {
+                    if (mob instanceof BossCapEntity bossCapEntity && bossCapEntity.getBossCap() == null)
+                    {
+                        bossCapEntity.setBossCap(new BossCapability(mob));
+                        type.initForEntity(mob);
+                        bossCapEntity.setPersistence(false);
+                        break;
+                    }
+                }
+            }
         }
     }
 }
