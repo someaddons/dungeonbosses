@@ -9,8 +9,8 @@ import java.util.function.Predicate;
 /**
  * Type for holding AI param classes
  */
-public interface IAIParams {
-
+public interface IAIParams
+{
     /**
      * Empty paramts instance
      */
@@ -21,31 +21,37 @@ public interface IAIParams {
     /**
      * Default params
      */
-    public static class DefaultParams implements IAIParams {
-
+    public static class DefaultParams implements IAIParams
+    {
         public Predicate<LivingEntity> healthPhaseCheck = e -> true;
 
-        public DefaultParams(final JsonObject jsonData) {
+        public DefaultParams(final JsonObject jsonData)
+        {
             parse(jsonData);
         }
 
-        private DefaultParams() {
+        private DefaultParams()
+        {
             // Not allowed
         }
 
         private static final String HEAL_INTERVAL = "healthinterval";
 
         @Override
-        public IAIParams parse(final JsonObject jsonElement) {
-            if (jsonElement.has(HEAL_INTERVAL)) {
+        public IAIParams parse(final JsonObject jsonElement)
+        {
+            if (jsonElement.has(HEAL_INTERVAL))
+            {
                 healthPhaseCheck = e -> true;
                 final String rawData = jsonElement.get(HEAL_INTERVAL).getAsString();
 
                 final String[] intervals = rawData.split(";");
 
-                for (String interval : intervals) {
+                for (String interval : intervals)
+                {
                     final String[] intervalBoundaries = interval.split("-");
-                    if (intervalBoundaries.length != 2) {
+                    if (intervalBoundaries.length != 2)
+                    {
                         BrutalBosses.LOGGER.warn("Could not parse AI health requirements, needs exactly two numbers seperated by - for: " + interval);
                         throw new UnsupportedOperationException();
                     }
@@ -53,12 +59,15 @@ public interface IAIParams {
                     int boundary1 = Integer.parseInt(intervalBoundaries[0]);
                     int boundary2 = Integer.parseInt(intervalBoundaries[1]);
 
-                    if (boundary1 < boundary2) {
+                    if (boundary1 < boundary2)
+                    {
                         healthPhaseCheck =
-                                healthPhaseCheck.and(e -> (e.getHealth() / e.getMaxHealth()) * 100 > boundary1 && (e.getHealth() / e.getMaxHealth()) * 100 < boundary2);
-                    } else {
+                            healthPhaseCheck.and(e -> (e.getHealth() / e.getMaxHealth()) * 100 >= boundary1 && (e.getHealth() / e.getMaxHealth()) * 100 <= boundary2);
+                    }
+                    else
+                    {
                         healthPhaseCheck =
-                                healthPhaseCheck.and(e -> (e.getHealth() / e.getMaxHealth()) * 100 < boundary1 && (e.getHealth() / e.getMaxHealth()) * 100 > boundary2);
+                            healthPhaseCheck.and(e -> (e.getHealth() / e.getMaxHealth()) * 100 <= boundary1 && (e.getHealth() / e.getMaxHealth()) * 100 >= boundary2);
                     }
                 }
             }

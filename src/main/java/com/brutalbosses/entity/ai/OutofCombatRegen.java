@@ -1,5 +1,7 @@
 package com.brutalbosses.entity.ai;
 
+import com.brutalbosses.entity.capability.BossCapEntity;
+import com.brutalbosses.entity.capability.BossCapability;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,6 +40,15 @@ public class OutofCombatRegen extends Goal
         {
             combatTimer = 20;
             mob.heal(amount);
+            if (mob.getHealth() == mob.getMaxHealth())
+            {
+                // Reequip starting gear
+                final BossCapability bossCapability = ((BossCapEntity) mob).getBossCap();
+                if (bossCapability != null && bossCapability.isBoss())
+                {
+                    bossCapability.getBossType().initGear(mob);
+                }
+            }
         }
 
         return false;
@@ -45,6 +56,7 @@ public class OutofCombatRegen extends Goal
 
     public void stop()
     {
+
     }
 
     public void tick()

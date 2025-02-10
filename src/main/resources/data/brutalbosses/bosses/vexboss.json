@@ -43,6 +43,18 @@
     "dungeons_arise:chests/heavenly_rider/heavenly_rider_treasure": 1,
     "graveyard:chests/totem_loot": 1,
     "dungeoncrawl:chests/stage_5": 1,
-    "dungeons_enhanced:chests/large_dungeon": 1
+    "dungeons_enhanced:chests/large_dungeon": 1,
+    "nova_structures:chests/creeping_crypt/vault_creeping": 1,
+    "mostructures:mansion_map": 1,
+    "mvs:rare": 1,
+    "philipsruins:chest/end_ruins_loot": 1,
+    "philipsruins:chest/lost_soul_city_loot": 1,
+    "philipsruins:chest/level_three_ruins_loot": 1,
+    "repurposed_structures:chests/mansion/birch": 1,
+    "repurposed_structures:chests/pyramids/end": 1,
+    "structory:harvest/manor2/treasure": 1,
+    "structory_towers:top/mangrove_top": 1,
+    "dungeons_arise:chests/mechanical_nest/mechanical_nest_equipment": 1,
+    "dungeons_arise:chests/infested_temple/infested_temple_vault_ominous": 1
   }
 }

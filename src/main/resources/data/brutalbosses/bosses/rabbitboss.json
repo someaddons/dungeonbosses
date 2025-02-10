@@ -39,6 +39,15 @@
     "minecraft:chests/ruined_portal": 1,
     "dungeoncrawl:chests/stage_3": 1,
     "philipsruins:chests/desert_pyramid_loot": 1,
-    "dungeons_enhanced:chests/monster_maze/treasure": 1
+    "dungeons_enhanced:chests/monster_maze/treasure": 1,
+    "ctov:chests/village/village_farm": 1,
+    "medieval_buildings:chests/town_inside": 1,
+    "medieval_buildings:chests/medium_shack_house": 1,
+    "mostructures:bunny_skeleton": 1,
+    "mostructures:bunny_spider": 1,
+    "repurposed_structures:chests/cities/overworld": 1,
+    "repurposed_structures:chests/villages/warped_tannery": 2,
+    "structory_towers:top/forager_top": 1,
+    "valhelsia_structures:chests/desert_house": 1
   }
 }

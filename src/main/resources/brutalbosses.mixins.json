@@ -1,9 +1,9 @@
 {
   "required": false,
-  "minVersion": "0.8",
   "package": "com.brutalbosses.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "AreaEffectCloudMixin",
     "BasePressurePlateBlockMixin",
     "BossCapMixin",
     "JsonReloadListenerRegistryAccess",
@@ -17,6 +17,7 @@
     "ProjectileHitActionMixin",
     "ServerPlayerGameModeMixin",
     "SpawnerBlockListener",
+    "SpawnerSpawnMixin",
     "ZombieMixin"
   ],
   "client": [
@@ -26,6 +27,7 @@
     "PlayerMixin"
   ],
   "injectors": {
-    "defaultRequire": 1
-  }
+    "defaultRequire": 0
+  },
+  "minVersion": "0.8"
 }

@@ -2,6 +2,7 @@ package com.brutalbosses.entity;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.ai.IAIParams;
+import com.brutalbosses.event.EventHandler;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,8 +27,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -66,6 +69,7 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener implement
     public static final String ITEM_LOOT_COUNT  = "droppeditemamount";
     public static final String SHOW_BAR         = "showbossbar";
     private static final String PROTECT_TREASURE = "protect_treasure";
+    private static final String RANDOM_SPAWN = "random_spawn";
 
     /**
      * Random
@@ -327,6 +331,29 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener implement
             if (data.has(SHOW_BAR))
             {
                 bossType.setBossBar(data.get(SHOW_BAR).getAsBoolean());
+            }
+
+            if (data.has(RANDOM_SPAWN))
+            {
+                int chance = data.get(RANDOM_SPAWN).getAsInt();
+
+                if (chance < 0 || chance > 100)
+                {
+                    BrutalBosses.LOGGER.error("Bad random spawn chance in bossfile:" + entry.getKey() + " chance:" + chance + " has to be within 0-100");
+                }
+
+                chance = Math.min(100, Math.max(0, chance));
+
+                Set<BossType> possibleBosses = EventHandler.randomSpawns.get(bossType.getEntityType());
+
+                if (possibleBosses == null)
+                {
+                    possibleBosses = new HashSet<>();
+                }
+
+                possibleBosses.add(bossType);
+                EventHandler.randomSpawns.put(entityTypeEntry, possibleBosses);
+                bossType.setRandomSpawnChance(chance);
             }
 
             return bossType;

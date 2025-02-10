@@ -66,6 +66,7 @@ public class BossType
     private boolean showBossBar       = true;
     private boolean nameVisible       = true;
     private boolean protectsTreasure  = true;
+    private int randomSpawnChance = 0;
 
     public BossType(final EntityType entityToUse, final ResourceLocation id)
     {
@@ -150,10 +151,7 @@ public class BossType
         }
 
         boss.setCustomName(Component.literal(desc));
-        if (nameVisible)
-        {
-            boss.setCustomNameVisible(true);
-        }
+        boss.setCustomNameVisible(nameVisible);
 
         if (protectsTreasure)
         {
@@ -204,7 +202,7 @@ public class BossType
      *
      * @param boss
      */
-    private void initGear(final LivingEntity boss)
+    public void initGear(final LivingEntity boss)
     {
         if (boss instanceof Mob)
         {
@@ -385,6 +383,16 @@ public class BossType
     }
 
     /**
+     * Set the custom attributes
+     *
+     * @param
+     */
+    public void setRandomSpawnChance(final int randomSpawnChance)
+    {
+        this.randomSpawnChance = randomSpawnChance;
+    }
+
+    /**
      * Get the exp dropped
      *
      * @return
@@ -485,5 +493,10 @@ public class BossType
     public void setProtectsTreasure(final boolean protectsTreasure)
     {
         this.protectsTreasure = protectsTreasure;
+    }
+
+    public boolean rollRandomSpawn()
+    {
+        return BrutalBosses.rand.nextInt(100) < randomSpawnChance;
     }
 }
