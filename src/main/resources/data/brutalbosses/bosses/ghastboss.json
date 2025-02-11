@@ -34,6 +34,11 @@
     "dungeons_arise:chests/heavenly_conqueror/heavenly_conqueror_treasure": 1,
     "dungeons_arise:chests/small_blimp/small_blimp_treasure": 1,
     "infernalexp:chests/glowstone_canyon_ruin_chest": 1,
-    "infernalexp:chests/basalt_delta_ruin_chest": 1
+    "infernalexp:chests/basalt_delta_ruin_chest": 1,
+    "nova_structures:chests/piglin_outstation/outstation_treasure": 1,
+    "formationsnether:sphere_cage/wither": 1,
+    "formationsnether:small_lava_arena": 1,
+    "philipsruins:chest/nether_lava_ruins_loot": 1,
+    "structory_towers:top/crimson_top": 2
   }
 }

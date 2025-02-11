@@ -10,7 +10,8 @@
     "generic.max_health": 60,
     "generic.follow_range": 50,
     "generic.knockback_resistance": 1,
-    "generic.movement_speed": 0.8
+    "generic.movement_speed": 0.8,
+    "attribute.name.generic.jump_strength": 1.0
   },
   "customattributes": {
     "attack_speed": 0.7
@@ -39,6 +40,15 @@
     "minecraft:chests/ruined_portal": 1,
     "dungeoncrawl:chests/stage_3": 1,
     "philipsruins:chests/desert_pyramid_loot": 1,
-    "dungeons_enhanced:chests/monster_maze/treasure": 1
+    "dungeons_enhanced:chests/monster_maze/treasure": 1,
+    "ctov:chests/village/village_farm": 1,
+    "medieval_buildings:chests/town_inside": 1,
+    "medieval_buildings:chests/medium_shack_house": 1,
+    "mostructures:bunny_skeleton": 1,
+    "mostructures:bunny_spider": 1,
+    "repurposed_structures:chests/cities/overworld": 1,
+    "repurposed_structures:chests/villages/warped_tannery": 2,
+    "structory_towers:top/forager_top": 1,
+    "valhelsia_structures:chests/desert_house": 1
   }
 }

@@ -2,6 +2,7 @@ package com.brutalbosses.event;
 
 import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.BossJsonListener;
+import com.brutalbosses.entity.BossType;
 import com.brutalbosses.entity.BossTypeManager;
 import com.brutalbosses.entity.CustomAttributes;
 import com.brutalbosses.entity.capability.BossCapEntity;
@@ -42,10 +43,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static com.brutalbosses.entity.CustomAttributes.DROP_GEAR;
 
@@ -70,6 +68,7 @@ public class EventHandler
     }
      */
 
+    public static Map<EntityType, Set<BossType>> randomSpawns = new HashMap<>();
     public static Map<BlockPos, UUID> protectedBlocks = new HashMap<>();
 
     @SubscribeEvent
@@ -232,6 +231,27 @@ public class EventHandler
         if (!event.getEntity().level.isClientSide && FMLEnvironment.dist == Dist.DEDICATED_SERVER)
         {
             Network.instance.sendPacket((ServerPlayer) event.getEntity(), new BossTypeSyncMessage(BossTypeManager.instance.bosses.values()));
+        }
+    }
+
+    public static void onEntitySpawn(final Mob mob, final MobSpawnType mobSpawnType)
+    {
+        if (randomSpawns.containsKey(mob.getType()))
+        {
+            Set<BossType> list = randomSpawns.get(mob.getType());
+            for (final BossType type : list)
+            {
+                if (type.rollRandomSpawn())
+                {
+                    if (mob instanceof BossCapEntity bossCapEntity && bossCapEntity.getBossCap() == null)
+                    {
+                        bossCapEntity.setBossCap(new BossCapability(mob));
+                        type.initForEntity(mob);
+                        bossCapEntity.setPersistence(false);
+                        break;
+                    }
+                }
+            }
         }
     }
 }

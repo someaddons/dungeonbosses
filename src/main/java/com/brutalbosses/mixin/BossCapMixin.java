@@ -26,6 +26,8 @@ public abstract class BossCapMixin extends LivingEntity implements BossCapEntity
     @Shadow
     public abstract void readAdditionalSaveData(CompoundTag compoundTag);
 
+    @Shadow
+    private boolean persistenceRequired;
     @Unique
     private BossCapability bossCap = null;
 
@@ -83,5 +85,11 @@ public abstract class BossCapMixin extends LivingEntity implements BossCapEntity
         }
 
         return 0.0F;
+    }
+
+    @Override
+    public void setPersistence(final boolean persistence)
+    {
+        persistenceRequired = persistence;
     }
 }

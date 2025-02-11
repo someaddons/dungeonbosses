@@ -9,4 +9,6 @@ public interface BossCapEntity
 
     @Nullable
     public BossCapability getBossCap();
+
+    public void setPersistence(final boolean persistence);
 }

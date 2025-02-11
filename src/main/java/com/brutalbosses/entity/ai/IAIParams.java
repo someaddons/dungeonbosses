@@ -62,12 +62,12 @@ public interface IAIParams
                     if (boundary1 < boundary2)
                     {
                         healthPhaseCheck =
-                          healthPhaseCheck.and(e -> (e.getHealth() / e.getMaxHealth()) * 100 > boundary1 && (e.getHealth() / e.getMaxHealth()) * 100 < boundary2);
+                            healthPhaseCheck.and(e -> (e.getHealth() / e.getMaxHealth()) * 100 >= boundary1 && (e.getHealth() / e.getMaxHealth()) * 100 <= boundary2);
                     }
                     else
                     {
                         healthPhaseCheck =
-                          healthPhaseCheck.and(e -> (e.getHealth() / e.getMaxHealth()) * 100 < boundary1 && (e.getHealth() / e.getMaxHealth()) * 100 > boundary2);
+                            healthPhaseCheck.and(e -> (e.getHealth() / e.getMaxHealth()) * 100 <= boundary1 && (e.getHealth() / e.getMaxHealth()) * 100 >= boundary2);
                     }
                 }
             }

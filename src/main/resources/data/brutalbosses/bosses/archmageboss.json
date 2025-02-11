@@ -65,6 +65,20 @@
     "dungeoncrawl:chests/stage_5": 1,
     "dungeons_arise:chests/mines_treasure_big": 1,
     "dungeons_arise:chests/plague_asylum/plague_asylum_treasure": 1,
-    "awesomedungeonend:chests/awesome_dungeon": 3
+    "awesomedungeonend:chests/awesome_dungeon": 3,
+    "nova_structures:chests/end_castle/greater_loot": 2,
+    "nova_structures:chests/end_castle/treasure_lighthouse": 2,
+    "nova_structures:chests/end_castle/vault_galleon": 1,
+    "nova_structures:chests/ancient_city": 3,
+    "idas:chests/archmages_tower/archmages_tower_treasure": 3,
+    "medieval_buildings:chests/tower": 1,
+    "medievalend:end_pyramid_chests": 1,
+    "mss:cathedral_rare": 1,
+    "mes:cathedral_rare": 2,
+    "repurposed_structures:chests/ancient_cities/end": 1,
+    "structory_towers:end_tower": 2,
+    "structory:library/high": 1,
+    "structory_towers:top/sacred_temple_top": 1,
+    "structory_towers:top/wizard_top": 2
   }
 }
