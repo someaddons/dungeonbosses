@@ -25,12 +25,12 @@ public class AreaEffectCloudMixin
         {
             if (owner instanceof Player)
             {
-                return true;
+                return false;
             }
 
             return o == owner;
         }
 
-        return true;
+        return false;
     }
 }
