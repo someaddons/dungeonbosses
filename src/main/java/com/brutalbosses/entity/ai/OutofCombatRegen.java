@@ -39,14 +39,17 @@ public class OutofCombatRegen extends Goal
         else
         {
             combatTimer = 20;
-            mob.heal(amount);
-            if (mob.getHealth() == mob.getMaxHealth())
+            if (mob.getHealth() < mob.getMaxHealth())
             {
-                // Reequip starting gear
-                final BossCapability bossCapability = ((BossCapEntity) mob).getBossCap();
-                if (bossCapability != null && bossCapability.isBoss())
+                mob.heal(amount);
+                if (mob.getHealth() == mob.getMaxHealth())
                 {
-                    bossCapability.getBossType().initGear(mob);
+                    // Reequip starting gear
+                    final BossCapability bossCapability = ((BossCapEntity) mob).getBossCap();
+                    if (bossCapability != null && bossCapability.isBoss())
+                    {
+                        bossCapability.getBossType().initGear(mob);
+                    }
                 }
             }
         }
