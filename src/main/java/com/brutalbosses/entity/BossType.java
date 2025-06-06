@@ -208,7 +208,7 @@ public class BossType
         {
             for (final Map.Entry<EquipmentSlot, ItemStack> gearEntry : gearMap.entrySet())
             {
-                boss.setItemSlot(gearEntry.getKey(), gearEntry.getValue());
+                boss.setItemSlot(gearEntry.getKey(), gearEntry.getValue().copy());
             }
         }
     }
