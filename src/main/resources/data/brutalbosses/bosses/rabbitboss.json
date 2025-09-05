@@ -10,7 +10,8 @@
     "generic.max_health": 60,
     "generic.follow_range": 50,
     "generic.knockback_resistance": 1,
-    "generic.movement_speed": 0.8
+    "generic.movement_speed": 0.8,
+    "generic.jump_strength": 1.0
   },
   "customattributes": {
     "attack_speed": 0.7

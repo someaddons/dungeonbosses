@@ -15,6 +15,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.monster.SpellcasterIllager;
@@ -159,6 +160,13 @@ public class BossType
         }
     }
 
+    final private static AttributeModifier healthMod = new AttributeModifier(ResourceLocation.fromNamespaceAndPath(BrutalBosses.MOD_ID, "healthmod"),
+        BrutalBosses.config.getCommonConfig().damageMultiplier - 1.0,
+        AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    final private static AttributeModifier damageMod = new AttributeModifier(ResourceLocation.fromNamespaceAndPath(BrutalBosses.MOD_ID, "damagemod"),
+        BrutalBosses.config.getCommonConfig().damageMultiplier - 1.0,
+        AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+
     /**
      * Inits stats and MobEffects
      *
@@ -172,21 +180,24 @@ public class BossType
         {
             if (boss.getAttributes().hasAttribute(attributeEntry.getKey()))
             {
-                if (attributeEntry.getKey() == Attributes.MAX_HEALTH || attributeEntry.getKey() == Attributes.ATTACK_DAMAGE)
-                {
-                    boss.getAttribute(attributeEntry.getKey()).setBaseValue(attributeEntry.getValue() * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier);
-                }
-                else
-                {
-                    boss.getAttribute(attributeEntry.getKey()).setBaseValue(attributeEntry.getValue());
-                }
+                boss.getAttribute(attributeEntry.getKey()).setBaseValue(attributeEntry.getValue());
             }
             else
             {
                 BrutalBosses.LOGGER.debug(
-                  "Boss:" + id.toString() + " Attribute: " + attributeEntry.getKey().value().getDescriptionId() + " is not applicable to: " +
-                    entityToUse);
+                    "Boss:" + id.toString() + " Attribute: " + attributeEntry.getKey().value().getDescriptionId() + " is not applicable to: " +
+                        entityToUse);
             }
+        }
+
+        if (boss.getAttributes().hasAttribute(Attributes.MAX_HEALTH))
+        {
+            boss.getAttribute(Attributes.MAX_HEALTH).addTransientModifier(healthMod);
+        }
+
+        if (boss.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE))
+        {
+            boss.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(damageMod);
         }
 
         boss.setHealth(boss.getMaxHealth() * healthPct);

@@ -1,20 +1,22 @@
 package com.brutalbosses.config;
 
-import com.brutalbosses.BrutalBosses;
 import com.cupboard.config.ICommonConfig;
 import com.google.gson.JsonObject;
 
 public class CommonConfiguration implements ICommonConfig
 {
     public boolean printChestLoottable        = false;
-    public double  globalDifficultyMultiplier = 1.0;
+    public double damageMultiplier = 1.0;
+    public double healthMultiplier = 1.0;
     public int     globalBossSpawnChance      = 30;
     public int     minDistance                = 100;
 
     public CommonConfiguration()
     {
+
     }
 
+    @Override
     public JsonObject serialize()
     {
         final JsonObject root = new JsonObject();
@@ -26,9 +28,14 @@ public class CommonConfiguration implements ICommonConfig
         root.add("printChestLoottable", entry);
 
         final JsonObject entry2 = new JsonObject();
-        entry2.addProperty("desc:", "Global difficulty multiplier, affects health and damage of all bosses, default = 1.0, max = 1000");
-        entry2.addProperty("globalDifficultyMultiplier", globalDifficultyMultiplier);
-        root.add("globalDifficultyMultiplier", entry2);
+        entry2.addProperty("desc:", "Global difficulty multiplier, affects damage of all bosses, default:1.0");
+        entry2.addProperty("damageMultiplier", damageMultiplier);
+        root.add("damageMultiplier", entry2);
+
+        final JsonObject entry56 = new JsonObject();
+        entry56.addProperty("desc:", "Global difficulty multiplier, affects health of all bosses, default:1.0");
+        entry56.addProperty("healthMultiplier", healthMultiplier);
+        root.add("healthMultiplier", entry56);
 
         final JsonObject entry3 = new JsonObject();
         entry3.addProperty("desc:",
@@ -44,16 +51,12 @@ public class CommonConfiguration implements ICommonConfig
         return root;
     }
 
-    public void deserialize(JsonObject data)
+    @Override
+    public void deserialize(final JsonObject data)
     {
-        if (data == null)
-        {
-            BrutalBosses.LOGGER.error("Config file was empty!");
-            return;
-        }
-
         printChestLoottable = data.get("printChestLoottable").getAsJsonObject().get("printChestLoottable").getAsBoolean();
-        globalDifficultyMultiplier = data.get("globalDifficultyMultiplier").getAsJsonObject().get("globalDifficultyMultiplier").getAsDouble();
+        damageMultiplier = data.get("damageMultiplier").getAsJsonObject().get("damageMultiplier").getAsDouble();
+        healthMultiplier = data.get("healthMultiplier").getAsJsonObject().get("healthMultiplier").getAsDouble();
         globalBossSpawnChance = data.get("globalBossSpawnChance").getAsJsonObject().get("globalBossSpawnChance").getAsInt();
         minDistance = data.get("minDistance").getAsJsonObject().get("minDistance").getAsInt();
     }
