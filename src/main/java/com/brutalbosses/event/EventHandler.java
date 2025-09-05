@@ -121,7 +121,7 @@ public class EventHandler
             if (cap != null && cap.isBoss())
             {
                 event.setAmount((float) ((event.getAmount() + cap.getBossType().getCustomAttributeValueOrDefault(CustomAttributes.PROJECTILE_DAMAGE, 0))
-                                           * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier));
+                    * BrutalBosses.config.getCommonConfig().damageMultiplier));
             }
         }
     }
