@@ -11,7 +11,7 @@
     "generic.follow_range": 50,
     "generic.knockback_resistance": 1,
     "generic.movement_speed": 0.8,
-    "attribute.name.generic.jump_strength": 1.0
+    "generic.jump_strength": 1.0
   },
   "customattributes": {
     "attack_speed": 0.7

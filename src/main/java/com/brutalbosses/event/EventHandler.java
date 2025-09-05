@@ -37,7 +37,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
-import net.neoforged.neoforge.event.entity.living.LivingConversionEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -123,7 +122,7 @@ public class EventHandler
             if (cap != null && cap.isBoss())
             {
                 event.setNewDamage((float) ((event.getNewDamage() + cap.getBossType().getCustomAttributeValueOrDefault(CustomAttributes.PROJECTILE_DAMAGE, 0))
-                                           * BrutalBosses.config.getCommonConfig().globalDifficultyMultiplier));
+                    * BrutalBosses.config.getCommonConfig().damageMultiplier));
             }
         }
     }
