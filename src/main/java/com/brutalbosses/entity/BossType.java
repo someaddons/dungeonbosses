@@ -204,7 +204,7 @@ public class BossType
 
         for (final Map.Entry<Holder<MobEffect>, Integer> MobEffectEntry : potionMobEffects.entrySet())
         {
-            boss.getActiveEffectsMap().put(MobEffectEntry.getKey(), new MobEffectInstance(MobEffectEntry.getKey(), 10000000, MobEffectEntry.getValue()));
+            boss.getActiveEffectsMap().put(MobEffectEntry.getKey(), new MobEffectInstance(MobEffectEntry.getKey(), 10000000, MobEffectEntry.getValue() - 1));
         }
     }
 
