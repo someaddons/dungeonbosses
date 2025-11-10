@@ -77,6 +77,18 @@ public class BossSpawnHandler
     }
 
     /**
+     * Recursively spawns an entity and all of its passengers into the world.
+     */
+    private static void spawnEntityWithPassengers(ServerLevelAccessor world, Entity entity) {
+        List<Entity> passengers = new ArrayList<>(entity.getPassengers()); // capture first
+        world.addFreshEntity(entity);
+        for (Entity passenger : passengers) {
+            spawnEntityWithPassengers(world, passenger);
+            passenger.startRiding(entity, true);
+        }
+    }
+
+    /**
      * Spawns the boss at the given position
      *
      * @param world
@@ -124,7 +136,7 @@ public class BossSpawnHandler
 
             if (!boss.isRemoved())
             {
-                world.addFreshEntity(boss);
+                spawnEntityWithPassengers(world, boss);
             }
         }
         catch (Exception spawnException)
