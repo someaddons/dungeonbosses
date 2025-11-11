@@ -4,12 +4,15 @@ import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.capability.BossCapEntity;
 import com.cupboard.util.BlockSearch;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 
@@ -77,18 +80,6 @@ public class BossSpawnHandler
     }
 
     /**
-     * Recursively spawns an entity and all of its passengers into the world.
-     */
-    private static void spawnEntityWithPassengers(ServerLevelAccessor world, Entity entity) {
-        List<Entity> passengers = new ArrayList<>(entity.getPassengers()); // capture first
-        world.addFreshEntity(entity);
-        for (Entity passenger : passengers) {
-            spawnEntityWithPassengers(world, passenger);
-            passenger.startRiding(entity, true);
-        }
-    }
-
-    /**
      * Spawns the boss at the given position
      *
      * @param world
@@ -134,9 +125,17 @@ public class BossSpawnHandler
             }
             ((BossCapEntity) boss).getBossCap().setSpawnPos(pos);
 
+            // Convert boss (and its passengers) to NBT
+            CompoundTag bossNbt = new CompoundTag();
+            boss.save(bossNbt);
+
             if (!boss.isRemoved())
             {
-                spawnEntityWithPassengers(world, boss);
+                // Load entity (and all passengers) from NBT
+                Entity loadedBoss = EntityType.loadEntityRecursive(bossNbt, (Level) world, e -> {
+                    world.addFreshEntity(e);
+                    return e;
+                });
             }
         }
         catch (Exception spawnException)
