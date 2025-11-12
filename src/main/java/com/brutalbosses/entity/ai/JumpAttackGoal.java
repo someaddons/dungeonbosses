@@ -178,7 +178,6 @@ public class JumpAttackGoal extends Goal
 
             // Cooldown
             ticksToNextUpdate = (int) (params.interval + (BrutalBosses.rand.nextInt(20) - 10));
-            ticksToNextUpdate = 100;
             // Stop movement for 1sec
             mob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 30, 3));
             mob.setDeltaMovement(Vec3.ZERO.add(0, -0.8, 0));
