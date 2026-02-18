@@ -47,8 +47,8 @@ public class ClientEventHandler {
         // Not sure why this is needed
         //Minecraft.getInstance().gui.getBossOverlay().events = new ConcurrentHashMap<>();
     }
-
-    public static void onWorldUnload() {
+    public static void onLogout()
+    {
         // Clear any boss infos to avoid storing entities/Levels
         bossInfoMap.clear();
         Minecraft.getInstance().gui.getBossOverlay().events.clear();
