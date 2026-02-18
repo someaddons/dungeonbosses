@@ -8,6 +8,8 @@ import com.brutalbosses.event.EventHandler;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -74,6 +76,30 @@ public class BossType
         this.id = id;
     }
 
+    public static void loadPassengersRecursively(Entity root, CompoundTag tag, Level world) {
+        if (!tag.contains("Passengers", Tag.TAG_LIST)) {
+            return;
+        }
+
+        ListTag passengers = tag.getList("Passengers", Tag.TAG_COMPOUND);
+        for (int i = 0; i < passengers.size(); i++) {
+            CompoundTag passengerTag = passengers.getCompound(i);
+
+            // Create the passenger entity but don't spawn it
+            EntityType<?> passengerType = EntityType.byString(passengerTag.getString("id")).orElse(null);
+            if (passengerType == null) continue;
+
+            Entity passenger = passengerType.create(world);
+            if (passenger == null) continue;
+
+            passenger.load(passengerTag); // load NBT into entity
+            passenger.startRiding(root, true);
+
+            // Recurse for deeper stacks
+            loadPassengersRecursively(passenger, passengerTag, world);
+        }
+    }
+
     /**
      * Creates a new boss entity of this type
      *
@@ -83,6 +109,7 @@ public class BossType
     public Mob createBossEntity(final Level world)
     {
         final Entity entity = entityToUse.create(world);
+        //final Entity entity = EntityType.loadEntityRecursive(nbt, world, (ent) -> ent);
 
         if (entity instanceof AbstractVillager)
         {
@@ -90,18 +117,16 @@ public class BossType
             ((AbstractVillager) entity).offers = new MerchantOffers();
         }
 
-        if (creationData != null)
-        {
-            if (creationData.contains("Pos"))
-            {
-                entity.load(creationData);
-            }
-            else
-            {
-                if (entity instanceof LivingEntity)
-                {
-                    ((LivingEntity) entity).readAdditionalSaveData(creationData);
-                }
+        if (creationData != null) {
+            try {
+                // ensure ID is present for vanilla loader
+                CompoundTag nbt = creationData.copy();
+                nbt.putString("id", EntityType.getKey(entity.getType()).toString());
+
+                entity.load(nbt);  // load stats / attributes / trades
+                loadPassengersRecursively(entity, nbt, world); // attach riding entities
+            } catch (Exception e) {
+                BrutalBosses.LOGGER.error("Failed to load NBT for boss " + id, e);
             }
         }
 
