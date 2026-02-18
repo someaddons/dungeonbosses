@@ -184,18 +184,18 @@ public class BossType
             }
             else
             {
-                BrutalBosses.LOGGER.debug(
-                  "Boss:" + id.toString() + " Attribute: " + attributeEntry.getKey().getDescriptionId() + " is not applicable to: " + ForgeRegistries.ENTITY_TYPES.getKey(
-                    entityToUse));
+                BrutalBosses.LOGGER.info(
+                    "Boss:" + id.toString() + " Attribute: " + attributeEntry.getKey().getDescriptionId() + " is not applicable to: " + ForgeRegistries.ENTITY_TYPES.getKey(
+                        entityToUse));
             }
         }
 
-        if (boss.getAttributes().hasAttribute(Attributes.MAX_HEALTH))
+        if (boss.getAttributes().hasAttribute(Attributes.MAX_HEALTH) && !boss.getAttribute(Attributes.MAX_HEALTH).hasModifier(healthMod))
         {
             boss.getAttribute(Attributes.MAX_HEALTH).addTransientModifier(healthMod);
         }
 
-        if (boss.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE))
+        if (boss.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE) && !boss.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(damageMod))
         {
             boss.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(damageMod);
         }
