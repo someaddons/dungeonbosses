@@ -190,12 +190,12 @@ public class BossType
             }
         }
 
-        if (boss.getAttributes().hasAttribute(Attributes.MAX_HEALTH))
+        if (boss.getAttributes().hasAttribute(Attributes.MAX_HEALTH) && !boss.getAttribute(Attributes.MAX_HEALTH).hasModifier(healthMod.id()))
         {
             boss.getAttribute(Attributes.MAX_HEALTH).addTransientModifier(healthMod);
         }
 
-        if (boss.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE))
+        if (boss.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE) && !boss.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(damageMod.id()))
         {
             boss.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(damageMod);
         }

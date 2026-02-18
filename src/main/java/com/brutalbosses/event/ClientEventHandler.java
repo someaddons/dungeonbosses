@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -51,7 +52,7 @@ public class ClientEventHandler
         //Minecraft.getInstance().gui.getBossOverlay().events = new ConcurrentHashMap<>();
     }
     @SubscribeEvent
-    public static void onWorldUnload(LevelEvent.Unload event)
+    public static void onWorldUnload(ClientPlayerNetworkEvent.LoggingOut event)
     {
         // Clear any boss infos to avoid storing entities/Levels
         bossInfoMap.clear();
