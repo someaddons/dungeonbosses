@@ -143,7 +143,6 @@ public class JumpAttackGoal extends Goal
             return;
         }
 
-        //params.duration = 20;
         mob.getLookControl().setLookAt(target);
         mob.getLookControl().tick();
         if (animationTick <= params.duration * 0.1)

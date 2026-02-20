@@ -130,8 +130,11 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener implement
             if (data.has(ENTITY_NBT)) {
                 try {
                     bossType.setEntityNBT(TagParser.parseTag(data.get(ENTITY_NBT).getAsString()));
-                } catch (CommandSyntaxException e) {
-                    throw new RuntimeException(e);
+                }
+                catch (CommandSyntaxException e)
+                {
+                    BrutalBosses.LOGGER.error("Malformed field entitynbt in bossfile:" + entry.getKey(), e);
+                    return null;
                 }
             }
 
