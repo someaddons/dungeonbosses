@@ -1,6 +1,7 @@
 package com.brutalbosses;
 
 import com.brutalbosses.command.CommandSpawnBoss;
+import com.brutalbosses.compat.Compat;
 import com.brutalbosses.config.CommonConfiguration;
 import com.brutalbosses.entity.BossJsonListener;
 import com.brutalbosses.entity.ModEntities;
@@ -43,7 +44,7 @@ public class BrutalBosses implements ModInitializer
         });
 
         ModEntities.init();
-
+        Compat.initCompat();
         PayloadTypeRegistry.playS2C().register(BossCapMessage.TYPE, StreamCodec.of((buf, msg) -> msg.write(buf), byteBuf -> new BossCapMessage().read(byteBuf)));
         PayloadTypeRegistry.playS2C().register(BossOverlayMessage.TYPE, StreamCodec.of((buf, msg) -> msg.write(buf), byteBuf -> new BossOverlayMessage().read(byteBuf)));
         PayloadTypeRegistry.playS2C().register(BossTypeSyncMessage.TYPE, StreamCodec.of((buf, msg) -> msg.write(buf), byteBuf -> new BossTypeSyncMessage().read(byteBuf)));

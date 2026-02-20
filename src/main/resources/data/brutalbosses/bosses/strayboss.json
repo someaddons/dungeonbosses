@@ -19,7 +19,7 @@
     "dropgear": 6
   },
   "gear": {
-    "mainhand": "{id:\"minecraft:bow\",Count:1b,components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:piercing\": 4, \"minecraft:quick_charge\": 3}}}}",
+    "mainhand": "{id:\"minecraft:bow\",Count:1b,components: {\"minecraft:enchantments\": {levels: {\"minecraft:piercing\": 4, \"minecraft:quick_charge\": 3}}}}",
     "helmet": "{id: \"minecraft:turtle_helmet\", Count: 1b}",
     "offhand": "{id: \"minecraft:tipped_arrow\", Count: 64b, components: {\"minecraft:potion_contents\": {potion: \"minecraft:long_turtle_master\"}}}"
   },

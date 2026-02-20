@@ -14,7 +14,7 @@
     "dropgear": 1
   },
   "gear": {
-    "mainhand": "{id: \"minecraft:trident\", Count: 1b, components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:riptide\": 3}}}}"
+    "mainhand": "{id: \"minecraft:trident\", Count: 1b, components: {\"minecraft:enchantments\": {levels: {\"minecraft:riptide\": 3}}}}"
   },
   "ai-goals": {
     "brutalbosses:aftercombatregen": {
