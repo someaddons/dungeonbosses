@@ -4,18 +4,28 @@ import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.compat.Compat;
 import com.cupboard.util.BlockSearch;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static com.brutalbosses.entity.capability.BossCapability.BOSS_CAP;
@@ -94,21 +104,30 @@ public class BossSpawnHandler
                 spawns.poll();
             }
 
-            final Mob boss = bossType.createBossEntity(world.getLevel());
-
-            if (boss == null)
+            final CompoundTag bossTag = bossType.createBossTag(world.getLevel());
+            if (bossTag == null)
             {
                 return;
             }
+
+            List<Entity> passengers = new ArrayList<>();
+            // Load entity (and all passengers) from NBT
+            Entity boss = EntityType.loadEntityRecursive(bossTag, world.getLevel(), e -> {
+                e.setUUID(UUID.randomUUID());
+                passengers.add(e);
+                return e;
+            });
+            passengers.remove(boss);
+            boss.setUUID(UUID.randomUUID());
 
             if (chest != null)
             {
                 final ResourceLocation lootTable = chest.lootTable;
                 BrutalBosses.LOGGER.debug(
-                  "Spawning " + bossType.getID() + " at " + pos + " at " + chest.getDisplayName().getString() + " with:" + lootTable);
+                    "Spawning " + bossType.getID() + " at " + pos + " at " + chest.getDisplayName().getString() + " with:" + lootTable);
             }
 
-            final BlockPos spawnPos = findSpawnPosForBoss(world, boss, pos);
+            final BlockPos spawnPos = findSpawnPosForBoss(world, (LivingEntity) boss, pos);
             if (spawnPos == null)
             {
                 boss.remove(Entity.RemovalReason.DISCARDED);
@@ -119,17 +138,37 @@ public class BossSpawnHandler
                 boss.setPos(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
             }
 
-            if (chest != null)
+            bossType.initForEntity((Mob) boss);
+            ((Mob) boss).setHealth(((Mob) boss).getMaxHealth());
+            if (boss instanceof AbstractVillager)
+            {
+                // Init empty offers to avoid offers creating maps during worldgen
+                ((AbstractVillager) boss).offers = new MerchantOffers();
+            }
+
+            // Check loottable null to allow entity nbt setting it
+            if (chest != null && boss.getCapability(BOSS_CAP).orElse(null).getLootTable() == null)
             {
                 boss.getCapability(BOSS_CAP).orElse(null).setLootTable(chest.lootTable);
             }
-            boss.getCapability(BOSS_CAP).orElse(null).setSpawnPos(pos);
+            boss.getCapability(BOSS_CAP).orElse(null).setSpawnPos(spawnPos);
 
             Compat.applyAllCompats(world, bossType, pos, boss);
 
             if (!boss.isRemoved())
             {
                 world.addFreshEntity(boss);
+                for (final Entity passenger : passengers)
+                {
+                    passenger.getCapability(BOSS_CAP).ifPresent(cap -> cap.setSpawnPos(spawnPos));
+                    passenger.setPos(boss.position());
+                    if (passenger instanceof AbstractVillager)
+                    {
+                        // Init empty offers to avoid offers creating maps during worldgen
+                        ((AbstractVillager) passenger).offers = new MerchantOffers();
+                    }
+                    world.addFreshEntity(passenger);
+                }
             }
         }
         catch (Exception spawnException)
@@ -138,32 +177,37 @@ public class BossSpawnHandler
         }
     }
 
-    public static BlockPos findSpawnPosForBoss(final ServerLevelAccessor world, final Entity boss, final BlockPos pos)
+    public static BlockPos findSpawnPosForBoss(final ServerLevelAccessor world, final LivingEntity boss, final BlockPos pos)
     {
+        final boolean allowWater = boss.canBreatheUnderwater();
         final BlockPos spawnPos = BlockSearch.findAround(world, pos, 15, 10, 1,
-          (w, p) ->
-          {
-              if (w.getBlockState(p.below()).isAir())
-              {
-                  return false;
-              }
+            (w, p) ->
+            {
+                if (w.getBlockState(p.below()).isAir())
+                {
+                    return false;
+                }
 
-              for (int x = Mth.floor((-boss.getBbWidth() + 1) / 2); x <= Mth.ceil((boss.getBbWidth() - 1) / 2); x++)
-              {
-                  for (int z = Mth.floor((-boss.getBbWidth() + 1) / 2); z <= Mth.ceil((boss.getBbWidth() - 1) / 2); z++)
-                  {
-                      for (int y = 0; y <= Mth.ceil(boss.getBbHeight()); y++)
-                      {
-                          if (!(w.getBlockState(p.offset(x, y, z)).isAir()))
-                          {
-                              return false;
-                          }
-                      }
-                  }
-              }
+                for (int x = Mth.floor((-boss.getBbWidth() + 1) / 2); x <= Mth.ceil((boss.getBbWidth() - 1) / 2); x++)
+                {
+                    for (int z = Mth.floor((-boss.getBbWidth() + 1) / 2); z <= Mth.ceil((boss.getBbWidth() - 1) / 2); z++)
+                    {
+                        for (int y = 0; y <= Mth.ceil(boss.getBbHeight()); y++)
+                        {
+                            final BlockState state = w.getBlockState(p.offset(x, y, z));
+                            if (!(state.isAir()))
+                            {
+                                if ((!allowWater || !w.getFluidState(p.offset(x, y, z)).is(FluidTags.WATER)))
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
 
-              return true;
-          });
+                return true;
+            });
 
         return spawnPos;
     }

@@ -6,6 +6,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.fml.ModList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Compat
 {
     /**
@@ -13,13 +16,21 @@ public class Compat
      */
     private static IEntityCompat championsCompat = new IEntityCompat() {};
 
+    /**
+     * Compat managers, inject a new one for a callback
+     */
+    public static List<IEntityCompat> compatManagers = new ArrayList<>();
+
     public static void applyAllCompats(
-      final ServerLevelAccessor world,
-      final BossType bossType,
-      final BlockPos pos,
-      final Entity boss)
+        final ServerLevelAccessor world,
+        final BossType bossType,
+        final BlockPos pos,
+        final Entity boss)
     {
-        championsCompat.applyCompatTo(world, bossType, pos, boss);
+        for (final IEntityCompat compat : compatManagers)
+        {
+            compat.applyCompatTo(world, bossType, pos, boss);
+        }
     }
 
     public static void initCompat()
@@ -28,5 +39,7 @@ public class Compat
         {
             championsCompat = new ChampionsCompat();
         }
+
+        compatManagers.add(championsCompat);
     }
 }
