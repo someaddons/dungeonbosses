@@ -138,8 +138,6 @@ public class BossSpawnHandler
 
             bossType.initForEntity((Mob) boss);
             ((Mob) boss).setHealth(((Mob) boss).getMaxHealth());
-            //TODO!:
-            ((Mob) boss).setHealth(1);
             if (boss instanceof AbstractVillager)
             {
                 // Init empty offers to avoid offers creating maps during worldgen
