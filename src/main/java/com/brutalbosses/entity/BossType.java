@@ -81,41 +81,27 @@ public class BossType
      * @param world
      * @return
      */
-    public Mob createBossEntity(final Level world)
+    public CompoundTag createBossTag(final Level world)
     {
         final Entity entity = entityToUse.create(world);
 
-        if (entity instanceof AbstractVillager)
+        if (!(entity instanceof BossCapEntity bossCapEntity))
         {
-            // Init empty offers to avoid offers creating maps during worldgen
-            ((AbstractVillager) entity).offers = new MerchantOffers();
-        }
-
-        if (creationData != null)
-        {
-            if (creationData.contains("Pos"))
-            {
-                entity.load(creationData);
-            }
-            else
-            {
-                if (entity instanceof LivingEntity)
-                {
-                    ((LivingEntity) entity).readAdditionalSaveData(creationData);
-                }
-            }
-        }
-
-        if (!(entity instanceof BossCapEntity))
-        {
-            BrutalBosses.LOGGER.warn("Not supported boss entity:" + entityToUse);
+            BrutalBosses.LOGGER.warn("Non supported boss entity:" + entityToUse);
             return null;
         }
 
-        ((BossCapEntity) entity).setBossCap(new BossCapability(entity));
-        ((BossCapEntity) entity).getBossCap().setBossType(this);
-        initForEntity((Mob) entity);
-        return (Mob) entity;
+        final CompoundTag tagData = new CompoundTag();
+        bossCapEntity.setBossCap(new BossCapability(entity));
+        bossCapEntity.getBossCap().setBossType(this);
+        entity.save(tagData);
+
+        if (creationData != null)
+        {
+            tagData.merge(creationData);
+        }
+
+        return tagData;
     }
 
     /**

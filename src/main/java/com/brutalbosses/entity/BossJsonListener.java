@@ -152,7 +152,8 @@ public class BossJsonListener extends SimpleJsonResourceReloadListener
                 }
                 catch (CommandSyntaxException e)
                 {
-                    throw new RuntimeException(e);
+                    BrutalBosses.LOGGER.error("Malformed field entitynbt in bossfile:" + entry.getKey(), e);
+                    return null;
                 }
             }
 

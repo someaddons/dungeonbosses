@@ -18,7 +18,7 @@
     "attack_speed": 0.5
   },
   "gear": {
-    "mainhand": "{id:\"minecraft:iron_sword\",Count:1b, components: {\"minecraft:stored_enchantments\": {levels: {\"minecraft:fire_aspect\": 2}}}}",
+    "mainhand": "{id:\"minecraft:iron_sword\",Count:1b, components: {\"minecraft:enchantments\": {levels: {\"minecraft:fire_aspect\": 2}}}}",
     "offhand": "{id:\"minecraft:shield\",Count:1b}"
   },
   "ai-goals": {
