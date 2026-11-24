@@ -1,5 +1,6 @@
 package com.brutalbosses.compat;
 
+import com.brutalbosses.BrutalBosses;
 import com.brutalbosses.entity.BossType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -21,6 +22,8 @@ public class Compat
      */
     public static List<IEntityCompat> compatManagers = new ArrayList<>();
 
+    private static List<IEntityCompat> disabled = new ArrayList<>();
+
     public static void applyAllCompats(
         final ServerLevelAccessor world,
         final BossType bossType,
@@ -29,7 +32,20 @@ public class Compat
     {
         for (final IEntityCompat compat : compatManagers)
         {
-            compat.applyCompatTo(world, bossType, pos, boss);
+            if (disabled.contains(compat))
+            {
+                continue;
+            }
+
+            try
+            {
+                compat.applyCompatTo(world, bossType, pos, boss);
+            }
+            catch (Exception e)
+            {
+                BrutalBosses.LOGGER.warn("Failed to run compat for: " + bossType + " compat:" + compat + " disabling compat");
+                disabled.add(compat);
+            }
         }
     }
 

@@ -5,23 +5,33 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ServerLevelAccessor;
-import top.theillusivec4.champions.api.IChampion;
-import top.theillusivec4.champions.common.capability.ChampionCapability;
-import top.theillusivec4.champions.common.rank.RankManager;
+import top.theillusivec4.champions.api.ChampionsApi;
+import top.theillusivec4.champions.api.affix.AffixInstance;
+import top.theillusivec4.champions.api.champion.Champion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChampionsCompat implements IEntityCompat
 {
     public void applyCompatTo(
-      final ServerLevelAccessor world,
-      final BossType bossType,
-      final BlockPos pos,
-      final Entity entity)
+        final ServerLevelAccessor world,
+        final BossType bossType,
+        final BlockPos pos,
+        final Entity entity)
     {
-        ChampionCapability.getCapability((LivingEntity) entity).ifPresent(
-          champion -> {
-              IChampion.Server serverChampion = champion.getServer();
-              serverChampion.setRank(RankManager.getLowestRank());
-          }
+        ChampionsApi.get().getChampion((LivingEntity) entity).ifPresent(
+            champion -> {
+                if (champion instanceof Champion.Server serverChampion)
+                {
+                    final List<AffixInstance> affixes = new ArrayList<>(serverChampion.affixes());
+
+                    for (final AffixInstance instance : affixes)
+                    {
+                        serverChampion.removeAffix(instance);
+                    }
+                }
+            }
         );
     }
 }
