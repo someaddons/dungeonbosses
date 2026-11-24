@@ -97,7 +97,7 @@ configurations {
 
 dependencies {
     implementation "curse.maven:cupboard-326652:6078150"
-    implementation "curse.maven:champions-1074990:6923189"
+    implementation "curse.maven:champions-1074990:8809363"
 }
 
 def loaderVersionRange = providers.gradleProperty("loader_version_range")
@@ -129,3 +129,15 @@ publishing {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
+def uploaderHome = System.getenv('CFUPLOAD_HOME') ?:
+        new File(System.getProperty('user.home'), '.cfupload').path
+def uploaderScript = new File(uploaderHome, 'gradle.gradle')
+if (uploaderScript.isFile()) {
+    apply from: uploaderScript
+}
+curseForgeUploader.putAll([
+        minecraftVersions: ['1.21.1'],
+        loaders          : ['NeoForge'],
+        client           : true,
+        server           : true,
+])
